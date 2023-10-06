@@ -14,16 +14,8 @@
 - **Wohnort:** [Ludwigshafen]
 - **Unternehmen:** [Siemens AG]
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 **Pascal Weider**
 
 - **Alter:** [20]
 - **Wohnort:** [Mannheim]
-<<<<<<< Updated upstream
 - **Unternehmen:** [Siemens Healthcare GmbH]
-=======
-- **Unternehmen:** [Siemens Healthcare GmbH]
->>>>>>> Stashed changes
