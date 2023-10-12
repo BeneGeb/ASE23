@@ -14,6 +14,12 @@
 - **Wohnort:** [Ludwigshafen]
 - **Unternehmen:** [Siemens AG]
 
+**Yichen Zhang**
+
+- **Alter:** [21]
+- **Wohnort:** [Mannheim]
+- **Unternehmen:** [REWE digital]
+
 **Pascal Weider**
 
 - **Alter:** [20]
