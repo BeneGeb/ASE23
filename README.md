@@ -18,4 +18,4 @@
 
 - **Alter:** [21]
 - **Wohnort:** [Mannheim]
-- **Unternehmen:** [REWE digital]
+- **Unternehmen:** [REWE digital GmbH]
