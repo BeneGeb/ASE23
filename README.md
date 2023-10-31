@@ -18,10 +18,10 @@
 
 - **Alter:** [21]
 - **Wohnort:** [Mannheim]
-- **Unternehmen:** [REWE digital]
+- **Unternehmen:** [REWE digital GmbH]
 
 **Pascal Weider**
-
 - **Alter:** [20]
 - **Wohnort:** [Mannheim]
 - **Unternehmen:** [Siemens Healthcare GmbH]
+
