@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
+
+body {
+    font-family: 'Julius Sans One', sans-serif;
+    background-image: url('login_background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: left center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    position: absolute;
+    right: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    height: 400px; /* Erhöhte Höhe */
+    padding: 20px 40px;
+    border-radius: 10px;
+    background-color: rgba(242, 242, 242, 0.9); /* Hellgrau & Transparenz */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-image: none;
+}
+
+h2 {
+    font-family: 'Julius Sans One', sans-serif;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+    background-color: #f2f2f2; /* hell Grau */
+}
+
+button {
+    padding: 10px;
+    background-color: #f2f2f2;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: 'Julius Sans One', sans-serif;
+}
+
+button:hover {
+    background-color: #d9d9d9; 
+}
