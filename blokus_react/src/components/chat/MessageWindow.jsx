@@ -2,7 +2,7 @@
 
 import React from 'react'
 // You can view the CSS at: https://github.com/sohamkamani/react-chat-example/blob/master/src/MessageWindow.css
-import '../../styles/MessageWindow.css'
+import '../../styles/Chat/MessageWindow.css'
 
 // The message component takes the message text and the username of the message
 // sender. It also takes `self` - a boolean value depicting whether the message

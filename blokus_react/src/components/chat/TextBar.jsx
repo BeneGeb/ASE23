@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // The CSS can be viewed at https://github.com/sohamkamani/react-chat-example/blob/master/src/TextBar.css
-import '../../styles/TextBar.css'
+import '../../styles/Chat/TextBar.css'
 
 export default class TextBar extends Component {
   constructor (props) {

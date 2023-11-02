@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../styles/Chat.css'
+import '../../styles/Chat/Chat.css'
 
 import MessageWindow from './MessageWindow'
 import TextBar from './TextBar'
@@ -11,7 +11,6 @@ export default class Chat extends React.Component {
         username: null
     }
 
-    
   constructor (props) {
     super(props)
     console.log("constructor")
