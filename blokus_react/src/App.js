@@ -1,12 +1,14 @@
 import React from 'react'
-import Login from './components/login/login'
+
 import Chat from './components/chat/Chat'
+import GamePage from './components/gamepage/gamepage'
+
 
 export class App extends React.Component {
   render() {
     return (
-      <div className="App">
-        <Login />
+      <div className="App" style={{ width: '100%', height: '100vh' }}>
+        <GamePage  />
       </div>
     )
   }

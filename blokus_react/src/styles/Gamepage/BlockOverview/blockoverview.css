@@ -1,0 +1,100 @@
+.block-overview{
+    background-color: #D9D9D9;
+    border-radius: 15px;
+    width: 20%;
+    margin: 2.5%;
+    height: 35%;
+    display: flex;
+    flex-direction: column;
+}
+
+.block-filter{
+    background-color: white;
+    border-radius: 10px;
+    width: 70%;
+    height: 15%;
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+.inner-block-filter{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height:100%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.filter-button{
+    background-color: #D9D9D9;
+    text-align: center;
+    height: 80%;
+    width: 15%;
+    border-radius: 5px;
+    border: none;
+    transition: background 0.3s ease;
+}
+
+.filter-button:hover {
+    background: #BDBDBD;
+    /* Ändere die Hintergrundfarbe bei Hover */
+}
+
+#selected-filter-button{
+    background-color: #B0B0AE;
+}
+
+.block-selector{
+    width: 80%;
+    height: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.arrow-selection-button{
+    background-color: white;
+    content: "\2192";
+    border-radius: 15px;
+    border: none;
+    height: 60%;
+    width: 10%;
+    transition: background 0.3s ease;
+}
+
+.arrow-selection-button::before{
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    display: inline-block;
+}
+
+.arrow-selection-button:hover {
+    background: #BDBDBD;
+    /* Ändere die Hintergrundfarbe bei Hover */
+}
+
+.arrow-selection-button:active {
+    background-color: #B0B0AE;
+}
+
+.right-arrow::before {
+    border-width: 0.5em 0 0.5em 0.5em;
+    border-color: transparent transparent transparent #7A7A7A;
+}
+
+.left-arrow::before {
+    border-width: 0.5em 0.5em 0.5em 0;
+    border-color: transparent #7A7A7A transparent transparent;
+}
+
+.block-view{
+    background-color: white;
+    height: 70%;
+    width: 70%;
+    border-radius: 50%;
+}
