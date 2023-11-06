@@ -9,18 +9,13 @@ function FilterButton({value, selectedButton, onClick}){
     );
 }
 
-export default function BlockFilter(){
-        const [selectedButton, setSelectedButton] = React.useState(1);
-        
-        function onSelectionButtonClick(buttonValue){
-            setSelectedButton(buttonValue);
-        }
-
+export default function BlockFilter({onFilterChange, selectedFilter}){
+      
         return (
             <div class="block-filter">
                 <div class="inner-block-filter"> 
                 {Array(5).fill(null).map((item,index) => (
-                    <FilterButton key={index} selectedButton={selectedButton} value={index+1} onClick={() => onSelectionButtonClick(index+1)} />
+                    <FilterButton key={index} selectedButton={selectedFilter} value={index+1} onClick={() => onFilterChange(index+1)} />
                 )) }
                 </div>
             </div>
