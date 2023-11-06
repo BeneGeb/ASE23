@@ -11,7 +11,10 @@ export default function GamePage(){
   
     return (
         <div class="gamepage">
-            <BlockOverview allBlocks={allBlocks[0]}/>
+            {allBlocks.map((block, index) => (
+                <BlockOverview key={index} allBlocks={block}/>
+            )
+            )}
         </div>
     );
 }

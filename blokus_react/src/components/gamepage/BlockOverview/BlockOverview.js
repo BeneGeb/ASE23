@@ -12,6 +12,7 @@ export default function BlockOverview({allBlocks}){
 
     function onFilterChange(filterValue){
         setSelectedFilter(filterValue);
+        setSelectedBlockIndex(0);
     }
 
 
@@ -29,6 +30,7 @@ export default function BlockOverview({allBlocks}){
             }
             setSelectedBlockIndex(newIndex);
         }
+        
     }
 
     return (
