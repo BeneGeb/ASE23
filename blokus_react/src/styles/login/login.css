@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
 
-body {
+.login-page {
     font-family: 'Julius Sans One', sans-serif;
     background-image: url('login_background.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: left center;
-    height: 100vh;
+    height: 100%;
+    width: 100%;
     margin: 0;
 }
 
@@ -36,7 +37,7 @@ h2 {
     align-items: stretch;
 }
 
-input {
+.login-input {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -47,7 +48,7 @@ input {
     background-color: #f2f2f2; /* hell Grau */
 }
 
-button {
+.submit-button {
     padding: 10px;
     background-color: #f2f2f2;
     color: black;
@@ -58,6 +59,6 @@ button {
     font-family: 'Julius Sans One', sans-serif;
 }
 
-button:hover {
+.submit-button:hover {
     background-color: #d9d9d9; 
 }
