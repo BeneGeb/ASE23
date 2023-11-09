@@ -43,7 +43,7 @@ const CheckBoxReady = () => {
     );
 }
 
-export default function playerOverviewField({playernamelist}){
+export default function PlayerOverviewField({playernamelist}){
     return(
         <div className='parent-div'>
             <div className='header-div'>
