@@ -1,5 +1,8 @@
 from django.urls import path
+from .views import register, login, lobby
 
-from . import views
-
-urlpatterns = [path("", views.lobby)]
+urlpatterns = [
+    path('register/', register, name='register'),
+    path('login/', login, name='login'),
+    path("", lobby)
+]
