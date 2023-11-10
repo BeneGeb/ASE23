@@ -1,9 +1,8 @@
-export let send
+export let sendChatMessage;
 let onMessageCallback
 
-// This exported function is used to initialize the websocket connection
-export const startWebsocketConnection = () => {
-    let url = "ws://127.0.0.1:8000/ws/socket-server/"
+export const startWebsocketChatConnection = () => {
+    let url = "ws://127.0.0.1:8000/ws/chat/"
     const ws = new window.WebSocket(url) || {}
    
     ws.onopen = () => {
@@ -17,11 +16,11 @@ export const startWebsocketConnection = () => {
     ws.onmessage = (e) => {
         onMessageCallback(e.data)
     }
-    send = ws.send.bind(ws)
+
+    sendChatMessage = ws.send.bind(ws)
 }
 
-// This function is called by our React application to register a callback
-// that needs to be called everytime a new message is received
-export const registerOnMessageCallback = (fn) => {
-  onMessageCallback = fn
+
+export const registerOnMessageCallback = (callBackFunction) => {
+  onMessageCallback = callBackFunction
 }
