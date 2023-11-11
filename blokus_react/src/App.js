@@ -3,24 +3,18 @@ import React from 'react'
 import Chat from './components/chat/Chat'
 import GamePage from './components/gamepage/gamepage'
 import Login from './components/login/login'
-import Drag from './components/field/drag'
+import Dnd from './components/field/dnd'
 
-// const draggables = [
-//   {
-//     id: "1",
-//   },
-//   {
-//     id: "2",
-//   },
-//   {
-//     id: "3",
-//   },
-// ];
 
-const App = () => {
-  return (
-    <Drag />
-  );
-};
+export class App extends React.Component {
+  render() {
+    return (
+      <div className="App" style={{ width: '100%', height: '100vh' }}>
 
-export default App;
+        <Dnd  />
+      </div>
+    )
+  }
+}
+
+export default App
