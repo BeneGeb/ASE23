@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import '../../styles/field/dnd.css';
+
 
 const DragAndDrop = ({ draggables }) => {
   const [droppable, setDroppable] = React.useState(false);
@@ -51,11 +53,14 @@ const DragAndDrop = ({ draggables }) => {
         </div>
       ))}
       <div
-        className="droppable"
+        className="game-board"
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       />
+      <div className='game-board::before'>
+
+      </div>
     </div>
   );
 };

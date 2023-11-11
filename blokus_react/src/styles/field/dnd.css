@@ -24,3 +24,16 @@
   background-size: 20px 20px;
   z-index: -1;
 }
+
+.draggable {
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  cursor: grab;
+}
+
+.droppable {
+  width: 200px;
+  height: 200px;
+  background-color: green;
+}
