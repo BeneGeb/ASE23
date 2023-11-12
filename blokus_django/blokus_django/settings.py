@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "corsheaders",
     "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -40,7 +41,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
-    "corsheaders",
     "chat",
 ]
 
@@ -72,6 +72,14 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',  # for testing
+]
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = "blokus_django.urls"
 
