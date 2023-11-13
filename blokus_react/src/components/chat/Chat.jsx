@@ -1,46 +1,29 @@
 import React from 'react'
 import '../../styles/Chat/Chat.css'
-
+import { useState } from 'react'
 import MessageWindow from './MessageWindow'
 import TextBar from './TextBar'
-import { registerOnMessageCallback, send} from '../../wsChat'
+import { startWebsocketChatConnection,registerOnMessageCallback} from '../../webSocketConnections/wsChatInterface'
 
-export default class Chat extends React.Component {
-    state = {
-        messages: [],
-        username: null
-    }
+startWebsocketChatConnection()
 
-  constructor (props) {
-    super(props)
-    console.log("constructor")
-    registerOnMessageCallback(this.onMessageReceived.bind(this))
-  }
+export default function Chat () {
+  const [allMessages, setAllMessages] = useState([]);
+  const [username, setUsername] = useState(null);
 
-  onMessageReceived (msg) {
+  registerOnMessageCallback(onMessageReceived)
+  
+  function onMessageReceived (msg) {
     msg = JSON.parse(msg)
-    console.log(msg["message"])
-    this.setState({
-      messages: this.state.messages.concat(msg["message"])
-    })
+    setAllMessages(allMessages.concat(msg["message"]))
   }
 
-  sendMessage (text) {
-    const message = {
-      message: text
-    }
-    send(JSON.stringify(message))
-  }
 
-  render () {
-    const sendMessage = this.sendMessage.bind(this)
-
-    return (
-      <div className='container'>
-        <div className='container-title'>Messages</div>
-        <MessageWindow messages={this.state.messages} username={""} />
-        <TextBar onSend={sendMessage} />
-      </div>
-    )
-  }
+  return (
+    <div className='container'>
+      <div className='container-title'>Messages</div>
+      <MessageWindow messages={allMessages} username={""} />
+      <TextBar />
+    </div>
+  )
 }
