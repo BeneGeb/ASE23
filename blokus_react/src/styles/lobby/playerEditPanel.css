@@ -1,0 +1,44 @@
+.parent-div-edit{
+    background-color: #d9d9d98a;
+    border-radius: 25px;
+    width: 25%;
+    height: 55%;
+    margin-top: 3%;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #b1b1b1cb;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    box-shadow: 3px 3px rgba(102, 100, 100, 0.226);
+}
+
+.headline-edit{
+    font-family: 'Julius Sans One', sans-serif;
+    margin: 3%;
+    font-size: 170%;
+    text-align: center;
+}
+
+.player-div{
+
+    align-self: center;
+}
+.player-name-edit{
+    background-color: #d4d4d4;
+    border-radius: 30px;
+    width: 70%;
+    height: 8%;
+    border-width: 0px;
+    font-family: 'Julius Sans One', sans-serif;
+    margin-bottom: 5%;
+    font-size: 100%;
+    align-self: center;
+    text-align: center;
+}
+
+.div-blockus-block{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

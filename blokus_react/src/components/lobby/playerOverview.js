@@ -9,18 +9,10 @@ function PlayerNameField({name}){
     );
 }
 
-function ReadyButton(){
+export function SingleBlocks({blockColor}){
     return(
-        <div className='ready-button-container'>
-            <h1 className='ready-button'>Ready</h1>
-        </div>
-    );
-}
-
-function SingleBlocks(){
-    return(
-        <div className='outer-blockus-block'>
-            <div className='inner-blockus-block'></div>
+        <div className='outer-blockus-block' style = {{backgroundColor: blockColor, border : "3px solid rgba(105,105,105, 0.3)" }}>
+            <div className='inner-blockus-block' style = {{ backgroundColor: blockColor, border: "3px solid rgba(105,105,105,0.3)" }}></div>
         </div>
     );
 }
@@ -29,7 +21,7 @@ const CheckBoxReady = () => {
     const [isChecked, setIsChecked] = useState(false);
   
     const handleCheckboxChange = () => {
-      setIsChecked(!isChecked);S
+      setIsChecked(!isChecked);
     };
 
     return (
@@ -43,29 +35,27 @@ const CheckBoxReady = () => {
     );
 }
 
-export default function PlayerOverviewField({playernamelist}){
+export default function PlayerOverviewField({playernamelist, colorlist}){
     return(
         <div className='parent-div'>
-            <div className='header-div'>
-                <h1>Player</h1>
-                <h1>Color</h1>
+            <div className='header'>
+                <h1 className='headline'>Player</h1>
+                <h1 className='headline'>Color</h1>
+                <div className='placeholder-div-header'></div>
             </div>
-            <div className='playername-div'>
-                {playernamelist.map((item, index) =>(   
-                    <PlayerNameField name={item}/>
+            <div className='content-div'>
+                {playernamelist.map((items, index) =>(   
+                    <div className='row-element'> 
+                        <PlayerNameField name={items}/>
+                        <SingleBlocks blockColor={colorlist[index]}/>
+                        <CheckBoxReady />
+                    </div>
                 ))}
             </div>
-            <div className='block-div'>
-                {playernamelist.map(() =>(   
-                    <SingleBlocks/>
-                ))}
+            <div className='button-div'>
+                <button type="button" className='ready-button'>Ready</button>
+                <div className='placeholder-div'></div>
             </div>
-            <div className='checkbox_div'>
-                {playernamelist.map(() => (
-                    <CheckBoxReady />
-                ))}   
-            </div>
-            <ReadyButton/>
         </div>
     );
 }
