@@ -3,7 +3,8 @@ import React from 'react'
 import Chat from './components/chat/Chat'
 import GamePage from './components/gamepage/gamepage'
 import Login from './components/login/login'
-import Dnd from './components/field/dnd'
+import Dnd from './components/field/dnd_pro'
+import Gamefield from './components/field/drag'
 
 
 export class App extends React.Component {
