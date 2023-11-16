@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../../styles/field/dnd.css';
 
 const Dnd = () => {
+  // user React
   // const [dragging, setDragging] = useState(false);
   // const [position, setPosition] = useState({ x: 0, y: 0 });
 
@@ -58,13 +59,14 @@ const Dnd = () => {
       }
     }, { offset: Number.NEGATIVE_INFINITY }).element
   }
+  
 
 
 
   return (
     <div className='app'>
       <div className='container'>
-        <p className='draggable' draggable='true'>Drag the box around!</p>
+        <p className='draggable' draggable='true'>Drag the box around! 1</p>
         <p className='draggable' draggable='true'>Drag the box around! 2</p>
       </div>
       <div className='container'>
