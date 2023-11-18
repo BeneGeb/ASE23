@@ -1,81 +1,58 @@
 import React, { useState } from 'react';
-import '../../styles/field/dnd.css';
 
-const Dnd = () => {
-  // user React
-  // const [dragging, setDragging] = useState(false);
-  // const [position, setPosition] = useState({ x: 0, y: 0 });
+const DragAndDrop = () => {
+  const [draggedItem, setDraggedItem] = useState(null);
+  const [items, setItems] = useState(['Item 1', 'Item 2', 'Item 3']);
 
-  // const handleDragStart = (e) => {
-  //   e.preventDefault();
-  //   setDragging(true);
-  // };
+  const handleDragStart = (e, index) => {
+    setDraggedItem({ index });
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', index);
+  };
 
-  // const handleDragEnd = (e) => {
-  //   e.preventDefault();
-  //   setDragging(false);
-  // };
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    const draggedOverItemIndex = index;
 
-  // const handleDragOver = (e) => {
-  //   e.preventDefault();
-  //   setPosition({ x: e.clientX, y: e.clientY });
-  // };
-  const draggables = document.querySelectorAll('.draggable')
-  const containers = document.querySelectorAll('.container')
-  
-  draggables.forEach(draggable => {
-    draggable.addEventListener('dragstart', () => {
-      draggable.classList.add('dragging')
-    })
-  
-    draggable.addEventListener('dragend', () => {
-      draggable.classList.remove('dragging')
-    })
-  })
-  
-  containers.forEach(container => {
-    container.addEventListener('dragover', e => {
-      e.preventDefault()
-      const afterElement = getDragAfterElement(container, e.clientY)
-      const draggable = document.querySelector('.dragging')
-      if (afterElement == null) {
-        container.appendChild(draggable)
-      } else {
-        container.insertBefore(draggable, afterElement)
-      }
-    })
-  })
-  
-  function getDragAfterElement(container, y) {
-    const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')]
-  
-    return draggableElements.reduce((closest, child) => {
-      const box = child.getBoundingClientRect()
-      const offset = y - box.top - box.height / 2
-      if (offset < 0 && offset > closest.offset) {
-        return { offset: offset, element: child }
-      } else {
-        return closest
-      }
-    }, { offset: Number.NEGATIVE_INFINITY }).element
-  }
-  
+    if (draggedItem && draggedOverItemIndex !== draggedItem.index) {
+      // Berechne die Position und gib sie aus
+      const newPosition = draggedOverItemIndex > draggedItem.index ? draggedOverItemIndex + 1 : draggedOverItemIndex;
+      console.log(`Item moved to position ${newPosition}`);
+    }
+  };
 
+  const handleDrop = (e, index) => {
+    e.preventDefault();
 
+    const draggedItemIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
+    const newItems = [...items];
+    newItems.splice(index, 0, newItems.splice(draggedItemIndex, 1)[0]);
+
+    setItems(newItems);
+    setDraggedItem(null);
+  };
 
   return (
-    <div className='app'>
-      <div className='container'>
-        <p className='draggable' draggable='true'>Drag the box around! 1</p>
-        <p className='draggable' draggable='true'>Drag the box around! 2</p>
-      </div>
-      <div className='container'>
-        <p className='draggable' draggable='true'>Drag the box around!3</p>
-        <p className='draggable' draggable='true'>Drag the box around! 4</p>
-      </div>
+    <div>
+      <h2>Drag and Drop Example</h2>
+      <ul>
+        {items.map((item, index) => (
+          <div className='square'
+            key={index}
+            draggable
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragOver={(e) => handleDragOver(e, index)}
+            onDrop={(e) => handleDrop(e, index)}
+            style={{
+              background: draggedItem && draggedItem.index === index ? '#efefef' : 'transparent',
+            }}
+          >
+            {item}
+          </div>
+        ))}
+      </ul>
     </div>
-   
   );
 };
 
-export default Dnd;
+export default DragAndDrop;

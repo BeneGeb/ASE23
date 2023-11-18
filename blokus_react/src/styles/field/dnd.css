@@ -22,7 +22,7 @@ body {
 .draggable.dragging{
   opacity: 0.5;
 }
-.app {
+.fieldApp {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,10 +36,16 @@ body {
   grid-template-columns: repeat(20, 1fr);
   gap: 1px; /* Abstand zwischen den Quadraten, um den Rand darzustellen */
 }
-.square {
+.empty-square {
   width: 100%;
   height: 100%;
   background-color: rgb(33, 73, 205);
+  border: 2px solid black;
+}
+.red-square {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(255, 0, 0);
   border: 2px solid black;
 }
 

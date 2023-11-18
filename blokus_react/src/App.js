@@ -4,7 +4,8 @@ import Chat from './components/chat/Chat'
 import GamePage from './components/gamepage/gamepage'
 import Login from './components/login/login'
 import Dnd from './components/field/dnd_pro'
-import Gamefield from './components/field/drag'
+import Gamefield from './components/field/Gamefield'
+
 
 
 export class App extends React.Component {
@@ -12,7 +13,7 @@ export class App extends React.Component {
     return (
       <div className="App" style={{ width: '100%', height: '100vh' }}>
 
-        <Dnd  />
+        <Gamefield/>
       </div>
     )
   }
