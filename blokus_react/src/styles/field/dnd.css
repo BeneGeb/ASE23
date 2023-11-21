@@ -1,10 +1,7 @@
-/* FILEPATH: /c:/Users/samue/OneDrive/Dokumente/Github/ASE23/blokus_react/src/styles/field/DnD/dnd.css */
+/* FILEPATH: /c:/Users/samue/OneDrive/Dokumente/Github/ASE23/blokus_react/src/styles/field/DnD/dnd.css
 
 /* Define the size and background color of the game board */
-body {
-  margin: 0;
-
-}
+/* 
 .container{
   background-color: #333;
   padding: 1rem;
@@ -21,35 +18,20 @@ body {
 }
 .draggable.dragging{
   opacity: 0.5;
-}
-.fieldApp {
+} */
+/* .fieldApp {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh; /* Die volle Höhe des Viewports */
-}
-.game-field {
-  width: 500px; /* Oder die gewünschte Breite des Spielfelds */
-  height: 500px; /* Oder die gewünschte Höhe des Spielfelds */
-  /* background-color: #d3d3d3; */
+
+.inner-game-field {
   display: grid;
-  grid-template-columns: repeat(20, 1fr);
-  gap: 1px; /* Abstand zwischen den Quadraten, um den Rand darzustellen */
-}
-.empty-square {
-  width: 100%;
-  height: 100%;
-  background-color: rgb(33, 73, 205);
-  border: 2px solid black;
-}
-.red-square {
-  width: 100%;
-  height: 100%;
-  background-color: rgb(255, 0, 0);
-  border: 2px solid black;
+  grid-template-columns: repeat(20, 4.5vh);
+  grid-template-rows: repeat(20, 4.5vh)
 }
 
-
+/* 
 .block-overview{
   background-color: #523838;
   border-radius: 15px;
@@ -58,8 +40,8 @@ body {
   height: 42%;
   display: flex;
   flex-direction: column;
-}
-
+} */
+/* 
 .blocki {
   width: 20px;
   height: 20px;
@@ -86,4 +68,4 @@ body {
   width: 200px;
   height: 200px;
   background-color: rgb(1, 125, 1);
-}
+} */

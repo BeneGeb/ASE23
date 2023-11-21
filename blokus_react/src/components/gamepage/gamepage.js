@@ -5,20 +5,24 @@ import { generateBlocks } from "../../Helper/BlockGenerator";
 import { startWebsocketGameConnection, sendPlacedBlock } from "../../webSocketConnections/webSocketGameInterface";
 import Gamefield from "../field/Gamefield";
 
-
 startWebsocketGameConnection();
 
 export default function GamePage(){
     const [allBlocks, setAllBlocks] = useState(generateBlocks());
-  
+    console.log(allBlocks)
     return (
         <div class="gamepage">
-            <Gamefield/>
-            {allBlocks.map((block, index) => (
-                <BlockOverview key={index} allBlocks={block}/>
-            )
-            )}
-            <button onClick={() => sendPlacedBlock("green")} > </button>
+            <div className="left-overviews">
+                 <BlockOverview key={0} allBlocks={allBlocks[0]}/>
+                 <BlockOverview key ={1}allBlocks={allBlocks[1]}/>
+            </div>
+            <div className="game-field">
+                <Gamefield/>
+            </div>
+            <div className="right-overviews">
+                 <BlockOverview key={2} allBlocks={allBlocks[2]}/>
+                 <BlockOverview key={3} allBlocks={allBlocks[3]}/>
+            </div>
         </div>
     );
 }

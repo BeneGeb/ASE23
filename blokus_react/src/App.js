@@ -13,7 +13,7 @@ export class App extends React.Component {
     return (
       <div className="App" style={{ width: '100%', height: '100vh' }}>
 
-        <Gamefield/>
+        <GamePage/>
       </div>
     )
   }
