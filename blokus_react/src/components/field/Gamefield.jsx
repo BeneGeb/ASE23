@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import '../../styles/field/dnd.css';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { DndContext, closestCenter } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 const Square = ({index,handleDropSquare,color}) => {
 
   const handleDragOver = (e) => {
@@ -12,13 +9,6 @@ const Square = ({index,handleDropSquare,color}) => {
   const handleDrop = (e) => {
     e.preventDefault();
     handleDropSquare();
-
-    // const draggedItemIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
-    // const newItems = [...items];
-    // newItems.splice(index, 0, newItems.splice(draggedItemIndex, 1)[0]);
-
-    // setItems(newItems);
-    // setDraggedItem(null);
   };
   return (
     <div
@@ -56,8 +46,6 @@ const Gamefield = () => {
   
   const handleDragStart = (e, index) => {
     setDraggedItem({ index });
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', index);
   };
   return(
    

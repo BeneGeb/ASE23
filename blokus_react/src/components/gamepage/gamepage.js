@@ -3,6 +3,7 @@ import '../../styles/Gamepage/gamepage.css'
 import { useState } from 'react';
 import { generateBlocks } from "../../Helper/BlockGenerator";
 import { startWebsocketGameConnection, sendPlacedBlock } from "../../webSocketConnections/webSocketGameInterface";
+import Gamefield from "../field/Gamefield";
 
 
 startWebsocketGameConnection();
@@ -12,6 +13,7 @@ export default function GamePage(){
   
     return (
         <div class="gamepage">
+            <Gamefield/>
             {allBlocks.map((block, index) => (
                 <BlockOverview key={index} allBlocks={block}/>
             )
