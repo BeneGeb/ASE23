@@ -22,9 +22,7 @@ export default function Multiblock({ selecteBlock }) {
               {row.map((block) => {
                 return block ? (
                   <SingleSquare color={color} droppable={false} />
-                ) : (
-                  <EmptySquare />
-                );
+                ) : null;
               })}
             </div>
           );
