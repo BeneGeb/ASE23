@@ -25,7 +25,7 @@ const GameField = () => {
         <SingleSquare
           droppable={true}
           key={index}
-          index={index}
+          fieldIndex={index}
           handleDropSquare={handleDropSquare}
           color={value}
         />

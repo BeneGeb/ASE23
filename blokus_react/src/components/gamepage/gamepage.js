@@ -9,7 +9,7 @@ startWebsocketGameConnection();
 
 export default function GamePage(){
     const [allBlocks, setAllBlocks] = useState(generateBlocks());
-    console.log(allBlocks)
+
     return (
         <div class="gamepage">
             <div className="left-overviews">

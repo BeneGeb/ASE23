@@ -2,22 +2,18 @@ export default function SingleSquare({
   color,
   droppable,
   handleDropSquare,
-  index,
+  fieldIndex,
+  onMouseDownSquare,
 }) {
   const handleDragOver = (e) => {
     e.preventDefault();
   };
-  //Alle Blöcke die dazu gehörnen
-  //welcher Block von allen bist du
+
   const handleDrop = (e) => {
     e.preventDefault();
     const draggedItemColor = e.dataTransfer.getData("color");
-    handleDropSquare(index, draggedItemColor);
-    console.log(index);
-  };
-
-  const handleDragStart = (e) => {
-    e.dataTransfer.setData("color", color);
+    handleDropSquare(fieldIndex, draggedItemColor);
+    console.log(fieldIndex);
   };
 
   if (droppable) {
@@ -34,7 +30,7 @@ export default function SingleSquare({
     return (
       <div
         className={color ? "single-block " + color + "-block" : "empty-square"}
-        onDragStart={(e) => handleDragStart(e)}
+        onMouseDown={onMouseDownSquare}
       >
         <div className={"inner-" + color + "-block"}></div>
       </div>

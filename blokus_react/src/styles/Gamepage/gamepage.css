@@ -13,6 +13,7 @@
     justify-content: center;
 }
 
+
 .left-overviews{
     width: 35%;
     height: 100%;
@@ -120,6 +121,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.fill-square{
+    width: 4vh;
+    height: 4vh
 }
 
 
