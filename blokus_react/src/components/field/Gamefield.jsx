@@ -8,27 +8,17 @@ import {
 } from "@dnd-kit/sortable";
 import SingleSquare from "../gamepage/SingleSquare";
 
-const GameField = () => {
-  const [squaresArray, setsquaresArray] = useState(
-    Array.from({ length: 400 }, (v, i) => null)
-  );
-
-  function handleDropSquare(index, color) {
-    let newSquaresArray = [...squaresArray];
-    newSquaresArray[index] = color;
-    setsquaresArray(newSquaresArray);
-  }
+const GameField = ({ squaresArray }) => {
+  // function handleDropSquare(index, color) {
+  //   let newSquaresArray = [...squaresArray];
+  //   newSquaresArray[index] = color;
+  //   setsquaresArray(newSquaresArray);
+  // }
 
   return (
     <div className="inner-game-field">
       {squaresArray.map((value, index) => (
-        <SingleSquare
-          droppable={true}
-          key={index}
-          fieldIndex={index}
-          handleDropSquare={handleDropSquare}
-          color={value}
-        />
+        <SingleSquare key={index} fieldIndex={index} color={value} />
       ))}
     </div>
   );

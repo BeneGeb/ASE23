@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "chat",
+    "gameinterface",
 ]
 
 ASGI_APPLICATION = "blokus_django.asgi.application"

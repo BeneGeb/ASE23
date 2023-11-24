@@ -21,12 +21,15 @@ export const startWebsocketGameConnection = () => {
 }
 
 
-export const registerOnMessageCallback = (callBackFunction) => {
+export const registerOnGameMessageCallback = (callBackFunction) => {
   onMessageCallback = callBackFunction
 }
 
-export const sendPlacedBlock = (team) => {
+export const sendPlacedBlock = (indexList, color) => {
     wsSendMessage(JSON.stringify({
-        'team': team ,
+        'type': 'action',
+        'action': 'placeField' ,
+        'indexList': indexList,
+        'color': color
     }))
 }
