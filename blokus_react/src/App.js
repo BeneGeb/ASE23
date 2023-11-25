@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import Chat from './components/chat/Chat';
+
 import GamePage from './components/gamepage/gamepage';
 import Login from './components/login/login';
 import Register from './components/register/register';

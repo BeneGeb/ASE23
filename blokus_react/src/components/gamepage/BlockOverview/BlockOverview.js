@@ -34,7 +34,7 @@ export default function BlockOverview({allBlocks, currPlayer, color}){
     }
 
     return (
-        <div class="block-overview">
+        <div class={currPlayer? "block-overview " + color: "block-overview"}>
             <BlockSelector currPlayer={currPlayer} selectedBlocks={filteredBlocks[selectedBlockIndex]} onSwitchBlockClick={onSwitchBlockClick} color={color}/>
             <BlockFilter onFilterChange={onFilterChange} selectedFilter={selectedFilter} />
         </div>

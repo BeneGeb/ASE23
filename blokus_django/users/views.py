@@ -8,12 +8,12 @@ import jwt, datetime
 
 JWT_SECRET = "r3FIem8T67NVumSmD7IrdrC042YTrPAugLZJsucI80GLH0mHWkHmahHZKhc3jON_cu5aHMaIRM3u04svAv11QQ"
 class RegisterView(APIView):
-    def post(self, request):
+    def post(self, request):       
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-
+ 
 
 class LoginView(APIView):
     def post(self, request):
