@@ -1,0 +1,71 @@
+/* FILEPATH: /c:/Users/samue/OneDrive/Dokumente/Github/ASE23/blokus_react/src/styles/field/DnD/dnd.css
+
+/* Define the size and background color of the game board */
+/* 
+.container{
+  background-color: #333;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+.draggable{
+  padding: 1rem;
+  background-color: white;
+  border: 2px solid black;
+  cursor: move;
+}
+.draggable:hover{
+  background-color: #aaaaaa;
+}
+.draggable.dragging{
+  opacity: 0.5;
+} */
+/* .fieldApp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Die volle Höhe des Viewports */
+
+.inner-game-field {
+  display: grid;
+  grid-template-columns: repeat(20, 4.5vh);
+  grid-template-rows: repeat(20, 4.5vh)
+}
+
+/* 
+.block-overview{
+  background-color: #523838;
+  border-radius: 15px;
+  width: 40%;
+  margin: 5.5%;
+  height: 42%;
+  display: flex;
+  flex-direction: column;
+} 
+ 
+.blocki {
+  width: 20px;
+  height: 20px;
+  background-color: rgb(128, 249, 6);
+  border: 2px solid white;
+  /* cursor: grab; */
+
+/* dnd.css */
+.custom-hover:hover .blocki {
+  cursor: grab;
+}
+
+.custom-hover:active .blocki {
+  cursor: grabbing;
+}
+
+
+.blocki.dragging {
+  background-color: rgba(128, 249, 6, 0.1); /* Halbtransparenter roter Hintergrund */
+}
+
+
+.droppable {
+  width: 200px;
+  height: 200px;
+  background-color: rgb(1, 125, 1);
+} 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../styles/field/dnd.css';
+//import '../../styles/field/dnd.css';
 
 const Dnd = () => {
   const [dragging, setDragging] = useState(false);

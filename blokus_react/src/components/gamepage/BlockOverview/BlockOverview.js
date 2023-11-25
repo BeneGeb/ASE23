@@ -4,17 +4,17 @@ import BlockSelector from './BlockSelector';
 import { useState } from 'react';
 
 
-export default function BlockOverview({allBlocks}){
+export default function BlockOverview({allBlocks, currPlayer, color}){
     const [selectedFilter, setSelectedFilter] = useState(1);
     const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
 
+    
     const filteredBlocks = allBlocks.filter(block => block.getSize() === selectedFilter);
 
     function onFilterChange(filterValue){
         setSelectedFilter(filterValue);
         setSelectedBlockIndex(0);
     }
-
 
     function onSwitchBlockClick(direction){
         if(direction === "left"){
@@ -35,7 +35,7 @@ export default function BlockOverview({allBlocks}){
 
     return (
         <div class="block-overview">
-            <BlockSelector selectedBlocks={filteredBlocks[selectedBlockIndex]} onSwitchBlockClick={onSwitchBlockClick}/>
+            <BlockSelector currPlayer={currPlayer} selectedBlocks={filteredBlocks[selectedBlockIndex]} onSwitchBlockClick={onSwitchBlockClick} color={color}/>
             <BlockFilter onFilterChange={onFilterChange} selectedFilter={selectedFilter} />
         </div>
     );

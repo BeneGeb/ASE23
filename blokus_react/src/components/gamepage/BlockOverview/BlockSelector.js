@@ -9,19 +9,21 @@ function SwitchBlockButton({direction, onClick}){
 }
 
 
-function BlockView({selectedBlock}){
+function BlockView({selectedBlock, currPlayer, color}){
+
     return (
-        <div class="block-view">
+        <div class={currPlayer? "block-view " + color: "block-view"} >
             <Multiblock selecteBlock={selectedBlock}/>
         </div>
     );
 }
 
-export default function BlockSelector({selectedBlocks, onSwitchBlockClick}){
+export default function BlockSelector({selectedBlocks, onSwitchBlockClick, currPlayer, color}){
+    
     return (
         <div class="block-selector">
             <SwitchBlockButton direction="left" onClick={() => onSwitchBlockClick("left")}/>
-             <BlockView selectedBlock={selectedBlocks} />
+             <BlockView selectedBlock={selectedBlocks} currPlayer={currPlayer} color={color}/>
             <SwitchBlockButton direction="right" onClick={() => onSwitchBlockClick("right")}/>
         </div>
     );
