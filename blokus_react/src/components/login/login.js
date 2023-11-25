@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import '../../styles/login/login.css'
+import '../../styles/login/login.css';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    username: '',
-    password: '',
-    sessionId: ''
+    email: '',
+    password: ''
   });
 
   const handleChange = (e) => {
@@ -16,10 +19,18 @@ function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-	//blabla
-    console.log('Anmeldedaten:', credentials);
+    try {
+      const response = await axios.post('http://localhost:8000/api/login', {
+        email: credentials.email,
+        password: credentials.password
+      });
+      console.log('Login successful:', response.data);
+      navigate('/gamepage');
+    } catch (error) {
+      console.error('Login error:', error.response ? error.response.data : error.message);
+    }
   };
 
   return (
@@ -28,16 +39,17 @@ function Login() {
         <h2>LOGIN</h2>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <input className="login-input" type="text" id="username" name="username" placeholder="USERNAME" value={credentials.username} onChange={handleChange} required />
+            <input className="login-input" type="email" id="email" name="email" placeholder="EMAIL" value={credentials.email} onChange={handleChange} required />
           </div>
           <div className="input-group">
-            <input  className="login-input" type="password" id="password" name="password" placeholder="PASSWORD" value={credentials.password} onChange={handleChange} required />
+            <input className="login-input" type="password" id="password" name="password" placeholder="PASSWORD" value={credentials.password} onChange={handleChange} required />
           </div>
-          <div className="input-group">
-            <input  className="login-input" type="text" id="sessionId" name="sessionId" placeholder="SESSIONID" value={credentials.sessionId} onChange={handleChange} required />
+          <div className="submit-button-container">
+                <button className="submit-button" type="submit">LOGIN</button>
           </div>
-          <button className="submit-button" type="submit">START</button>
         </form>
+        <br /><br />
+        <Link to="/register">Noch nicht registriert?</Link>
       </div>
     </div>
   );
