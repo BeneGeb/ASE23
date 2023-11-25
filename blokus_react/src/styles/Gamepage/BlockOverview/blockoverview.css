@@ -106,3 +106,16 @@
     justify-content: center;
     align-items: center;
 }
+
+.block-view.red{
+    border-color: #FF0000;
+}
+.block-view.green{
+    border-color: #00FF00;
+}
+.block-view.yellow {
+    border-color: #FFFF00;
+}
+.block-view.blue {
+    border-color: #0000FF;
+}
