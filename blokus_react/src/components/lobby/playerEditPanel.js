@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {SingleBlocks} from './playerOverview.js';
 import '../../styles/lobby/playerEditPanel.css'
 
@@ -9,13 +9,62 @@ function NameInput({name}){
     );
 }
 
-function ColorPicker(){
-    return(
-        <div className='color-picker'> 
+const CheckBoxColor = () => {
+  const [selectedOption, setSelectedOption] = useState('');
 
-        </div>    
-     );
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  return (
+    <div className='color-box'>
+      <div className='div-radio-red'>
+        <input
+          type="radio"
+          value = "#FF0000"
+          checked={selectedOption === "#FF0000"}
+          onChange={handleOptionChange}
+        />
+      </div>
+      <div className='div-radio-blue'>
+        <input
+          type="radio"
+          value = "#0000FF" 
+          checked={selectedOption === "#0000FF"}
+          onChange={handleOptionChange}
+        />
+      </div>
+      <div className='div-radio-green'>
+        <input
+          type="radio"
+          value = "#00FF00" 
+          checked={selectedOption === "#00FF00"}
+          onChange={handleOptionChange}
+        />
+      </div>
+      <div className='div-radio-yellow'>
+        <input
+          type="radio"
+          value = "#FFFF00" 
+          checked={selectedOption === "#FFFF00"}
+          onChange={handleOptionChange}
+        />
+      </div>
+    </div>
+  );
 }
+
+const ColorPicker = (defaultcolor) => {
+    const [selectedColor, setSelectedColor] = useState(defaultcolor);
+  
+    const handleColorChange = (color) => {
+      setSelectedColor(color);
+    };
+
+    return (
+        <CheckBoxColor/>
+    );
+};
 
 export default function PlayerEditField({playername, playercolor}){
     return(
@@ -23,9 +72,11 @@ export default function PlayerEditField({playername, playercolor}){
            <h1 className='headline-edit'> Personal Settings</h1>
            <NameInput name={playername}/>
            <div className='div-blockus-block'>
-            <   SingleBlocks blockColor={playercolor}/>
+                <ColorPicker defaultcolor={playercolor}/>
            </div>
-           <ColorPicker/>
+           <div className='button-div-edit'>
+                <button type="button" className='confirmation-button'>set</button>
+            </div>
         </div>
     );
 }

@@ -1,12 +1,12 @@
 .parent-div-edit{
-    background-color: #d9d9d98a;
+    background-color: #d9d9d9d0;
     border-radius: 25px;
     width: 25%;
-    height: 55%;
-    margin-top: 3%;
+    height: 100%;
+    margin-left:3%;
     border-style: solid;
-    border-width: 2px;
-    border-color: #b1b1b1cb;
+    border-width: 3px;
+    border-color: #b1b1b1;
     display: flex;
     justify-content: space-evenly;
     flex-direction: column;
@@ -23,6 +23,7 @@
 .player-div{
 
     align-self: center;
+
 }
 .player-name-edit{
     background-color: #d4d4d4;
@@ -39,6 +40,128 @@
 
 .div-blockus-block{
     display: flex;
+    width: 100%;
+    height: 20%;
     justify-content: center;
     align-items: center;
+}
+
+.confirmation-button{
+    background-color: rgb(90, 90, 212);
+    border-radius: 100px;
+    width: 15%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Julius Sans One', sans-serif;
+    margin-bottom: 5%;
+    font-size: 110%
+}
+
+.confirmation-button:hover{
+    background-color: rgb(134, 134, 206);
+    width: 16%;
+    height: 61%;
+}
+
+.button-div-edit{
+    height: 15%;
+    margin-top: 3%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.color-picker-div {
+    width: 100%;
+    height: 50%;
+    border-radius: 2px;
+    border-width: 2px;
+    border-color: #b6b2b2;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.color-box{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type="color"] {
+    appearance: none;
+    -moz-appearance: none; 
+    -webkit-appearance: none;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    width: 5em;
+    height: 5em;
+    border-radius: 2px;
+    padding: 10px;
+    box-sizing: border-box;
+    }
+  ::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  
+  ::-webkit-color-swatch{
+    border-width: 2px;
+    border-radius: 2px;
+    border-color: #b6b2b2;
+}
+
+input[type ="radio"]{
+    height: 2em; 
+    width: 2em;
+    margin: 6%;
+    accent-color: black;
+}
+
+.div-radio-red{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:2%;
+    height: 3em;
+    width: 3em;
+    border-radius: 50%;
+    background-color: #FF0000;
+}
+
+.div-radio-blue{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:2%;
+    height: 3em;
+    width: 3em;
+    border-radius: 50%;
+    background-color: #0000FF;
+}
+
+.div-radio-green{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:2%;
+    height: 3em;
+    width: 3em;
+    border-radius: 50%;
+    background-color: #00FF00;
+}
+
+.div-radio-yellow{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:2%;
+    height: 3em;
+    width: 3em;
+    border-radius: 50%;
+    background-color: #FFFF00;
 }
