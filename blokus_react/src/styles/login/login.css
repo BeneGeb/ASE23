@@ -17,10 +17,10 @@
     top: 50%;
     transform: translateY(-50%);
     width: 300px;
-    height: 400px; /* Erhöhte Höhe */
+    height: 400px;
     padding: 20px 40px;
     border-radius: 10px;
-    background-color: rgba(242, 242, 242, 0.9); /* Hellgrau & Transparenz */
+    background-color: rgba(242, 242, 242, 0.9);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-image: none;
 }
@@ -45,7 +45,12 @@ h2 {
     border-radius: 5px;
     outline: none;
     font-size: 16px;
-    background-color: #f2f2f2; /* hell Grau */
+    background-color: #f2f2f2;
+}
+
+.submit-button-container {
+    display: flex;
+    justify-content: center;
 }
 
 .submit-button {

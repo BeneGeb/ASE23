@@ -1,11 +1,30 @@
 .block-overview{
     background-color: #D9D9D9;
     border-radius: 15px;
-    width: 18%;
+    width: 80%;
     margin: 2.5%;
-    height: 42%;
+    height: 40%;
     display: flex;
     flex-direction: column;
+    border-color: #D9D9D9;
+    border-style: solid;
+    border-width: 6px;
+}
+
+.block-overview.red {
+    border-color: #FF0000;
+}
+
+.block-overview.green {
+    border-color: #00FF00;
+}
+
+.block-overview.yellow {
+    border-color: #FFFF00;
+}
+
+.block-overview.blue {
+    border-color: #0000FF;
 }
 
 .block-filter{
@@ -105,4 +124,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.block-view.red{
+    border-color: #FF0000;
+}
+.block-view.green{
+    border-color: #00FF00;
+}
+.block-view.yellow {
+    border-color: #FFFF00;
+}
+.block-view.blue {
+    border-color: #0000FF;
 }

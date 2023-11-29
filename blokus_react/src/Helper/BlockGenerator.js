@@ -1,10 +1,10 @@
 import { Block } from "../Model/Block";
 
 export function generateBlocks(){
-    let result = []
+    let result = new Map();
 
-    const colors = ["red", "blue", "green", "yellow"]
-    const allTemplates = getArrayOfBlocks()
+    const colors = ["red", "blue", "green", "yellow"];
+    const allTemplates = getArrayOfBlocks();
 
 
     colors.forEach(color => {
@@ -12,7 +12,7 @@ export function generateBlocks(){
       allTemplates.forEach(template => {
         colorBlocks.push(new Block(template, color))
       })
-      result.push(colorBlocks)
+      result.set(color, colorBlocks)
     });
     return result;
 }
