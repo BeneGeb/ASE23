@@ -36,10 +36,14 @@ export default class Chat extends React.Component {
     const sendMessage = this.sendMessage.bind(this)
 
     return (
-      <div className='container'>
-        <div className='container-title'>Messages</div>
-        <MessageWindow messages={this.state.messages} username={""} />
-        <TextBar onSend={sendMessage} />
+      <div className='background-containter'>
+        <div className='container'>
+          <div className='chat-header'>
+            <h1 className='container-title'>Messages</h1>
+            <TextBar onSend={sendMessage} />
+          </div>
+          <MessageWindow messages={this.state.messages} username={""} />
+        </div>
       </div>
     )
   }
