@@ -1,12 +1,11 @@
 .parent-div{
-    background-color: #d9d9d98a;
+    background-color: #d9d9d9d0;
     border-radius: 25px;
     width: 30%;
-    height: 55%;
-    margin-top: 3%;
+    height: 100%;
     border-style: solid;
-    border-width: 2px;
-    border-color: #b1b1b1cb;
+    border-width: 3px;
+    border-color: #b1b1b1;    
     display: flex;
     justify-content: space-evenly;
     flex-direction: column;
@@ -99,6 +98,12 @@
     font-family: 'Julius Sans One', sans-serif;
     margin-bottom: 5%;
     font-size: 110%
+}
+
+.ready-button:hover{
+    background-color: rgb(114, 114, 199);
+    width: 26%;
+    height: 61%;
 }
 
 .outer-blockus-block{
