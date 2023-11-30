@@ -1,14 +1,32 @@
 .textbar {
     display: flex;
-    align-items: stretch;
+    width: 100%;
+    margin-left: 3%;
 }
 
 .textbar-input {
     flex-grow: 1;
     box-sizing: border-box;
+    height: 85%;
+    margin-right: 3%;
+    border-radius: 30px;
+    border-width: 0px;
+    font-family: 'Julius Sans One', sans-serif;
+    font-size: 100%;
+    align-self: center;
 }
 
 .textbar-send {
-    border-radius: 0;
-    border: none;
+    background-color: rgb(90, 90, 212);
+    border-radius: 30px;
+    width: 15%;
+    height: 83%;
+    align-self: center;
+    font-family: 'Julius Sans One', sans-serif;
+    font-size: 110%
+}
+
+.textbar-send:hover{
+    background-color: rgb(134, 134, 206);
+    height: 87%;
 }
