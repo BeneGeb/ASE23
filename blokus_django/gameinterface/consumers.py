@@ -56,16 +56,16 @@ class GameConsumer(WebsocketConsumer):
             #Initialize all Square Fields
             empty_field = [] 
             for i in range(400):
-                if i ==150:
-                    square = Square.objects.create(square_id=i, game_id=game, value="red")
-                elif i == 250:
-                    square = Square.objects.create(square_id=i, game_id=game, value="green")
-                elif i == 350:
-                    square = Square.objects.create(square_id=i, game_id=game, value="yellow")
-                elif i == 50:
-                    square = Square.objects.create(square_id=i, game_id=game, value="blue")
-                else:
-                    square = Square.objects.create(square_id=i, game_id=game, value="")
+                # if i ==150:
+                #     square = Square.objects.create(square_id=i, game_id=game, value="red")
+                # elif i == 250:
+                #     square = Square.objects.create(square_id=i, game_id=game, value="green")
+                # elif i == 350:
+                #     square = Square.objects.create(square_id=i, game_id=game, value="yellow")
+                # elif i == 50:
+                #     square = Square.objects.create(square_id=i, game_id=game, value="blue")
+                # else:
+                square = Square.objects.create(square_id=i, game_id=game, value="")
                 empty_field.append(square.value)
         
 

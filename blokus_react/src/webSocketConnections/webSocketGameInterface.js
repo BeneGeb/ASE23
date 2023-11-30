@@ -2,7 +2,11 @@ let onMessageCallback;
 let wsSendMessage;
 
 export const startWebsocketGameConnection = () => {
-  let url = "ws://127.0.0.1:8000/ws/game/";
+  const windowUrl = window.location.hostname;
+
+  //const ipAddress = windowUrl.split("//")[1].split(":")[0];
+  let url = "ws://" + windowUrl + ":8000/ws/game/";
+  //let url = "ws://127.0.0.1:8000/ws/game/";
   const ws = new window.WebSocket(url) || {};
 
   ws.onopen = () => {

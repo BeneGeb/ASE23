@@ -15,6 +15,10 @@ import {
 
 startWebsocketGameConnection();
 
+//TODO: Anfangs die Blöcke in ecke platzieren
+//TODO: wenn block an seite ist, werden auch auf der anderen Seite die Blöcke markiert
+//TODO: Block aus Liste entfernen wenn platziert wurde
+
 export default function GamePage() {
   const [allBlocks, setAllBlocks] = useState(generateBlocks());
   const [currPlayer, setCurrPlayer] = useState(0);
@@ -70,7 +74,6 @@ export default function GamePage() {
   }
 
   function evalMarkedFields(field) {
-    //TODO: Abfrage ob der Spieler auch dran ist
     const currPlayerData = playerData.find(
       (player) => player.player_id === currPlayer
     );
@@ -80,13 +83,31 @@ export default function GamePage() {
     const allFields = findFieldsOfColor(color, field);
     const allDiagonalFields = evalDiagonalFields(allFields);
     let markedFields = [];
-    allDiagonalFields.forEach((index) => {
-      const newFields = selectedBlock.evalAllFixedIndices(index);
 
+    if (allDiagonalFields.length !== 0) {
+      allDiagonalFields.forEach((index) => {
+        const newFields = selectedBlock.evalAllFixedIndices(index);
+
+        newFields.forEach((possibility) => {
+          if (checkPossible(possibility, color)) markedFields.push(possibility);
+        });
+      });
+    } else {
+      const playerIndex = playerData.findIndex(
+        (player) => player.player_id === currPlayer
+      );
+      let startIndex;
+
+      if (playerIndex === 0) startIndex = 0;
+      else if (playerIndex === 1) startIndex = 380;
+      else if (playerIndex === 2) startIndex = 19;
+      else if (playerIndex === 3) startIndex = 399;
+
+      const newFields = selectedBlock.evalAllFixedIndices(startIndex);
       newFields.forEach((possibility) => {
         if (checkPossible(possibility, color)) markedFields.push(possibility);
       });
-    });
+    }
     setMarkedFields(markedFields);
   }
 
@@ -124,6 +145,7 @@ export default function GamePage() {
   }
 
   function onSquareClick(index) {
+    console.log(index);
     if (isIndexInArrayOfArray(index, markedFields)) {
       const placedBlock = findIndexInArrayOfArray(index, markedFields);
 
