@@ -28,4 +28,57 @@ export class Block {
 
     return transposedArray;
   }
+
+  et() {
+    let allIndexList = [];
+
+    this.template.forEach((row, y) => {
+      row.forEach((value, x) => {
+        if (value === true) {
+          allIndexList.push(this.evalRelativPositions(x, y));
+        }
+      });
+    });
+    return allIndexList;
+  }
+
+  evalAllRelativePositions() {
+    let allIndexList = [];
+
+    this.template.forEach((row, y) => {
+      row.forEach((value, x) => {
+        if (value === true) {
+          allIndexList.push(this.evalRelativPositions(x, y));
+        }
+      });
+    });
+    return allIndexList;
+  }
+
+  evalRelativPositions(givenX, givenY) {
+    let indexList = [];
+    this.template.forEach((row, y) => {
+      row.forEach((value, x) => {
+        if (value === true) {
+          let index = x - givenX;
+          index = index + (y - givenY) * 20;
+          indexList.push(index);
+        }
+      });
+    });
+    return indexList;
+  }
+
+  evalAllFixedIndices(index) {
+    let allFixesIndices = [];
+    this.evalAllRelativePositions().forEach((indexList) => {
+      let fixedIndices = [];
+      indexList.forEach((relativIndex) => {
+        fixedIndices.push(relativIndex + index);
+      });
+      allFixesIndices.push(fixedIndices);
+    });
+
+    return allFixesIndices;
+  }
 }

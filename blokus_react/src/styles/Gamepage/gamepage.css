@@ -48,7 +48,7 @@
     align-items: center;
 }
 
-.inner-red-block {
+.red-block-inner {
     width: 2.5vh;
     height: 2.5vh;
     background-color: #FF0000;
@@ -67,7 +67,7 @@
     align-items: center;
 }
 
-.inner-green-block {
+.green-block-inner {
     width: 2.5vh;
     height: 2.5vh;
     background-color: #00FF00;
@@ -86,7 +86,7 @@
     align-items: center;
 }
 
-.inner-yellow-block {
+.yellow-block-inner {
     width: 2.5vh;
     height: 2.5vh;
     background-color: #FFFF00;
@@ -105,7 +105,7 @@
     align-items: center;
 }
 
-.inner-blue-block {
+.blue-block-inner {
     width: 2.5vh;
     height: 2.5vh;
     background-color: #0000FF;
@@ -122,9 +122,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border-color: black;
-    border-style: solid;
-    border-width: 3px;
+   
 }
 
 .empty-square {
@@ -141,6 +139,12 @@
     width: 4vh;
     height: 4vh
 }
+
+.placed{
+    opacity: 0.7;
+}
+
+
 
 
 
