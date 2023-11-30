@@ -48,7 +48,7 @@ export default function GamePage() {
     const currPlayer = json["currPlayer"];
     setCurrPlayer(currPlayer);
     setsquaresArray(field);
-
+    setPlacedBlock([]);
     evalMarkedFields(field);
   }
 
