@@ -1,35 +1,41 @@
-let onMessageCallback
-let wsSendMessage
+let onMessageCallback;
+let wsSendMessage;
 
 export const startWebsocketGameConnection = () => {
-    let url = "ws://127.0.0.1:8000/ws/game/"
-    const ws = new window.WebSocket(url) || {}
-   
-    ws.onopen = () => {
-        console.log('opened Websocket Game connection')
-    }
+  const windowUrl = window.location.hostname;
 
-    ws.onclose = (e) => {
-        console.log('close Websocket Game connection: ', e.code, e.reason)
-    }
+  //const ipAddress = windowUrl.split("//")[1].split(":")[0];
+  let url = "ws://" + windowUrl + ":8000/ws/game/";
+  //let url = "ws://127.0.0.1:8000/ws/game/";
+  const ws = new window.WebSocket(url) || {};
 
-    ws.onmessage = (e) => {
-        onMessageCallback(e.data)
-    }
+  ws.onopen = () => {
+    console.log("opened Websocket Game connection");
+  };
 
-    wsSendMessage = ws.send.bind(ws)
-}
+  ws.onclose = (e) => {
+    console.log("close Websocket Game connection: ", e.code, e.reason);
+  };
 
+  ws.onmessage = (e) => {
+    onMessageCallback(e.data);
+  };
+
+  wsSendMessage = ws.send.bind(ws);
+};
 
 export const registerOnGameMessageCallback = (callBackFunction) => {
-  onMessageCallback = callBackFunction
-}
+  onMessageCallback = callBackFunction;
+};
 
 export const sendPlacedBlock = (indexList, color) => {
-    wsSendMessage(JSON.stringify({
-        'type': 'action',
-        'action': 'placeField' ,
-        'indexList': indexList,
-        'color': color
-    }))
-}
+  console.log(indexList);
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "placeField",
+      indexList: indexList,
+      color: color,
+    })
+  );
+};
