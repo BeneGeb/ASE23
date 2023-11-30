@@ -20,10 +20,14 @@ export default function Chat () {
 
 
   return (
-    <div className='container'>
-      <div className='container-title'>Messages</div>
-      <MessageWindow messages={allMessages} username={""} />
-      <TextBar />
-    </div>
+      <div className='background-containter'>
+        <div className='container'>
+          <div className='chat-header'>
+            <h1 className='container-title'>Messages</h1>
+            <TextBar/>
+          </div>
+          <MessageWindow messages={allMessages} username={""} />
+        </div>
+      </div>
   )
 }
