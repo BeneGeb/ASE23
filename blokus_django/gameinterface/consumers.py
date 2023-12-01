@@ -14,6 +14,9 @@ class GameConsumer(WebsocketConsumer):
         )
         self.accept()
 
+
+
+
     def disconnect(self, close_code):
         async_to_sync(
             self.channel_layer.group_discard(
@@ -56,15 +59,6 @@ class GameConsumer(WebsocketConsumer):
             #Initialize all Square Fields
             empty_field = [] 
             for i in range(400):
-                # if i ==150:
-                #     square = Square.objects.create(square_id=i, game_id=game, value="red")
-                # elif i == 250:
-                #     square = Square.objects.create(square_id=i, game_id=game, value="green")
-                # elif i == 350:
-                #     square = Square.objects.create(square_id=i, game_id=game, value="yellow")
-                # elif i == 50:
-                #     square = Square.objects.create(square_id=i, game_id=game, value="blue")
-                # else:
                 square = Square.objects.create(square_id=i, game_id=game, value="")
                 empty_field.append(square.value)
         
@@ -86,17 +80,22 @@ class GameConsumer(WebsocketConsumer):
         try:
             index_list = json_data["indexList"]
             color = json_data["color"]
+            blockId = json_data["blockId"]
             Square.objects.filter(game_id =1, square_id__in = index_list).update(value=color)
-
             values_list = Square.objects.values_list('value', flat=True)
 
             game = Game.objects.filter(game_id=1)
             currPlayer_id = game.first().currPlayer_id
-            game.update(currPlayer_id =  (currPlayer_id + 1) % 4)
+            newPlayer_id = (currPlayer_id + 1) % 4
+            game.update(currPlayer_id =  newPlayer_id)
 
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "send_gamefield", "currPlayer": game.first().currPlayer_id,"field": list(values_list) }
             )
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {"type": "send_block_placed", "playerId": currPlayer_id,"blockId": blockId}
+            )
+            
         except Exception as e:
              #Send Error Response to Clients
             async_to_sync(self.channel_layer.group_send)(
@@ -121,6 +120,11 @@ class GameConsumer(WebsocketConsumer):
         field = event["field"]
         currPlayer = event["currPlayer"]
         self.send(text_data=json.dumps({"type": "send_gamefield", "currPlayer": currPlayer, "field": field }))
+
+    def send_block_placed(self, event):
+        playerId = event["playerId"]
+        blockId = event["blockId"]
+        self.send(text_data=json.dumps({"type": "send_block_placed", "playerId":playerId, "blockId": blockId}))
 
     #Soll ermöglichen sich zu reconnecten
     def get_gamestate(self,event):

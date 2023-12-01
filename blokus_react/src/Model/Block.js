@@ -1,7 +1,8 @@
 export class Block {
-  constructor(template, color) {
+  constructor(block_id, template, color) {
     this.template = template;
     this.color = color;
+    this.block_id = block_id;
   }
 
   getSize() {
@@ -27,19 +28,6 @@ export class Block {
     }
 
     return transposedArray;
-  }
-
-  et() {
-    let allIndexList = [];
-
-    this.template.forEach((row, y) => {
-      row.forEach((value, x) => {
-        if (value === true) {
-          allIndexList.push(this.evalRelativPositions(x, y));
-        }
-      });
-    });
-    return allIndexList;
   }
 
   evalAllRelativePositions() {
@@ -76,6 +64,7 @@ export class Block {
       indexList.forEach((relativIndex) => {
         fixedIndices.push(relativIndex + index);
       });
+
       allFixesIndices.push(fixedIndices);
     });
 
