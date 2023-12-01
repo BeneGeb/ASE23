@@ -1,7 +1,8 @@
 export class Block {
-  constructor(template, color) {
+  constructor(block_id, template, color) {
     this.template = template;
     this.color = color;
+    this.block_id = block_id;
   }
 
   getSize() {

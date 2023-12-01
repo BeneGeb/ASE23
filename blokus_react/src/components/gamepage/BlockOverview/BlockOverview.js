@@ -4,57 +4,35 @@ import BlockSelector from "./BlockSelector";
 import { useState } from "react";
 
 export default function BlockOverview({
-  allBlocks,
+  playerData,
   currPlayer,
-  color,
-  onSelectedBlockChanged,
+  allBlocks,
+  onFilterChange,
+  onSwitchBlockClick,
 }) {
-  const [selectedFilter, setSelectedFilter] = useState(1);
-  const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
-
-  const filteredBlocks = allBlocks.filter(
-    (block) => block.getSize() === selectedFilter
-  );
-
-  function onFilterChange(filterValue) {
-    setSelectedFilter(filterValue);
-    setSelectedBlockIndex(0);
-    updateSelectedBlockInGamepage(0, filterValue);
+  function handleFilterChange(filterValue) {
+    onFilterChange(playerData.player_id, filterValue);
   }
 
-  function updateSelectedBlockInGamepage(newIndex, filterValue = null) {
-    if (filterValue === null) filterValue = selectedFilter;
-    const filteredBlocks = allBlocks.filter(
-      (block) => block.getSize() === filterValue
-    );
-    onSelectedBlockChanged(color, filteredBlocks[newIndex]);
-  }
-
-  function onSwitchBlockClick(direction) {
-    let newIndex;
-    if (direction === "left") {
-      newIndex = selectedBlockIndex - 1;
-      if (newIndex < 0) newIndex = filteredBlocks.length - 1;
-    } else {
-      newIndex = selectedBlockIndex + 1;
-      if (newIndex >= filteredBlocks.length) newIndex = 0;
-    }
-
-    setSelectedBlockIndex(newIndex);
-    updateSelectedBlockInGamepage(newIndex);
+  function handleSwitchBlockClick(direction) {
+    onSwitchBlockClick(playerData.player_id, direction);
   }
 
   return (
-    <div class={currPlayer ? "block-overview " + color : "block-overview"}>
+    <div
+      class={
+        currPlayer ? "block-overview " + playerData.color : "block-overview"
+      }
+    >
       <BlockSelector
         currPlayer={currPlayer}
-        selectedBlocks={filteredBlocks[selectedBlockIndex]}
-        onSwitchBlockClick={onSwitchBlockClick}
-        color={color}
+        selectedBlock={playerData.selectedBlock}
+        onSwitchBlockClick={handleSwitchBlockClick}
+        color={playerData.color}
       />
       <BlockFilter
-        onFilterChange={onFilterChange}
-        selectedFilter={selectedFilter}
+        onFilterChange={handleFilterChange}
+        selectedFilter={playerData.selectedFilter}
       />
     </div>
   );

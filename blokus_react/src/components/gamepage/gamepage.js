@@ -7,12 +7,17 @@ import {
   registerOnGameMessageCallback,
   sendPlacedBlock,
 } from "../../webSocketConnections/webSocketGameInterface";
-import Gamefield from "./field/Gamefield";
+import Gamefield from "./Field/Gamefield";
 import {
   isIndexInArrayOfArray,
   findIndexInArrayOfArray,
+  findFieldsOfColorInArray,
 } from "../../Helper/ArrayHelper";
 
+import {
+  checkFieldPossible,
+  evalDiagonalFields,
+} from "../../Helper/BlokusHelper";
 startWebsocketGameConnection();
 
 //TODO: Block aus Liste entfernen wenn platziert wurde
@@ -28,13 +33,25 @@ export default function GamePage() {
       player_id: 0,
       color: "red",
       selectedBlock: allBlocks.get("red")[0],
+      selectedFilter: 1,
     },
-    { player_id: 1, color: "green", selectedBlock: allBlocks.get("green")[0] },
-    { player_id: 2, color: "blue", selectedBlock: allBlocks.get("blue")[0] },
+    {
+      player_id: 1,
+      color: "green",
+      selectedBlock: allBlocks.get("green")[0],
+      selectedFilter: 1,
+    },
+    {
+      player_id: 2,
+      color: "blue",
+      selectedBlock: allBlocks.get("blue")[0],
+      selectedFilter: 1,
+    },
     {
       player_id: 3,
       color: "yellow",
       selectedBlock: allBlocks.get("yellow")[0],
+      selectedFilter: 1,
     },
   ]);
   const [markedFields, setMarkedFields] = useState([]);
@@ -42,144 +59,116 @@ export default function GamePage() {
 
   registerOnGameMessageCallback(onGameMessageReceived);
 
+  //Handler for Receiving Messages from Server
   function onGameMessageReceived(jsonData) {
     const json = JSON.parse(jsonData);
-    const field = json["field"];
-    const currPlayer = json["currPlayer"];
+    const type = json["type"];
+
+    if (type === "send_gamefield") {
+      updateCurrentGamestate(json["field"], json["currPlayer"]);
+    } else if (type === "send_block_placed") {
+      deletePlacedBlockFromAllBlocks(json["playerId"], json["blockId"]);
+      evalMarkedFields(squaresArray, null);
+    }
+  }
+
+  function updateCurrentGamestate(field, currPlayer) {
     setCurrPlayer(currPlayer);
     setsquaresArray(field);
-    setPlacedBlock([]);
-    evalMarkedFields(field);
-  }
-
-  function onSelectedBlockChanged(color, newBlock) {
-    const newPlayerData = [...playerData];
-    newPlayerData.find((player) => player.color === color).selectedBlock =
-      newBlock;
-    setPlayerData(newPlayerData);
-    evalMarkedFields(squaresArray);
+    evalMarkedFields(field, null);
     setPlacedBlock([]);
   }
 
-  function findFieldsOfColor(color, field) {
-    var fields = [];
-    for (var i = 0; i < field.length; i++) {
-      if (squaresArray[i] === color) {
-        fields.push(i);
-      }
+  function deletePlacedBlockFromAllBlocks(player_id, block_id) {
+    let copyAllBlocks = allBlocks;
+    const playerColor = playerData.find(
+      (player) => player.player_id === player_id
+    ).color;
+
+    //Delete placed Block from allBlocks
+    let blocksIndex = copyAllBlocks.get(playerColor);
+    copyAllBlocks.set(
+      playerColor,
+      blocksIndex.filter((block) => block.block_id !== block_id)
+    );
+
+    const updatedPlayerData = [...playerData];
+
+    const playerIndex = updatedPlayerData.findIndex(
+      (player) => player.color === playerColor
+    );
+
+    const playerFilter = updatedPlayerData[playerIndex].selectedFilter;
+    const filteredBlocks = allBlocks
+      .get(playerColor)
+      .filter((block) => block.getSize() === playerFilter);
+
+    if (playerIndex !== -1) {
+      updatedPlayerData[playerIndex] = {
+        ...updatedPlayerData[playerIndex],
+        selectedBlock: filteredBlocks[0],
+      };
     }
-    return fields;
+
+    evalMarkedFields(squaresArray, filteredBlocks[0]);
+    setPlayerData(updatedPlayerData);
+    setAllBlocks(copyAllBlocks);
   }
 
-  function evalMarkedFields(field) {
+  function evalMarkedFields(field, selectedBlock) {
     const currPlayerData = playerData.find(
       (player) => player.player_id === currPlayer
     );
-    const selectedBlock = currPlayerData.selectedBlock;
+    //get selected Block and color of current Player
+    if (selectedBlock == null) {
+      selectedBlock = currPlayerData.selectedBlock;
+    }
+
+    if (selectedBlock == null) {
+      setMarkedFields([]);
+      return;
+    }
     const color = currPlayerData.color;
 
-    const allFields = findFieldsOfColor(color, field);
+    //get all possible indices to place new block
+    const allFields = findFieldsOfColorInArray(color, field);
     const allDiagonalFields = evalDiagonalFields(allFields);
     let markedFields = [];
 
+    //check if no block has been placed before
     if (allDiagonalFields.length !== 0) {
+      //Try every possibility for every diagonal block
       allDiagonalFields.forEach((index) => {
         const newFields = selectedBlock.evalAllFixedIndices(index);
 
         newFields.forEach((possibility) => {
-          if (checkPossible(possibility, color)) markedFields.push(possibility);
+          if (checkFieldPossible(possibility, color, squaresArray))
+            markedFields.push(possibility);
         });
       });
     } else {
+      //check possibility for placing block in corner
       const playerIndex = playerData.findIndex(
         (player) => player.player_id === currPlayer
       );
       let startIndex;
 
+      //Fixed Corner Values depending on player
       if (playerIndex === 0) startIndex = 0;
       else if (playerIndex === 1) startIndex = 380;
       else if (playerIndex === 2) startIndex = 19;
       else if (playerIndex === 3) startIndex = 399;
 
-      console.log(startIndex);
       const newFields = selectedBlock.evalAllFixedIndices(startIndex);
       newFields.forEach((possibility) => {
-        if (checkPossible(possibility, color)) markedFields.push(possibility);
+        if (checkFieldPossible(possibility, color, squaresArray))
+          markedFields.push(possibility);
       });
     }
     setMarkedFields(markedFields);
   }
 
-  function checkPossible(indexList, color) {
-    for (let i = 0; i < indexList.length; i++) {
-      const index = indexList[i];
-
-      if (squaresArray[index] !== "") return false; // Wenn das Feld schon belegt ist
-      if (squaresArray[index - 1] === color) return false; // Wenn links schon belegt ist
-      if (squaresArray[index + 1] === color) return false; // Wenn rechts schon belegt ist
-      if (squaresArray[index - 20] === color) return false; // Wenn oben schon belegt ist
-      if (squaresArray[index + 20] === color) return false; // Wenn unten schon belegt ist
-      if (index < 0 || index > 399) return false;
-    }
-    if (!checkOverflow(indexList)) return false;
-    return true;
-  }
-
-  function checkOverflow(indexList) {
-    const followingIndices = findFollowingIndices(indexList);
-    let result = true;
-    followingIndices.forEach((sublist) => {
-      const firstResult = Math.floor(sublist[0] / 20);
-      sublist.forEach((index) => {
-        if (Math.floor(index / 20) !== firstResult) result = false;
-      });
-    });
-    return result;
-  }
-
-  function findFollowingIndices(input) {
-    let result = [];
-
-    for (let i = 0; i < input.length; i++) {
-      if (input[i] + 1 == input[i + 1]) {
-        let j = i;
-        let sublist = [];
-        sublist.push(input[j]);
-        while (input[j] + 1 == input[j + 1]) {
-          j += 1;
-          sublist.push(input[j]);
-        }
-        result.push(sublist);
-        i = j;
-      }
-    }
-    return result;
-  }
-
-  function evalDiagonalFields(allFields) {
-    let allDiagonalFields = [];
-    allFields.forEach((index) => {
-      const left_up = index - 21;
-      if (left_up >= 0 && left_up < 400 && index % 20 !== 0)
-        allDiagonalFields.push(left_up);
-
-      const right_up = index - 19;
-      if (right_up >= 0 && right_up < 400 && index % 20 !== 19)
-        allDiagonalFields.push(right_up);
-
-      const left_down = index + 19;
-      if (left_down >= 0 && left_down < 400 && index % 20 !== 0)
-        allDiagonalFields.push(left_down);
-
-      const right_down = index + 21;
-      if (right_down >= 0 && right_down < 400 && index % 20 !== 19)
-        allDiagonalFields.push(right_down);
-    });
-    return allDiagonalFields;
-  }
-
   function onSquareClick(index) {
-    console.log(index);
     if (isIndexInArrayOfArray(index, markedFields)) {
       const placedBlock = findIndexInArrayOfArray(index, markedFields);
 
@@ -189,24 +178,87 @@ export default function GamePage() {
 
   function onSubmitField() {
     setMarkedFields([]);
+    const selectedBlockId = playerData.find(
+      (player) => player.player_id == currPlayer
+    ).selectedBlock.block_id;
     sendPlacedBlock(
       placedBlock,
-      playerData.find((player) => player.player_id == currPlayer).color
+      playerData.find((player) => player.player_id == currPlayer).color,
+      selectedBlockId
     );
     setPlacedBlock([]);
   }
 
+  function onFilterChange(playerId, newFilter) {
+    const updatedPlayerData = [...playerData];
+
+    const playerIndex = updatedPlayerData.findIndex(
+      (player) => player.player_id === playerId
+    );
+
+    const filteredBlocks = allBlocks
+      .get(playerData.find((player) => player.player_id == playerId).color)
+      .filter((block) => block.getSize() === newFilter);
+
+    if (playerIndex !== -1) {
+      updatedPlayerData[playerIndex] = {
+        ...updatedPlayerData[playerIndex],
+        selectedFilter: newFilter,
+        selectedBlock: filteredBlocks[0],
+      };
+    }
+
+    evalMarkedFields(squaresArray, filteredBlocks[0]);
+    setPlayerData(updatedPlayerData);
+  }
+
+  function onSwitchBlockClick(playerId, direction) {
+    const updatedPlayerData = [...playerData];
+
+    const playerIndex = updatedPlayerData.findIndex(
+      (player) => player.player_id === playerId
+    );
+
+    const playerFilter = updatedPlayerData[playerIndex].selectedFilter;
+    const filteredBlocks = allBlocks
+      .get(playerData.find((player) => player.player_id == playerId).color)
+      .filter((block) => block.getSize() === playerFilter);
+
+    const selectedBlockIndex = filteredBlocks.findIndex(
+      (block) => block === playerData[playerIndex].selectedBlock
+    );
+
+    let newIndex;
+    if (direction === "left") {
+      newIndex = selectedBlockIndex - 1;
+      if (newIndex < 0) newIndex = filteredBlocks.length - 1;
+    } else {
+      newIndex = selectedBlockIndex + 1;
+      if (newIndex >= filteredBlocks.length) newIndex = 0;
+    }
+
+    if (playerIndex !== -1) {
+      updatedPlayerData[playerIndex] = {
+        ...updatedPlayerData[playerIndex],
+        selectedBlock: filteredBlocks[newIndex],
+      };
+    }
+    evalMarkedFields(squaresArray, filteredBlocks[newIndex]);
+    setPlayerData(updatedPlayerData);
+  }
+
   return (
     <div class="gamepage">
-      <div className="left-overviews">
+      <div className="overviews-container">
         <BlockOverview
           key={0}
           currPlayer={0 == currPlayer}
           allBlocks={allBlocks.get(
             playerData.find((player) => player.player_id == 0).color
           )}
-          color={playerData.find((player) => player.player_id == 0).color}
-          onSelectedBlockChanged={onSelectedBlockChanged}
+          playerData={playerData.find((player) => player.player_id == 0)}
+          onFilterChange={onFilterChange}
+          onSwitchBlockClick={onSwitchBlockClick}
         />
         {placedBlock.length !== 0 ? (
           <button onClick={onSubmitField}>test</button>
@@ -217,8 +269,9 @@ export default function GamePage() {
           allBlocks={allBlocks.get(
             playerData.find((player) => player.player_id == 1).color
           )}
-          color={playerData.find((player) => player.player_id == 1).color}
-          onSelectedBlockChanged={onSelectedBlockChanged}
+          playerData={playerData.find((player) => player.player_id == 1)}
+          onFilterChange={onFilterChange}
+          onSwitchBlockClick={onSwitchBlockClick}
         />
       </div>
       <div className="game-field">
@@ -232,15 +285,16 @@ export default function GamePage() {
           }
         />
       </div>
-      <div className="right-overviews">
+      <div className="overviews-container">
         <BlockOverview
           key={2}
           currPlayer={2 == currPlayer}
           allBlocks={allBlocks.get(
             playerData.find((player) => player.player_id == 2).color
           )}
-          color={playerData.find((player) => player.player_id == 2).color}
-          onSelectedBlockChanged={onSelectedBlockChanged}
+          playerData={playerData.find((player) => player.player_id == 2)}
+          onFilterChange={onFilterChange}
+          onSwitchBlockClick={onSwitchBlockClick}
         />
         <BlockOverview
           key={3}
@@ -248,8 +302,9 @@ export default function GamePage() {
           allBlocks={allBlocks.get(
             playerData.find((player) => player.player_id == 3).color
           )}
-          color={playerData.find((player) => player.player_id == 3).color}
-          onSelectedBlockChanged={onSelectedBlockChanged}
+          playerData={playerData.find((player) => player.player_id == 3)}
+          onFilterChange={onFilterChange}
+          onSwitchBlockClick={onSwitchBlockClick}
         />
       </div>
     </div>

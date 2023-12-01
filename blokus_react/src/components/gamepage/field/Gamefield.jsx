@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../../../styles/Gamepage/field.css";
-import SingleSquare from "../SingleSquare";
+import SingleSquare from "../Squares/SingleSquare";
 import { isIndexInArrayOfArray } from "../../../Helper/ArrayHelper";
 
 const GameField = ({

@@ -28,14 +28,14 @@ export const registerOnGameMessageCallback = (callBackFunction) => {
   onMessageCallback = callBackFunction;
 };
 
-export const sendPlacedBlock = (indexList, color) => {
-  console.log(indexList);
+export const sendPlacedBlock = (indexList, color, blockId) => {
   wsSendMessage(
     JSON.stringify({
       type: "action",
       action: "placeField",
       indexList: indexList,
       color: color,
+      blockId: blockId,
     })
   );
 };
