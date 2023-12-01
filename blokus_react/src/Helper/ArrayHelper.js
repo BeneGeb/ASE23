@@ -25,13 +25,3 @@ export function findFieldsOfColorInArray(color, input) {
   }
   return fields;
 }
-
-// export function findFieldsOfColorInArray(color, field) {
-//   var fields = [];
-//   for (var i = 0; i < field.length; i++) {
-//     if (squaresArray[i] === color) {
-//       fields.push(i);
-//     }
-//   }
-//   return fields;
-// }
