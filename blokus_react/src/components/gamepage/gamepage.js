@@ -208,7 +208,8 @@ export default function GamePage() {
       };
     }
 
-    evalMarkedFields(squaresArray, filteredBlocks[0]);
+    if (playerId === currPlayer)
+      evalMarkedFields(squaresArray, filteredBlocks[0]);
     setPlayerData(updatedPlayerData);
   }
 
@@ -243,7 +244,8 @@ export default function GamePage() {
         selectedBlock: filteredBlocks[newIndex],
       };
     }
-    evalMarkedFields(squaresArray, filteredBlocks[newIndex]);
+    if (playerId === currPlayer)
+      evalMarkedFields(squaresArray, filteredBlocks[newIndex]);
     setPlayerData(updatedPlayerData);
   }
 
