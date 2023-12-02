@@ -18,6 +18,7 @@ import {
   checkFieldPossible,
   evalDiagonalFields,
 } from "../../Helper/BlokusHelper";
+import ControlButtons from "./Buttons/ControlButtons";
 startWebsocketGameConnection();
 
 //TODO: Block aus Liste entfernen wenn platziert wurde
@@ -156,8 +157,8 @@ export default function GamePage() {
       //Fixed Corner Values depending on player
       if (playerIndex === 0) startIndex = 0;
       else if (playerIndex === 1) startIndex = 380;
-      else if (playerIndex === 2) startIndex = 19;
-      else if (playerIndex === 3) startIndex = 399;
+      else if (playerIndex === 2) startIndex = 399;
+      else if (playerIndex === 3) startIndex = 19;
 
       const newFields = selectedBlock.evalAllFixedIndices(startIndex);
       newFields.forEach((possibility) => {
@@ -177,6 +178,7 @@ export default function GamePage() {
   }
 
   function onSubmitField() {
+    if (placedBlock.length === 0) return;
     setMarkedFields([]);
     const selectedBlockId = playerData.find(
       (player) => player.player_id == currPlayer
@@ -187,6 +189,46 @@ export default function GamePage() {
       selectedBlockId
     );
     setPlacedBlock([]);
+  }
+
+  function onRotateSquare() {
+    const updatedPlayerData = [...playerData];
+
+    const playerIndex = updatedPlayerData.findIndex(
+      (player) => player.player_id === currPlayer
+    );
+
+    const selectedBlock = updatedPlayerData[playerIndex].selectedBlock;
+    selectedBlock.turnBlock();
+
+    updatedPlayerData[playerIndex] = {
+      ...updatedPlayerData[playerIndex],
+      selectedBlock: selectedBlock,
+    };
+
+    setPlacedBlock([]);
+    evalMarkedFields(squaresArray, selectedBlock);
+    setPlayerData(updatedPlayerData);
+  }
+
+  function onMirrorSquare() {
+    const updatedPlayerData = [...playerData];
+
+    const playerIndex = updatedPlayerData.findIndex(
+      (player) => player.player_id === currPlayer
+    );
+
+    const selectedBlock = updatedPlayerData[playerIndex].selectedBlock;
+    selectedBlock.mirrorBlock();
+
+    updatedPlayerData[playerIndex] = {
+      ...updatedPlayerData[playerIndex],
+      selectedBlock: selectedBlock,
+    };
+
+    setPlacedBlock([]);
+    evalMarkedFields(squaresArray, selectedBlock);
+    setPlayerData(updatedPlayerData);
   }
 
   function onFilterChange(playerId, newFilter) {
@@ -210,6 +252,7 @@ export default function GamePage() {
 
     if (playerId === currPlayer)
       evalMarkedFields(squaresArray, filteredBlocks[0]);
+    setPlacedBlock([]);
     setPlayerData(updatedPlayerData);
   }
 
@@ -246,6 +289,7 @@ export default function GamePage() {
     }
     if (playerId === currPlayer)
       evalMarkedFields(squaresArray, filteredBlocks[newIndex]);
+    setPlacedBlock([]);
     setPlayerData(updatedPlayerData);
   }
 
@@ -262,9 +306,11 @@ export default function GamePage() {
           onFilterChange={onFilterChange}
           onSwitchBlockClick={onSwitchBlockClick}
         />
-        {placedBlock.length !== 0 ? (
-          <button onClick={onSubmitField}>test</button>
-        ) : null}
+        <ControlButtons
+          onSubmit={onSubmitField}
+          onRotate={onRotateSquare}
+          onMirror={onMirrorSquare}
+        />
         <BlockOverview
           key={1}
           currPlayer={1 == currPlayer}
@@ -289,22 +335,22 @@ export default function GamePage() {
       </div>
       <div className="overviews-container">
         <BlockOverview
-          key={2}
-          currPlayer={2 == currPlayer}
-          allBlocks={allBlocks.get(
-            playerData.find((player) => player.player_id == 2).color
-          )}
-          playerData={playerData.find((player) => player.player_id == 2)}
-          onFilterChange={onFilterChange}
-          onSwitchBlockClick={onSwitchBlockClick}
-        />
-        <BlockOverview
           key={3}
           currPlayer={3 == currPlayer}
           allBlocks={allBlocks.get(
             playerData.find((player) => player.player_id == 3).color
           )}
           playerData={playerData.find((player) => player.player_id == 3)}
+          onFilterChange={onFilterChange}
+          onSwitchBlockClick={onSwitchBlockClick}
+        />
+        <BlockOverview
+          key={2}
+          currPlayer={2 == currPlayer}
+          allBlocks={allBlocks.get(
+            playerData.find((player) => player.player_id == 2).color
+          )}
+          playerData={playerData.find((player) => player.player_id == 2)}
           onFilterChange={onFilterChange}
           onSwitchBlockClick={onSwitchBlockClick}
         />

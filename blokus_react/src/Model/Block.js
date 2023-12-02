@@ -18,16 +18,24 @@ export class Block {
   }
 
   turnBlock() {
-    const transposedArray = [];
+    const rows = this.template.length;
+    const cols = this.template[0].length;
 
-    for (let i = 0; i < this.template[0].length; i++) {
-      transposedArray[i] = [];
-      for (let j = 0; j < this.template.length; j++) {
-        transposedArray[i][j] = this.template[j][i];
+    const rotatedArray = Array.from({ length: cols }, () =>
+      Array(rows).fill(null)
+    );
+
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        rotatedArray[j][rows - 1 - i] = this.template[i][j];
       }
     }
 
-    return transposedArray;
+    this.template = rotatedArray;
+  }
+
+  mirrorBlock() {
+    this.template = this.template.map((row) => row.reverse());
   }
 
   evalAllRelativePositions() {

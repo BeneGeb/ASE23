@@ -58,8 +58,8 @@
 
 .filter-button:hover {
     background: #BDBDBD;
-    /* Ändere die Hintergrundfarbe bei Hover */
 }
+
 
 #selected-filter-button{
     background-color: #B0B0AE;
