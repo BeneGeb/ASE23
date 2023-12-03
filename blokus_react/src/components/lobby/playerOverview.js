@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import '../../styles/lobby/playerOverview.css'
+import { sendIfPlayerReady } from '../../webSocketConnections/webSocketLobby';
 
 function PlayerNameField({name}){
     return (
@@ -17,13 +18,15 @@ export function SingleBlocks({blockColor}){
     );
 }
 
-const CheckBoxReady = () => {
-    const [isChecked, setIsChecked] = useState(false);
-  
+const CheckBoxReady = ({ player_id, isReady }) => {
+    const [isChecked, setIsChecked] = useState(isReady);
+    
     const handleCheckboxChange = () => {
-      setIsChecked(!isChecked);
+      const newCheckedState = !isChecked;
+      setIsChecked(newCheckedState);
+      sendIfPlayerReady(player_id, newCheckedState);
     };
-
+  
     return (
       <div className='check-box'>
         <input
@@ -33,9 +36,9 @@ const CheckBoxReady = () => {
         />
       </div>
     );
-}
+};
 
-export default function PlayerOverviewField({playernamelist, colorlist}){
+export default function PlayerOverviewField({playerlist}){
     return(
         <div className='parent-div'>
             <div className='header'>
@@ -44,11 +47,11 @@ export default function PlayerOverviewField({playernamelist, colorlist}){
                 <div className='placeholder-div-header'></div>
             </div>
             <div className='content-div'>
-                {playernamelist.map((items, index) =>(   
+                {playerlist.map((player, index) =>(   
                     <div className='row-element'> 
-                        <PlayerNameField name={items}/>
-                        <SingleBlocks blockColor={colorlist[index]}/>
-                        <CheckBoxReady />
+                        <PlayerNameField name={player.player_name}/>
+                        <SingleBlocks blockColor={player.color}/>
+                        <CheckBoxReady player_id={player.player_id} isReady={player.isReady}/>
                     </div>
                 ))}
             </div>
