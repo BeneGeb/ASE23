@@ -15,8 +15,6 @@ class GameConsumer(WebsocketConsumer):
         self.accept()
 
 
-
-
     def disconnect(self, close_code):
         async_to_sync(
             self.channel_layer.group_discard(
@@ -36,6 +34,12 @@ class GameConsumer(WebsocketConsumer):
                     self.placeField(json_data)
                 elif action == "finishGame":
                     self.finishGame(json_data)
+                elif action == "joinLobby":
+                    self.joinLobby(json_data)
+                elif action == "updatePlayerSettings":
+                    self.updatePlayerSettings(json_data)
+                elif action == "sendIfPlayerReady":
+                    self.updateIsReadyStatus(json_data)
                 else:
                     raise "Unsupported action"
         except Exception as e:
@@ -103,13 +107,57 @@ class GameConsumer(WebsocketConsumer):
             )
             print(e)
 
-
     def finishGame(self, json_data):
         Game.objects.all().delete()
         Player.objects.all().delete()
         Square.objects.all().delete()
     #endregion
 
+    def joinLobby(self, json_data):
+        player_id = json_data["player_id"]
+        player_name = json_data["player_name"]
+        color = json_data["color"]
+        Lobby.objects.create(player_id=player_id, player_name=player_name, color=color, isReady=False)
+
+        async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {"type": "send_joinedPlayer", "player_id": player_id, "player_name": player_name, "color": color, "isReady": False}
+            )
+
+    def updatePlayerSettings(self, json_data):
+        player_id = json_data["player_id"]
+        player_name = json_data["player_name"]
+        color = json_data["color"]
+
+        player = Lobby.objects.get(player_id=player_id)
+
+        player.player_name = player_name
+        player.color = color
+        player.save()
+            
+        async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {"type": "send_playerData", "player_id": player_id, "player_name": player_name, "color": color}
+            )
+    
+    def updateIsReadyStatus(self, json_data):
+        player_id = json ["player_id"]
+        isReady = json_data["isReady"]
+        
+        player = Lobby.objects.get(player_id=player_id)
+
+        player.isReady = isReady
+        player.save()
+         # Check if all players are ready
+        total_players = Lobby.objects.count()
+        ready_players = Lobby.objects.filter(isReady=True).count()
+
+        if total_players == ready_players:
+            # All players are ready, perform action here
+            # startGame aufrufen und die Informationen übergeben, welche für das Game benotigt werrden
+            print("start game")
+
+        async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {"type": "send_ready_information" ,"player_id": player_id, "isReady": isReady}
+            )
     
     #region Send Requests to client
     def error(self, event):
@@ -125,6 +173,25 @@ class GameConsumer(WebsocketConsumer):
         playerId = event["playerId"]
         blockId = event["blockId"]
         self.send(text_data=json.dumps({"type": "send_block_placed", "playerId":playerId, "blockId": blockId}))
+
+    def send_playerData(self, event):
+        player_id = event["player_id"]
+        player_name = event["player_name"]
+        color = event["color"]
+        isReady = event["isReady"]
+        self.send(text_data=json.dumps({"type": "send_joinedPlayer", "player_id": player_id, "player_name": player_name, "color": color, "isReady": isReady}))
+    
+    def send_playerData(self, event):
+        player_id = event["player_id"]
+        player_name = event["player_name"]
+        color = event["color"]
+        self.send(text_data=json.dumps({"type": "send_playerData" ,"player_id": player_id, "player_name": player_name, "color": color}))
+    
+    def send_readyInformation(self, event):
+        player_id = event["player_id"]
+        isReady = event["isReady"]
+        self.send(text_data=json.dumps({"type": "send_readyInformation" ,"player_id": player_id, "isReady": isReady}))
+    
 
     #Soll ermöglichen sich zu reconnecten
     def get_gamestate(self,event):

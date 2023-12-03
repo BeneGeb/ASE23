@@ -12,6 +12,12 @@ class Player(models.Model):
     color = models.CharField(max_length=10)
     isAI = models.BooleanField()
     isHuman = models.BooleanField()
+
+class Lobby(models.Model):
+    player_id = models.AutoField(primary_key=True)
+    player_name = models.CharField(max_length= 15)
+    color = models.CharField(max_length=10)
+    isReady = models.BooleanField()
  
 class Square(models.Model):
     square_id = models.AutoField(primary_key=True)
