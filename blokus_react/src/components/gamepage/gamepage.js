@@ -7,7 +7,7 @@ import {
   registerOnGameMessageCallback,
   sendPlacedBlock,
 } from "../../webSocketConnections/webSocketGameInterface";
-import Gamefield from "./Field/Gamefield";
+import Gamefield from "./field/Gamefield";
 import {
   isIndexInArrayOfArray,
   findIndexInArrayOfArray,
