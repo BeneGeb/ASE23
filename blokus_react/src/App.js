@@ -6,6 +6,7 @@ import GamePage from './components/gamepage/gamepage';
 import Login from './components/login/login';
 import Register from './components/register/register';
 import LobbyPage from './components/lobby/lobby'
+import PasswordResetRequest from './components/pwReset/reset';
 
 const items = ['Player1', 'Player2', 'Player3', 'Player4'];
 const color = ["#0000FF", "#FFFF00", "#00FF00", "#FF0000"];
@@ -19,6 +20,7 @@ export class App extends React.Component {
           <Routes>
             <Route exact path="/" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/passwordreset" element={<PasswordResetRequest />} />
             <Route path="/gamepage" element={<GamePage />} />
             <Route path="/lobby" element={<LobbyPage items={items} colors={color} playername={playername} playercolor={playercolor}/>}/>
             {/*hier weitere Routen */}

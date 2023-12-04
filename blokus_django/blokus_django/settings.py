@@ -160,3 +160,13 @@ AUTH_USER_MODEL = 'users.User'
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.sendgrid.net"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "apikey"
+EMAIL_HOST_PASSWORD = "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"
+DEFAULT_FROM_EMAIL = "creativmedia.yz@gmail.com"
+
+APPEND_SLASH = False
