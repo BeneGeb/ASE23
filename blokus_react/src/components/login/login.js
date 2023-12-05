@@ -50,8 +50,6 @@ function Login() {
         </form>
         <br /><br />
         <Link to="/register">Noch nicht registriert?</Link>
-        <br /><br />
-        <Link to="/passwordreset">Passwort vergessen?</Link>
       </div>
     </div>
   );
