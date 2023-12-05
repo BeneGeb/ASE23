@@ -39,3 +39,42 @@ export const sendPlacedBlock = (indexList, color, blockId) => {
     })
   );
 };
+
+export const registerOnLobbyMessageCallback = (callBackFunction) => {
+  onMessageCallback = callBackFunction;
+};
+
+export const sendJoinedPlayer = (player_id, player_name, color) => {
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "joinLobby",
+      player_id: player_id,
+      player_name: player_name,
+      color: color,
+    })
+  );
+};
+
+export const sendPlayerData = (player_id, player_name, color) => {
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "updatePlayerSettings",
+      player_id: player_id,
+      player_name: player_name,
+      color: color,
+    })
+  );
+};
+
+export const sendIfPlayerReady = (player_id, isReady) => {
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "sendIfPlayerReady",
+      player_id: player_id,
+      isReady: isReady,
+    })
+  );
+};

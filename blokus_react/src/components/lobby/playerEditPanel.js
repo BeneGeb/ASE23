@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
-import { sendPlayerData } from "../../webSocketConnections/webSocketLobby";
-import '../../styles/lobby/playerEditPanel.css'
+import React, { useState } from "react";
+import { sendPlayerData } from "../../webSocketConnections/webSocketGameInterface";
+import "../../styles/lobby/playerEditPanel.css";
 
-export default function PlayerEditField({ playername, playercolor, player_id }) {
+export default function PlayerEditField({
+  playername,
+  playercolor,
+  player_id,
+}) {
   const [playerData, setPlayerData] = useState([
     {
-      player_name: '-',
+      player_name: "-",
       color: "gray",
-    }
+    },
   ]);
 
   const updatePlayerName = (newName) => {
@@ -33,9 +37,16 @@ export default function PlayerEditField({ playername, playercolor, player_id }) 
       updatePlayerName(event.target.value);
     };
     return (
-      <input type="text" id="playername" name="playername" className='player-name-edit' value={name} onChange={handleChange}></input>
+      <input
+        type="text"
+        id="playername"
+        name="playername"
+        className="player-name-edit"
+        value={name}
+        onChange={handleChange}
+      ></input>
     );
-  }
+  };
 
   const CheckBoxColor = ({ default_color }) => {
     const [selectedOption, setSelectedOption] = useState(default_color);
@@ -47,58 +58,62 @@ export default function PlayerEditField({ playername, playercolor, player_id }) 
     };
 
     return (
-      <div className='color-box'>
-        <div className='div-radio-red'>
+      <div className="color-box">
+        <div className="div-radio-red">
           <input
             type="radio"
-            value = "#FF0000"
+            value="#FF0000"
             checked={selectedOption === "#FF0000"}
             onChange={handleOptionChange}
           />
         </div>
-        <div className='div-radio-blue'>
+        <div className="div-radio-blue">
           <input
             type="radio"
-            value = "#0000FF" 
+            value="#0000FF"
             checked={selectedOption === "#0000FF"}
             onChange={handleOptionChange}
           />
         </div>
-        <div className='div-radio-green'>
+        <div className="div-radio-green">
           <input
             type="radio"
-            value = "#00FF00" 
+            value="#00FF00"
             checked={selectedOption === "#00FF00"}
             onChange={handleOptionChange}
           />
         </div>
-        <div className='div-radio-yellow'>
+        <div className="div-radio-yellow">
           <input
             type="radio"
-            value = "#FFFF00" 
+            value="#FFFF00"
             checked={selectedOption === "#FFFF00"}
             onChange={handleOptionChange}
           />
         </div>
       </div>
     );
-  }
+  };
 
   const send_changed_data = (player_id, player_data) => {
-    sendPlayerData(player_id,
-      player_data.player_name,
-      player_data.color)
-  }
+    sendPlayerData(player_id, player_data.player_name, player_data.color);
+  };
 
   return (
-    <div className='parent-div-edit'>
-      <h1 className='headline-edit'> Personal Settings</h1>
+    <div className="parent-div-edit">
+      <h1 className="headline-edit"> Personal Settings</h1>
       <NameInput name={playername} />
-      <div className='div-blockus-block'>
+      <div className="div-blockus-block">
         <CheckBoxColor default_color={playercolor} />
       </div>
-      <div className='button-div-edit'>
-        <button type="button" className='confirmation-button' onClick={() => send_changed_data(player_id, playerData)}>set</button>
+      <div className="button-div-edit">
+        <button
+          type="button"
+          className="confirmation-button"
+          onClick={() => send_changed_data(player_id, playerData)}
+        >
+          set
+        </button>
       </div>
     </div>
   );

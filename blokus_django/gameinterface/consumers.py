@@ -53,12 +53,8 @@ class GameConsumer(WebsocketConsumer):
             Player.objects.all().delete()
             Square.objects.all().delete()
 
-            game = Game.objects.create(game_id = 1, currPlayer_id = 0)
 
-            Player.objects.create(player_id=0, game_id=game, color="red", isAI=False, isHuman=True)
-            Player.objects.create(player_id=1, game_id=game, color="green", isAI=False, isHuman=True)
-            Player.objects.create(player_id=2, game_id=game, color="blue", isAI=False, isHuman=True)
-            Player.objects.create(player_id=4, game_id=game, color="yellow", isAI=False, isHuman=True)
+  
 
             #Initialize all Square Fields
             empty_field = [] 
@@ -117,10 +113,41 @@ class GameConsumer(WebsocketConsumer):
         player_id = json_data["player_id"]
         player_name = json_data["player_name"]
         color = json_data["color"]
-        Lobby.objects.create(player_id=player_id, player_name=player_name, color=color, isReady=False)
+
+        game = Game.objects.filter(game_id=1)[0]
+
+        if not game:
+            game = Game.objects.create(game_id = 1, currPlayer_id = 0)
+
+        player_list = Player.objects.all()
+
+        if not player_list:
+            player1= Player.objects.create(player_id=0, game_id=game, player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+            player2= Player.objects.create(player_id=1, game_id=game, player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+            player3= Player.objects.create(player_id=2, game_id=game, player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+            player4= Player.objects.create(player_id=3, game_id=game, player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+
+            player_list = [player1, player2, player3, player4]
+
+        for player in player_list:
+            if player.player_id == player_id:
+                player.player_name = player_name
+                player.color = color
+                player.isHuman = True
+                player.isAI = False
+                player.save()
+                break 
+
+        player = Player.objects.filter(player_id=player_id)[0]
+
+        json_player_list = []
+
+        for player in player_list:
+            player_data_json = player.toJSON()
+            json_player_list.append(player_data_json)
 
         async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {"type": "send_joinedPlayer", "player_id": player_id, "player_name": player_name, "color": color, "isReady": False}
+                self.room_group_name, {"type": "send_joinedPlayer", "playerList": list(json_player_list)}
             )
 
     def updatePlayerSettings(self, json_data):
@@ -128,7 +155,7 @@ class GameConsumer(WebsocketConsumer):
         player_name = json_data["player_name"]
         color = json_data["color"]
 
-        player = Lobby.objects.get(player_id=player_id)
+        player = Player.objects.get(player_id=player_id)
 
         player.player_name = player_name
         player.color = color
@@ -139,16 +166,15 @@ class GameConsumer(WebsocketConsumer):
             )
     
     def updateIsReadyStatus(self, json_data):
-        player_id = json ["player_id"]
+        player_id = json_data["player_id"]
         isReady = json_data["isReady"]
-        
-        player = Lobby.objects.get(player_id=player_id)
+        player = Player.objects.get(player_id=player_id)
 
         player.isReady = isReady
         player.save()
          # Check if all players are ready
-        total_players = Lobby.objects.count()
-        ready_players = Lobby.objects.filter(isReady=True).count()
+        total_players = Player.objects.count()
+        ready_players = Player.objects.filter(isReady=True).count()
 
         if total_players == ready_players:
             # All players are ready, perform action here
@@ -174,12 +200,10 @@ class GameConsumer(WebsocketConsumer):
         blockId = event["blockId"]
         self.send(text_data=json.dumps({"type": "send_block_placed", "playerId":playerId, "blockId": blockId}))
 
-    def send_playerData(self, event):
-        player_id = event["player_id"]
-        player_name = event["player_name"]
-        color = event["color"]
-        isReady = event["isReady"]
-        self.send(text_data=json.dumps({"type": "send_joinedPlayer", "player_id": player_id, "player_name": player_name, "color": color, "isReady": isReady}))
+    def send_joinedPlayer(self, event):
+        player_list =  event["playerList"]
+
+        self.send(text_data=json.dumps({"type": "send_joinedPlayer", "player_list": player_list}))
     
     def send_playerData(self, event):
         player_id = event["player_id"]
@@ -187,10 +211,10 @@ class GameConsumer(WebsocketConsumer):
         color = event["color"]
         self.send(text_data=json.dumps({"type": "send_playerData" ,"player_id": player_id, "player_name": player_name, "color": color}))
     
-    def send_readyInformation(self, event):
+    def send_ready_information(self, event):
         player_id = event["player_id"]
         isReady = event["isReady"]
-        self.send(text_data=json.dumps({"type": "send_readyInformation" ,"player_id": player_id, "isReady": isReady}))
+        self.send(text_data=json.dumps({"type": "send_ready_information" ,"player_id": player_id, "isReady": isReady}))
     
 
     #Soll ermöglichen sich zu reconnecten
