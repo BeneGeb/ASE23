@@ -33,6 +33,7 @@ export default function PlayerEditField({playername, playercolor, player_id}) {
         id="playername"
         name="playername"
         className="player-name-edit"
+        maxLength={10}
         value={name}
         onChange={handleChange}
       ></input>

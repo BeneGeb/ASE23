@@ -56,6 +56,16 @@ const ButtonReady =({player_id, isReady}) => {
   );
 };
 
+const ButtonQuit = ({player_id}) => {
+  const hangleQuit = () => {
+  };
+  return(
+    <button type="button" className="quit-button" onClick={hangleQuit}>
+    Quite
+  </button>
+  );
+}
+
 
 export default function PlayerOverviewField({ playerlist, player_id }) {
   return (
@@ -80,7 +90,7 @@ export default function PlayerOverviewField({ playerlist, player_id }) {
       <div className="button-div">
           <ButtonReady player_id={player_id} 
             isReady ={playerlist[player_id].isReady}/>
-        <div className="placeholder-div"></div>
+          <ButtonQuit player_id={player_id}/>
       </div>
     </div>
   );
