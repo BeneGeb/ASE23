@@ -99,7 +99,7 @@ export const sendIfPlayerReady = (player_id, isReady) => {
 };
 
 export const playerJoinedLobby = (index) => {
-  const color = ["Red", "Blue", "Green", "Blue"];
-  const player_name = "Player_1";
+  const color = ["#FF0000", "#0000FF", "#00FF00", "#FFFF00"];
+  const player_name = "Player_" + index;
   sendJoinedPlayer(index, player_name, color[index]);
 };
