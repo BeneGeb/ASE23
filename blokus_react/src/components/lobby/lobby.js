@@ -8,8 +8,9 @@ import {
   registerOnLobbyMessageCallback,
   sendJoinedPlayer,
 } from "../../webSocketConnections/webSocketGameInterface";
-
 startWebsocketGameConnection();
+
+setTimeout(sendJoinedPlayer, 2000);
 
 export default function LobbyPage({}) {
   const [playerData, setPlayerData] = useState([
@@ -39,18 +40,18 @@ export default function LobbyPage({}) {
     },
   ]);
 
-  registerOnLobbyMessageCallback(onLobbyMessageReceived);
-
   function playerJoinedLobby(index) {
-    const color = ["#0000FF", "#FFFF00", "#00FF00", "#FF0000"];
+    const websocket = startWebsocketGameConnection();
+    const color = ["Red", "Blue", "Green", "Blue"];
     const player_name = "Player_" + index;
-    sendJoinedPlayer(index, player_name, color[index]);
-  }
-
-  function updateJoinedPlayer(index, newData) {
-    const updatedPlayerData = [...playerData];
-    updatedPlayerData[index] = newData;
-    setPlayerData(updatedPlayerData);
+    // Check if the websocket instance exists before accessing its properties
+    if (websocket && websocket.readyState === websocket.OPEN) {
+      // Use the websocket instance
+      sendJoinedPlayer(index, player_name, color[index]);
+    } else {
+      console.log("WebSocket is not ready yet.");
+    // Handle the case when the WebSocket is not open yet
+    }
   }
 
   const updatePlayerData = (index, newData) => {
@@ -73,6 +74,8 @@ export default function LobbyPage({}) {
     setPlayerData(updatedPlayerData);
   };
 
+  registerOnLobbyMessageCallback(onLobbyMessageReceived);
+
   function onLobbyMessageReceived(jsonData) {
     const json = JSON.parse(jsonData);
     const type = json["type"];
@@ -93,11 +96,11 @@ export default function LobbyPage({}) {
       updateReadyStatus(player_id, isReady);
     }
   }
-
+  playerJoinedLobby(1);
   return (
     <div class="lobby-page">
       <div className="upper-divs">
-        <PlayerOverviewField playerlist={playerData} />
+        <PlayerOverviewField playerlist={playerData} player_id={0} />
         <PlayerEditField
           playername={playerData[0].player_name}
           playercolor={playerData[0].color}
@@ -110,3 +113,4 @@ export default function LobbyPage({}) {
     </div>
   );
 }
+

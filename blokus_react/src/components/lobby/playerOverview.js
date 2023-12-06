@@ -30,7 +30,18 @@ export function SingleBlocks({ blockColor }) {
   );
 }
 
-const CheckBoxReady = ({ player_id, isReady }) => {
+const CheckBoxReady = ({ isReady }) => {
+  return (
+    <div className="check-box">
+      <input
+        type="checkbox"
+        checked={isReady}
+      />
+    </div>
+  );
+};
+
+const ButtonReady =({player_id, isReady}) => {
   const [isChecked, setIsChecked] = useState(isReady);
 
   const handleCheckboxChange = () => {
@@ -38,19 +49,15 @@ const CheckBoxReady = ({ player_id, isReady }) => {
     setIsChecked(newCheckedState);
     sendIfPlayerReady(player_id, newCheckedState);
   };
-
-  return (
-    <div className="check-box">
-      <input
-        type="checkbox"
-        checked={isReady}
-        onChange={handleCheckboxChange}
-      />
-    </div>
+  return(
+    <button type="button" className="ready-button" onClick={handleCheckboxChange}>
+    Ready
+  </button>
   );
 };
 
-export default function PlayerOverviewField({ playerlist }) {
+
+export default function PlayerOverviewField({ playerlist, player_id }) {
   return (
     <div className="parent-div">
       <div className="header">
@@ -71,9 +78,8 @@ export default function PlayerOverviewField({ playerlist }) {
         ))}
       </div>
       <div className="button-div">
-        <button type="button" className="ready-button">
-          Ready
-        </button>
+          <ButtonReady player_id={player_id} 
+            isReady ={playerlist[player_id].isReady}/>
         <div className="placeholder-div"></div>
       </div>
     </div>
