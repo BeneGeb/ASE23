@@ -1,0 +1,41 @@
+.control-buttons-container{
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+    height: 10%;
+}
+
+.control-button {
+    width: 7vh;
+    height: 7vh;
+    border-radius: 50%;
+    background-color: #D9D9D9;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    transition: background 0.3s ease;
+}
+
+.control-button:hover {
+    background-color: #BDBDBD;
+}
+
+.control-button:active {
+    transform: scale(0.98);
+}
+
+
+.rotate-button {
+    background-image: url('rotate-button.png');
+}
+
+.confirm-button {
+    background-image: url('confirmation-button.png');
+}
+
+.mirror-button {
+    background-image: url('mirror-button.png');
+}
+

@@ -1,7 +1,8 @@
 export class Block {
-  constructor(template, color) {
+  constructor(block_id, template, color) {
     this.template = template;
     this.color = color;
+    this.block_id = block_id;
   }
 
   getSize() {
@@ -17,15 +18,64 @@ export class Block {
   }
 
   turnBlock() {
-    const transposedArray = [];
+    const rows = this.template.length;
+    const cols = this.template[0].length;
 
-    for (let i = 0; i < this.template[0].length; i++) {
-      transposedArray[i] = [];
-      for (let j = 0; j < this.template.length; j++) {
-        transposedArray[i][j] = this.template[j][i];
+    const rotatedArray = Array.from({ length: cols }, () =>
+      Array(rows).fill(null)
+    );
+
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        rotatedArray[j][rows - 1 - i] = this.template[i][j];
       }
     }
 
-    return transposedArray;
+    this.template = rotatedArray;
+  }
+
+  mirrorBlock() {
+    this.template = this.template.map((row) => row.reverse());
+  }
+
+  evalAllRelativePositions() {
+    let allIndexList = [];
+
+    this.template.forEach((row, y) => {
+      row.forEach((value, x) => {
+        if (value === true) {
+          allIndexList.push(this.evalRelativPositions(x, y));
+        }
+      });
+    });
+    return allIndexList;
+  }
+
+  evalRelativPositions(givenX, givenY) {
+    let indexList = [];
+    this.template.forEach((row, y) => {
+      row.forEach((value, x) => {
+        if (value === true) {
+          let index = x - givenX;
+          index = index + (y - givenY) * 20;
+          indexList.push(index);
+        }
+      });
+    });
+    return indexList;
+  }
+
+  evalAllFixedIndices(index) {
+    let allFixesIndices = [];
+    this.evalAllRelativePositions().forEach((indexList) => {
+      let fixedIndices = [];
+      indexList.forEach((relativIndex) => {
+        fixedIndices.push(relativIndex + index);
+      });
+
+      allFixesIndices.push(fixedIndices);
+    });
+
+    return allFixesIndices;
   }
 }

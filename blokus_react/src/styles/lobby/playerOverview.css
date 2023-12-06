@@ -1,0 +1,135 @@
+.parent-div{
+    background-color: #d9d9d9d0;
+    border-radius: 25px;
+    width: 30%;
+    height: 100%;
+    border-style: solid;
+    border-width: 3px;
+    border-color: #b1b1b1;    
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    box-shadow: 3px 3px rgba(102, 100, 100, 0.226);
+}
+
+.header{
+    width: 100%;
+    height: 10%;
+    margin-bottom: 5%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.headline{
+    font-family: 'Julius Sans One', sans-serif;
+    margin: 5%;
+    margin-left: 12%;
+    font-size: 170%;
+}
+
+.placeholder-div-header{
+    width: 20%;
+}
+
+.player-field{
+    background-color: #d4d4d4;
+    border-radius: 30px;
+    width: 30%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.player-name{
+    font-family: 'Julius Sans One', sans-serif;
+    margin-bottom: 5%;
+    font-size: 100%;
+    align-self: center;
+}
+
+.content-div{
+    width: 100%;
+    height: 60%;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+}
+
+.row-element{
+    width: 100%;
+    height: 60%;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    align-items: center;
+}
+
+.button-div{
+    height: 15%;
+    margin-top: 3%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.placeholder-div{
+    width: 45%;
+}
+
+.block-div{
+    width: 20%;
+    margin: 3%;
+    height: 95%;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+}
+
+.ready-button{
+    background-color: rgb(90, 90, 212);
+    border-radius: 30px;
+    width: 25%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Julius Sans One', sans-serif;
+    margin-bottom: 5%;
+    font-size: 110%
+}
+
+.ready-button:hover{
+    background-color: rgb(114, 114, 199);
+    width: 26%;
+    height: 61%;
+}
+
+.outer-blockus-block{
+    width: 5vh;
+    height: 5vh;
+    border-radius: 2px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inner-blockus-block{
+    width: 3.2vh;
+    height: 3.2vh;
+    border-radius: 2px;
+    box-sizing: border-box;
+}
+
+.check-box{
+    height: 50%;
+    width: 10%;
+}
+
+input[type="checkbox"]{
+    width: 1.8em;
+    height: 1.8em;
+    background-color: #50565a;
+}

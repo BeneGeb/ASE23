@@ -12,8 +12,7 @@ class Player(models.Model):
     color = models.CharField(max_length=10)
     isAI = models.BooleanField()
     isHuman = models.BooleanField()
-
-
+ 
 class Square(models.Model):
     square_id = models.AutoField(primary_key=True)
     game_id = models.ForeignKey(Game, on_delete=models.CASCADE)
