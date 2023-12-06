@@ -114,6 +114,7 @@ class GameConsumer(WebsocketConsumer):
         game = Game.objects.all()
 
         if not game:
+            Player.objects.all().delete()
             game = Game.objects.create(game_id = 1, currPlayer_id = 0)
         
 
