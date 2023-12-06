@@ -40,6 +40,15 @@ export const sendPlacedBlock = (indexList, color, blockId) => {
   );
 };
 
+export const startGame = () => {
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "startGame",
+    })
+  );
+};
+
 export const registerOnLobbyMessageCallback = (callBackFunction) => {
   onMessageCallback = callBackFunction;
 };

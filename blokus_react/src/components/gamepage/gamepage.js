@@ -6,6 +6,7 @@ import {
   startWebsocketGameConnection,
   registerOnGameMessageCallback,
   sendPlacedBlock,
+  startGame,
 } from "../../webSocketConnections/webSocketGameInterface";
 import Gamefield from "./field/Gamefield";
 import {
@@ -19,7 +20,10 @@ import {
   evalDiagonalFields,
 } from "../../Helper/BlokusHelper";
 import ControlButtons from "./Buttons/ControlButtons";
+
 startWebsocketGameConnection();
+
+setTimeout(startGame, 2000);
 
 //TODO: Block aus Liste entfernen wenn platziert wurde
 
