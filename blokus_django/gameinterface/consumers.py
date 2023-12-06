@@ -6,16 +6,12 @@ from .models import *
 
 class GameConsumer(WebsocketConsumer):
 
-
     def connect(self):
         self.room_group_name = "game"
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name, self.channel_name
         )
         self.accept()
-
-
-
 
     def disconnect(self, close_code):
         async_to_sync(
