@@ -1,40 +1,31 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import { sendPlayerData } from "../../webSocketConnections/webSocketGameInterface";
 import "../../styles/lobby/playerEditPanel.css";
 
-export default function PlayerEditField({
-  playername,
-  playercolor,
-  player_id,
-}) {
-  const [playerData, setPlayerData] = useState([
-    {
-      player_name: "-",
-      color: "gray",
-    },
-  ]);
-
+export default function PlayerEditField({playername, playercolor, player_id}) {
+  const [playerData, setPlayerData] = useState({
+    player_name: playername, 
+    color: playercolor, 
+  })
+  
   const updatePlayerName = (newName) => {
-    const updatedPlayerData = [...playerData];
-    updatedPlayerData[0] = {
-      ...updatedPlayerData[0],
+    setPlayerData({
+      ...playerData,
       player_name: newName,
-    };
-    setPlayerData(updatedPlayerData);
+    });
   };
 
   const updatePlayerColor = (newColor) => {
-    const updatedPlayerData = [...playerData];
-    updatedPlayerData[0] = {
-      ...updatedPlayerData[0],
+    setPlayerData({
+      ...playerData,
       color: newColor,
-    };
-    setPlayerData(updatedPlayerData);
+    });
   };
 
   const NameInput = ({ name }) => {
     const handleChange = (event) => {
-      updatePlayerName(event.target.value);
+      const newVlaue = event.target.value;
+      updatePlayerName(newVlaue);
     };
     return (
       <input
@@ -102,16 +93,15 @@ export default function PlayerEditField({
   return (
     <div className="parent-div-edit">
       <h1 className="headline-edit"> Personal Settings</h1>
-      <NameInput name={playername} />
+        <NameInput name={playerData.player_name} />
       <div className="div-blockus-block">
-        <CheckBoxColor default_color={playercolor} />
+        <CheckBoxColor default_color={playerData.color} />
       </div>
       <div className="button-div-edit">
         <button
           type="button"
           className="confirmation-button"
-          onClick={() => send_changed_data(player_id, playerData)}
-        >
+          onClick={() => send_changed_data(player_id, playerData)}>
           set
         </button>
       </div>
