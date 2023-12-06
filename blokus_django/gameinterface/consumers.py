@@ -54,18 +54,15 @@ class GameConsumer(WebsocketConsumer):
     def startGame(self):
         try:
             #Delete old Data
-            Game.objects.all().delete()
-            Player.objects.all().delete()
             Square.objects.all().delete()
 
-
+            game = Game.objects.filter(game_id=1)[0]
             #Initialize all Square Fields
             empty_field = [] 
             for i in range(400):
                 square = Square.objects.create(square_id=i, game_id=game, value="")
                 empty_field.append(square.value)
         
-
             #Send empty generated Field to Clients
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "send_gamefield" ,"field": empty_field, "currPlayer":game.currPlayer_id}
@@ -113,7 +110,7 @@ class GameConsumer(WebsocketConsumer):
     #endregion
 
     def joinLobby(self, json_data):
-        
+
         access_token = json_data["access_token"]
         payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])    
         player_id = payload.get("id")  
@@ -185,7 +182,7 @@ class GameConsumer(WebsocketConsumer):
         access_token = json_data["access_token"]
         payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])    
         player_id = payload.get("id")
-        
+
         isReady = json_data["isReady"]
         player = Player.objects.get(player_id=player_id)
 
@@ -195,14 +192,15 @@ class GameConsumer(WebsocketConsumer):
         total_players = Player.objects.count()
         ready_players = Player.objects.filter(isReady=True).count()
 
-        if total_players == ready_players:
-            # All players are ready, perform action here
-            # startGame aufrufen und die Informationen übergeben, welche für das Game benotigt werrden
-            print("start game")
-
-        async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {"type": "send_ready_information" ,"player_id": player_id, "isReady": isReady}
-            )
+        if not total_players == ready_players:
+            async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name, {"type": "send_ready_information" ,"player_id": player_id, "isReady": isReady}
+                )
+        else:
+            async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name, {"type": "send_start_game" ,"redirect": True}
+                )
+            self.startGame()
         
     def deletePlayer (self, json_data):
         player_id = json_data["player_id"]
@@ -255,6 +253,10 @@ class GameConsumer(WebsocketConsumer):
         index = event["index"]
         
         self.send(text_data=json.dumps({"type": "send_ready_information" ,"index": index}))
+
+    def send_start_game(self, event):
+        redirect = event["redirect"]
+        self.send(text_data=json.dumps({"type": "send_start_game" ,"redirect": redirect}))
 
     #Soll ermöglichen sich zu reconnecten
     def get_gamestate(self,event):

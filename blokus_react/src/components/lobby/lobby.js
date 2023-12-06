@@ -9,11 +9,13 @@ import {
   sendJoinedPlayer,
   playerJoinedLobby,
 } from "../../webSocketConnections/webSocketGameInterface";
+import { useNavigate } from "react-router-dom";
 
 // startWebsocketGameConnection();
 // setTimeout(() => playerJoinedLobby(0), 2000);
 
 export default function LobbyPage({}) {
+  const navigate = useNavigate();
   const [playerData, setPlayerData] = useState([
     {
       player_id: 0,
@@ -99,6 +101,8 @@ export default function LobbyPage({}) {
     } else if (type === "send_client_index") {
       const index = json["index"];
       setPlayerIndex(index);
+    } else if (type === "send_start_game") {
+      navigate("/gamepage");
     }
   }
 

@@ -25,8 +25,6 @@ import ControlButtons from "./Buttons/ControlButtons";
 
 // setTimeout(startGame, 2000);
 
-//TODO: Block aus Liste entfernen wenn platziert wurde
-
 export default function GamePage() {
   const [allBlocks, setAllBlocks] = useState(generateBlocks());
   const [currPlayer, setCurrPlayer] = useState(0);
