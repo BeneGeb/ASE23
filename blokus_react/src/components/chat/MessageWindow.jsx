@@ -13,7 +13,7 @@ export default function MessageWindow ({ messages = [], username }) {
     return (
       <div className='message-window'>
         {messages.map((msg, i) => {
-          return <Message key={i} text={msg} username={"Bene"}/>
+          return <Message key={i} text={msg} username={username}/>
         })}
       </div>
     )
