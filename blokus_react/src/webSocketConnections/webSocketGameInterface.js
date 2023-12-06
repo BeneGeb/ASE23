@@ -64,24 +64,24 @@ export const sendJoinedPlayer = () => {
   );
 };
 
-export const sendPlayerData = (player_id, player_name, color) => {
+export const sendPlayerData = (player_name, color) => {
   wsSendMessage(
     JSON.stringify({
       type: "action",
       action: "updatePlayerSettings",
-      player_id: player_id,
+      access_token: localStorage.getItem("access_token"),
       player_name: player_name,
       color: color,
     })
   );
 };
 
-export const sendIfPlayerReady = (player_id, isReady) => {
+export const sendIfPlayerReady = (isReady) => {
   wsSendMessage(
     JSON.stringify({
       type: "action",
       action: "sendIfPlayerReady",
-      player_id: player_id,
+      access_token: localStorage.getItem("access_token"),
       isReady: isReady,
     })
   );

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import "../../styles/lobby/playerOverview.css";
-import { sendIfPlayerReady, playerQuit } from "../../webSocketConnections/webSocketGameInterface";
+import {
+  sendIfPlayerReady,
+  playerQuit,
+} from "../../webSocketConnections/webSocketGameInterface";
 
 function PlayerNameField({ name }) {
   return (
@@ -33,40 +36,40 @@ export function SingleBlocks({ blockColor }) {
 const CheckBoxReady = ({ isReady }) => {
   return (
     <div className="check-box">
-      <input
-        type="checkbox"
-        checked={isReady}
-      />
+      <input type="checkbox" checked={isReady} />
     </div>
   );
 };
 
-const ButtonReady =({player_id, isReady}) => {
+const ButtonReady = ({ isReady }) => {
   const [isChecked, setIsChecked] = useState(isReady);
 
   const handleCheckboxChange = () => {
     const newCheckedState = !isChecked;
     setIsChecked(newCheckedState);
-    sendIfPlayerReady(player_id, newCheckedState);
+    sendIfPlayerReady(newCheckedState);
   };
-  return(
-    <button type="button" className="ready-button" onClick={handleCheckboxChange}>
-    Ready
-  </button>
+  return (
+    <button
+      type="button"
+      className="ready-button"
+      onClick={handleCheckboxChange}
+    >
+      Ready
+    </button>
   );
 };
 
-const ButtonQuit = ({player_id}) => {
+const ButtonQuit = ({ player_id }) => {
   const hangleQuit = () => {
-    playerQuit(player_id)
+    playerQuit(player_id);
   };
-  return(
+  return (
     <button type="button" className="quit-button" onClick={hangleQuit}>
-    Quite
-  </button>
+      Quite
+    </button>
   );
-}
-
+};
 
 export default function PlayerOverviewField({ playerlist, player_id }) {
   return (
@@ -89,9 +92,11 @@ export default function PlayerOverviewField({ playerlist, player_id }) {
         ))}
       </div>
       <div className="button-div">
-          <ButtonReady player_id={player_id} 
-            isReady ={playerlist[player_id].isReady}/>
-          <ButtonQuit player_id={player_id}/>
+        <ButtonReady
+          player_id={player_id}
+          isReady={playerlist[player_id].isReady}
+        />
+        <ButtonQuit player_id={player_id} />
       </div>
     </div>
   );

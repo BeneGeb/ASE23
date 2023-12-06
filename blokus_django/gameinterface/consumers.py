@@ -145,6 +145,7 @@ class GameConsumer(WebsocketConsumer):
                 player.color = color[index]
                 player.isHuman = True
                 player.isAI = False
+                client_index = player.player_index
                 player.save()
                 break 
 
@@ -154,20 +155,24 @@ class GameConsumer(WebsocketConsumer):
             player_data_json = player.toJSON()
             json_player_list.append(player_data_json) 
 
-        # client_index = 1
 
-        # async_to_sync(self.send(text_data=json.dumps({"type": "send_client_index", "index": client_index})))
+        async_to_sync(self.send(text_data=json.dumps({"type": "send_client_index", "index": client_index})))
         async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "send_joinedPlayer", "playerList": list(json_player_list)}
             )
 
     def updatePlayerSettings(self, json_data):
-        player_id = json_data["player_id"]
+        access_token = json_data["access_token"]
+        payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])    
+        player_id = payload.get("id")  
+
         player_name = json_data["player_name"]
         color = json_data["color"]
 
+
         player = Player.objects.get(player_id=player_id)
 
+   
         player.player_name = player_name
         player.color = color
         player.save()
@@ -177,7 +182,10 @@ class GameConsumer(WebsocketConsumer):
             )
     
     def updateIsReadyStatus(self, json_data):
-        player_id = json_data["player_id"]
+        access_token = json_data["access_token"]
+        payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])    
+        player_id = payload.get("id")
+        
         isReady = json_data["isReady"]
         player = Player.objects.get(player_id=player_id)
 

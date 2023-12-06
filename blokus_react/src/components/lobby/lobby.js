@@ -40,6 +40,7 @@ export default function LobbyPage({}) {
       isReady: false,
     },
   ]);
+  const [playerIndex, setPlayerIndex] = useState(0);
 
   useEffect(() => {
     function fetchData() {
@@ -48,8 +49,13 @@ export default function LobbyPage({}) {
     }
     fetchData();
   }, []);
-  const updatePlayerData = (index, newData) => {
+  const updatePlayerData = (player_id, newData) => {
     const updatedPlayerData = [...playerData];
+
+    const index = playerData.findIndex(
+      (element) => element.player_id === player_id
+    );
+
     updatedPlayerData[index] = {
       ...updatedPlayerData[index],
       player_name: newData.player_name,
@@ -58,8 +64,11 @@ export default function LobbyPage({}) {
     setPlayerData(updatedPlayerData);
   };
 
-  const updateReadyStatus = (index, isReadySatus) => {
+  const updateReadyStatus = (player_id, isReadySatus) => {
     const updatedPlayerData = [...playerData];
+    const index = playerData.findIndex(
+      (element) => element.player_id === player_id
+    );
     updatedPlayerData[index] = {
       ...updatedPlayerData[index],
       isReady: isReadySatus,
@@ -84,25 +93,23 @@ export default function LobbyPage({}) {
       };
       updatePlayerData(json["player_id"], updatedData);
     } else if (type === "send_ready_information") {
-      console.log("sdasdasdasdasdas");
       const player_id = json["player_id"];
       const isReady = json["isReady"];
       updateReadyStatus(player_id, isReady);
+    } else if (type === "send_client_index") {
+      const index = json["index"];
+      setPlayerIndex(index);
     }
   }
 
   return (
     <div class="lobby-page">
       <div className="upper-divs">
-        <PlayerOverviewField playerlist={playerData} player_id={1} />
-        <PlayerEditField
-          playername={playerData[1].player_name}
-          playercolor={playerData[1].color}
-          player_id={1}
-        />
+        <PlayerOverviewField playerlist={playerData} player_id={playerIndex} />
+        <PlayerEditField playerData={playerData[playerIndex]} />
       </div>
       <div className="chat-div">
-        <Chat username={playerData[2].player_name} />
+        <Chat username={playerData[playerIndex].player_name} />
       </div>
     </div>
   );
