@@ -48,3 +48,57 @@ export const startGame = () => {
     })
   );
 };
+
+export const registerOnLobbyMessageCallback = (callBackFunction) => {
+  onMessageCallback = callBackFunction;
+};
+
+export const sendJoinedPlayer = () => {
+  console.log("Joined Lobby");
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "joinLobby",
+      access_token: localStorage.getItem("access_token"),
+    })
+  );
+};
+
+export const sendPlayerData = (player_name, color) => {
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "updatePlayerSettings",
+      access_token: localStorage.getItem("access_token"),
+      player_name: player_name,
+      color: color,
+    })
+  );
+};
+
+export const sendIfPlayerReady = (isReady) => {
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "sendIfPlayerReady",
+      access_token: localStorage.getItem("access_token"),
+      isReady: isReady,
+    })
+  );
+};
+
+export const playerJoinedLobby = (index) => {
+  const color = ["#FF0000", "#0000FF", "#00FF00", "#FFFF00"];
+  const player_name = "Player_" + index;
+  sendJoinedPlayer(index, player_name, color[index]);
+};
+
+export const playerQuit = (player_id) => {
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "playerQuit",
+      player_id: player_id,
+    })
+  );
+};

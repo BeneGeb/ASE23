@@ -1,82 +1,109 @@
-import React, {useState} from 'react';
-import {SingleBlocks} from './playerOverview.js';
-import '../../styles/lobby/playerEditPanel.css'
+import React, { useState } from "react";
+import { sendPlayerData } from "../../webSocketConnections/webSocketGameInterface";
+import "../../styles/lobby/playerEditPanel.css";
 
-
-function NameInput({name}){
-    return(
-        <input type="text" id="playername" name="playername" className='player-name-edit' defaultValue={name}></input>
-    );
-}
-
-const CheckBoxColor = () => {
-  const [selectedOption, setSelectedOption] = useState('');
-
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
-
+const NameInput = ({ name, onPlayerDataChange }) => {
   return (
-    <div className='color-box'>
-      <div className='div-radio-red'>
+    <input
+      type="text"
+      className="player-name-edit"
+      maxLength={10}
+      value={name}
+      name={"player_name"}
+      onChange={onPlayerDataChange}
+    />
+  );
+};
+
+const CheckBoxColor = ({ color, onPlayerDataChange }) => {
+  return (
+    <div className="color-box">
+      <div className="div-radio-red">
         <input
           type="radio"
-          value = "#FF0000"
-          checked={selectedOption === "#FF0000"}
-          onChange={handleOptionChange}
+          name="color"
+          value="#FF0000"
+          checked={color === "#FF0000"}
+          onChange={onPlayerDataChange}
         />
       </div>
-      <div className='div-radio-blue'>
+      <div className="div-radio-blue">
         <input
           type="radio"
-          value = "#0000FF" 
-          checked={selectedOption === "#0000FF"}
-          onChange={handleOptionChange}
+          name="color"
+          value="#0000FF"
+          checked={color === "#0000FF"}
+          onChange={onPlayerDataChange}
         />
       </div>
-      <div className='div-radio-green'>
+      <div className="div-radio-green">
         <input
           type="radio"
-          value = "#00FF00" 
-          checked={selectedOption === "#00FF00"}
-          onChange={handleOptionChange}
+          name="color"
+          value="#00FF00"
+          checked={color === "#00FF00"}
+          onChange={onPlayerDataChange}
         />
       </div>
-      <div className='div-radio-yellow'>
+      <div className="div-radio-yellow">
         <input
           type="radio"
-          value = "#FFFF00" 
-          checked={selectedOption === "#FFFF00"}
-          onChange={handleOptionChange}
+          name="color"
+          value="#FFFF00"
+          checked={color === "#FFFF00"}
+          onChange={onPlayerDataChange}
         />
       </div>
     </div>
   );
-}
-
-const ColorPicker = (defaultcolor) => {
-    const [selectedColor, setSelectedColor] = useState(defaultcolor);
-  
-    const handleColorChange = (color) => {
-      setSelectedColor(color);
-    };
-
-    return (
-        <CheckBoxColor/>
-    );
 };
 
-export default function PlayerEditField({playername, playercolor}){
-    return(
-        <div className='parent-div-edit'>
-           <h1 className='headline-edit'> Personal Settings</h1>
-           <NameInput name={playername}/>
-           <div className='div-blockus-block'>
-                <ColorPicker defaultcolor={playercolor}/>
-           </div>
-           <div className='button-div-edit'>
-                <button type="button" className='confirmation-button'>set</button>
-            </div>
-        </div>
-    );
+export default function PlayerEditField({ playerData }) {
+  const [newPlayerData, setNewPlayerData] = useState();
+
+  function onPlayerDataChange(e) {
+    const { name, value } = e.target;
+
+    setNewPlayerData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  }
+
+  function submitChanges() {
+    const color = newPlayerData?.color ? newPlayerData.color : playerData.color;
+    const player_name = newPlayerData?.player_name
+      ? newPlayerData.player_name
+      : playerData.player_name;
+    sendPlayerData(player_name, color);
+  }
+
+  const showColor = newPlayerData?.color
+    ? newPlayerData.color
+    : playerData.color;
+  const showName = newPlayerData?.player_name
+    ? newPlayerData.player_name
+    : playerData.player_name;
+
+  return (
+    <div className="parent-div-edit">
+      <h1 className="headline-edit"> Personal Settings</h1>
+      <NameInput name={showName} onPlayerDataChange={onPlayerDataChange} />
+      <div className="div-blockus-block">
+        <CheckBoxColor
+          color={showColor}
+          onPlayerDataChange={onPlayerDataChange}
+        />
+      </div>
+      <div className="button-div-edit">
+        <button
+          type="button"
+          className="confirmation-button"
+          onClick={submitChanges}
+        >
+          set
+        </button>
+      </div>
+    </div>
+  );
 }

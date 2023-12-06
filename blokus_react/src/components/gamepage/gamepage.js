@@ -8,7 +8,7 @@ import {
   sendPlacedBlock,
   startGame,
 } from "../../webSocketConnections/webSocketGameInterface";
-import Gamefield from "./Field/Gamefield";
+import Gamefield from "./field/Gamefield";
 import {
   isIndexInArrayOfArray,
   findIndexInArrayOfArray,
@@ -21,11 +21,9 @@ import {
 } from "../../Helper/BlokusHelper";
 import ControlButtons from "./Buttons/ControlButtons";
 
-startWebsocketGameConnection();
+// startWebsocketGameConnection();
 
-setTimeout(startGame, 2000);
-
-//TODO: Block aus Liste entfernen wenn platziert wurde
+// setTimeout(startGame, 2000);
 
 export default function GamePage() {
   const [allBlocks, setAllBlocks] = useState(generateBlocks());
