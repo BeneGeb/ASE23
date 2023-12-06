@@ -38,6 +38,8 @@ class GameConsumer(WebsocketConsumer):
                     self.updatePlayerSettings(json_data)
                 elif action == "sendIfPlayerReady":
                     self.updateIsReadyStatus(json_data)
+                elif action == "playerQuit":
+                    self.deletePlayer(json_data)
                 else:
                     raise "Unsupported action"
         except Exception as e:
@@ -183,6 +185,22 @@ class GameConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "send_ready_information" ,"player_id": player_id, "isReady": isReady}
             )
+        
+    def deletePlayer (self, json_data):
+        player_id = json_data["player_id"]
+        player = Player.objects.get(player_id=player_id)
+
+        player.player_name = "-"
+        player.color = "gray"
+        player.isAI = True
+        player.isHuman = False
+        player.isReady = False
+        player.save()
+            
+        async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {"type": "send_playerData", "player_id": player_id, "player_name": "-", "color": "gray"}
+            )
+
     
     #region Send Requests to client
     def error(self, event):

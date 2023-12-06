@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../../styles/lobby/playerOverview.css";
-import { sendIfPlayerReady } from "../../webSocketConnections/webSocketGameInterface";
+import { sendIfPlayerReady, playerQuit } from "../../webSocketConnections/webSocketGameInterface";
 
 function PlayerNameField({ name }) {
   return (
@@ -58,6 +58,7 @@ const ButtonReady =({player_id, isReady}) => {
 
 const ButtonQuit = ({player_id}) => {
   const hangleQuit = () => {
+    playerQuit(player_id)
   };
   return(
     <button type="button" className="quit-button" onClick={hangleQuit}>

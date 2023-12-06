@@ -103,3 +103,13 @@ export const playerJoinedLobby = (index) => {
   const player_name = "Player_" + index;
   sendJoinedPlayer(index, player_name, color[index]);
 };
+
+export const playerQuit = (player_id) => {
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "playerQuit",
+      player_id: player_id,
+    })
+  );
+};
