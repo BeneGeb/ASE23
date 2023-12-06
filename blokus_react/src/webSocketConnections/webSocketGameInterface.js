@@ -54,6 +54,16 @@ export const registerOnLobbyMessageCallback = (callBackFunction) => {
 };
 
 export const sendJoinedPlayer = (player_id, player_name, color) => {
+  console.log(
+    JSON.stringify({
+      type: "action",
+      action: "joinLobby",
+      player_id: player_id,
+      player_name: player_name,
+      color: color,
+    })
+  );
+
   wsSendMessage(
     JSON.stringify({
       type: "action",
@@ -86,4 +96,10 @@ export const sendIfPlayerReady = (player_id, isReady) => {
       isReady: isReady,
     })
   );
+};
+
+export const playerJoinedLobby = (index) => {
+  const color = ["Red", "Blue", "Green", "Blue"];
+  const player_name = "Player_1";
+  sendJoinedPlayer(index, player_name, color[index]);
 };

@@ -7,10 +7,12 @@ import {
   startWebsocketGameConnection,
   registerOnLobbyMessageCallback,
   sendJoinedPlayer,
+  playerJoinedLobby,
 } from "../../webSocketConnections/webSocketGameInterface";
+
 startWebsocketGameConnection();
 
-setTimeout(sendJoinedPlayer, 2000);
+setTimeout(() => playerJoinedLobby(1), 2000);
 
 export default function LobbyPage({}) {
   const [playerData, setPlayerData] = useState([
@@ -39,20 +41,6 @@ export default function LobbyPage({}) {
       isReady: false,
     },
   ]);
-
-  function playerJoinedLobby(index) {
-    const websocket = startWebsocketGameConnection();
-    const color = ["Red", "Blue", "Green", "Blue"];
-    const player_name = "Player_" + index;
-    // Check if the websocket instance exists before accessing its properties
-    if (websocket && websocket.readyState === websocket.OPEN) {
-      // Use the websocket instance
-      sendJoinedPlayer(index, player_name, color[index]);
-    } else {
-      console.log("WebSocket is not ready yet.");
-    // Handle the case when the WebSocket is not open yet
-    }
-  }
 
   const updatePlayerData = (index, newData) => {
     const updatedPlayerData = [...playerData];
@@ -96,7 +84,7 @@ export default function LobbyPage({}) {
       updateReadyStatus(player_id, isReady);
     }
   }
-  playerJoinedLobby(1);
+
   return (
     <div class="lobby-page">
       <div className="upper-divs">
@@ -113,4 +101,3 @@ export default function LobbyPage({}) {
     </div>
   );
 }
-

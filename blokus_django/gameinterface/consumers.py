@@ -42,6 +42,7 @@ class GameConsumer(WebsocketConsumer):
                     raise "Unsupported action"
         except Exception as e:
             print(f"Receiving Request failed {json_data}: {e}")
+     
           
     #region Handle incoming Requests
     def startGame(self):
@@ -51,8 +52,6 @@ class GameConsumer(WebsocketConsumer):
             Player.objects.all().delete()
             Square.objects.all().delete()
 
-
-  
 
             #Initialize all Square Fields
             empty_field = [] 
@@ -112,10 +111,11 @@ class GameConsumer(WebsocketConsumer):
         player_name = json_data["player_name"]
         color = json_data["color"]
 
-        game = Game.objects.filter(game_id=1)[0]
+        game = Game.objects.all()
 
         if not game:
             game = Game.objects.create(game_id = 1, currPlayer_id = 0)
+        
 
         player_list = Player.objects.all()
 

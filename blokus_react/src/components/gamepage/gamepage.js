@@ -21,9 +21,9 @@ import {
 } from "../../Helper/BlokusHelper";
 import ControlButtons from "./Buttons/ControlButtons";
 
-startWebsocketGameConnection();
+// startWebsocketGameConnection();
 
-setTimeout(startGame, 2000);
+// setTimeout(startGame, 2000);
 
 //TODO: Block aus Liste entfernen wenn platziert wurde
 
