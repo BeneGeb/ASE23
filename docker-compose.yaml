@@ -1,0 +1,48 @@
+# version: "3.7"
+
+# services:
+#   blokus_django:
+#     volumes:
+#       - static:/static
+#     env_file:
+#       - .env
+#     build:
+#       context: ./blokus_django
+#     ports:
+#       - "8000:8000"
+#   blokus_react:
+#     build:
+#       context: ./blokus_react
+#     volumes:
+#       - blokus_react:/app/build
+#   nginx:
+#     build:
+#       context: ./nginx
+#     volumes:
+#       - static:/static
+#       - blokus_react:/var/www/blokus_react
+#     ports:
+#       - "80:80"
+#     depends_on:
+#       - blokus_django
+#       - blokus_react
+
+# volumes:
+#   static:
+#   blokus_react:
+
+services:
+  blokus_django:
+    build: ./blokus_django
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./blokus_django:/blokus_django
+    command: bash -c "python manage.py runserver 0.0.0.0:8000"
+
+  blokus_react:
+    build: ./blokus_react
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./blokus_react:/blokus_react
