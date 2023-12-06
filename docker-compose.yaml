@@ -40,9 +40,9 @@ services:
       - ./blokus_django:/blokus_django
     command: bash -c "python manage.py runserver 0.0.0.0:8000"
 
-  blokus_react:
-    build: ./blokus_react
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./blokus_react:/blokus_react
+  # blokus_react:
+  #   build: ./blokus_react
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./blokus_react:/blokus_react
