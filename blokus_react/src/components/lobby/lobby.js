@@ -11,8 +11,7 @@ import {
 } from "../../webSocketConnections/webSocketGameInterface";
 
 startWebsocketGameConnection();
-
-setTimeout(() => playerJoinedLobby(1), 2000);
+setTimeout(() => playerJoinedLobby(0), 2000);
 
 export default function LobbyPage({}) {
   const [playerData, setPlayerData] = useState([
@@ -88,11 +87,11 @@ export default function LobbyPage({}) {
   return (
     <div class="lobby-page">
       <div className="upper-divs">
-        <PlayerOverviewField playerlist={playerData} player_id={0} />
+        <PlayerOverviewField playerlist={playerData} player_id={1} />
         <PlayerEditField
-          playername={playerData[0].player_name}
-          playercolor={playerData[0].color}
-          player_id={playerData[0]}
+          playername={playerData[1].player_name}
+          playercolor={playerData[1].color}
+          player_id={1}
         />
       </div>
       <div className="chat-div">
