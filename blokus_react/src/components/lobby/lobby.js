@@ -95,7 +95,7 @@ export default function LobbyPage({}) {
         />
       </div>
       <div className="chat-div">
-        <Chat />
+        <Chat username={playerData[2].player_name}/>
       </div>
     </div>
   );
