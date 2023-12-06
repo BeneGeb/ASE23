@@ -12,7 +12,7 @@ export class App extends React.Component {
       <Router>
         <div className="App" style={{ width: "100%", height: "100vh" }}>
           <Routes>
-            <Route exact path="/" element={<Login />} />
+            <Route exact path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/gamepage" element={<GamePage />} />
             <Route path="/lobby" element={<LobbyPage />} />

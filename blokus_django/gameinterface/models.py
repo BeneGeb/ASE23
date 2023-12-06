@@ -7,7 +7,8 @@ class Game(models.Model):
     currPlayer_id = models.IntegerField()
     
 class Player(models.Model):
-    player_id = models.AutoField(primary_key=True)
+    player_index = models.AutoField(primary_key=True)
+    player_id = models.IntegerField(null=True, blank=True)
     game_id = models.ForeignKey(Game, on_delete=models.CASCADE)
     player_name = models.CharField(max_length= 15)
     color = models.CharField(max_length=10)

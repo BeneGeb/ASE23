@@ -1,13 +1,19 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { sendPlayerData } from "../../webSocketConnections/webSocketGameInterface";
 import "../../styles/lobby/playerEditPanel.css";
 
-export default function PlayerEditField({playername, playercolor, player_id}) {
+export default function PlayerEditField({
+  playername,
+  playercolor,
+  player_id,
+}) {
   const [playerData, setPlayerData] = useState({
-    player_name: playername, 
-    color: playercolor, 
-  })
-  
+    player_name: playername,
+    color: playercolor,
+  });
+
+  const [nameInput, setNameInput] = useState(playername);
+
   const updatePlayerName = (newName) => {
     setPlayerData({
       ...playerData,
@@ -22,10 +28,10 @@ export default function PlayerEditField({playername, playercolor, player_id}) {
     });
   };
 
-  const NameInput = ({ name }) => {
+  const NameInput = ({ name, setNameInput }) => {
     const handleChange = (event) => {
       const newVlaue = event.target.value;
-      updatePlayerName(newVlaue);
+      setNameInput(newVlaue);
     };
     return (
       <input
@@ -94,7 +100,7 @@ export default function PlayerEditField({playername, playercolor, player_id}) {
   return (
     <div className="parent-div-edit">
       <h1 className="headline-edit"> Personal Settings</h1>
-        <NameInput name={playerData.player_name} />
+      <NameInput name={nameInput} setNameInput={setNameInput} />
       <div className="div-blockus-block">
         <CheckBoxColor default_color={playerData.color} />
       </div>
@@ -102,7 +108,8 @@ export default function PlayerEditField({playername, playercolor, player_id}) {
         <button
           type="button"
           className="confirmation-button"
-          onClick={() => send_changed_data(player_id, playerData)}>
+          onClick={() => send_changed_data(player_id, playerData)}
+        >
           set
         </button>
       </div>

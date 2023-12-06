@@ -10,8 +10,8 @@ import {
   playerJoinedLobby,
 } from "../../webSocketConnections/webSocketGameInterface";
 
-startWebsocketGameConnection();
-setTimeout(() => playerJoinedLobby(0), 2000);
+// startWebsocketGameConnection();
+// setTimeout(() => playerJoinedLobby(0), 2000);
 
 export default function LobbyPage({}) {
   const [playerData, setPlayerData] = useState([
@@ -41,6 +41,13 @@ export default function LobbyPage({}) {
     },
   ]);
 
+  useEffect(() => {
+    function fetchData() {
+      startWebsocketGameConnection();
+      setTimeout(() => sendJoinedPlayer(), 2000);
+    }
+    fetchData();
+  }, []);
   const updatePlayerData = (index, newData) => {
     const updatedPlayerData = [...playerData];
     updatedPlayerData[index] = {
@@ -95,7 +102,7 @@ export default function LobbyPage({}) {
         />
       </div>
       <div className="chat-div">
-        <Chat username={playerData[2].player_name}/>
+        <Chat username={playerData[2].player_name} />
       </div>
     </div>
   );

@@ -53,24 +53,13 @@ export const registerOnLobbyMessageCallback = (callBackFunction) => {
   onMessageCallback = callBackFunction;
 };
 
-export const sendJoinedPlayer = (player_id, player_name, color) => {
-  console.log(
-    JSON.stringify({
-      type: "action",
-      action: "joinLobby",
-      player_id: player_id,
-      player_name: player_name,
-      color: color,
-    })
-  );
-
+export const sendJoinedPlayer = () => {
+  console.log("Joined Lobby");
   wsSendMessage(
     JSON.stringify({
       type: "action",
       action: "joinLobby",
-      player_id: player_id,
-      player_name: player_name,
-      color: color,
+      access_token: localStorage.getItem("access_token"),
     })
   );
 };

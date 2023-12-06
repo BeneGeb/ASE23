@@ -2,8 +2,12 @@ import json
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 from .models import *
+from users.models import User
+import jwt
 
+JWT_SECRET = "r3FIem8T67NVumSmD7IrdrC042YTrPAugLZJsucI80GLH0mHWkHmahHZKhc3jON_cu5aHMaIRM3u04svAv11QQ"
 
+color = ["#FF0000", "#0000FF", "#00FF00", "#FFFF00"];
 class GameConsumer(WebsocketConsumer):
 
     def connect(self):
@@ -109,11 +113,14 @@ class GameConsumer(WebsocketConsumer):
     #endregion
 
     def joinLobby(self, json_data):
-        player_id = json_data["player_id"]
-        player_name = json_data["player_name"]
-        color = json_data["color"]
+        
+        access_token = json_data["access_token"]
+        payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])    
+        player_id = payload.get("id")  
 
-        game = Game.objects.all()
+        user = User.objects.filter(id=player_id).first()
+
+        game = Game.objects.all()[0]
 
         if not game:
             Player.objects.all().delete()
@@ -123,30 +130,33 @@ class GameConsumer(WebsocketConsumer):
         player_list = Player.objects.all()
 
         if not player_list:
-            player1= Player.objects.create(player_id=0, game_id=game, player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
-            player2= Player.objects.create(player_id=1, game_id=game, player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
-            player3= Player.objects.create(player_id=2, game_id=game, player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
-            player4= Player.objects.create(player_id=3, game_id=game, player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+            player1= Player.objects.create(player_index=0, player_id=None, game_id=game, player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+            player2= Player.objects.create(player_index=1, player_id=None, game_id=game, player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+            player3= Player.objects.create(player_index=2, player_id=None, game_id=game, player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+            player4= Player.objects.create(player_index=3, player_id=None, game_id=game, player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
 
             player_list = [player1, player2, player3, player4]
 
-        for player in player_list:
-            if player.player_id == player_id:
-                player.player_name = player_name
-                player.color = color
+
+        for index, player in enumerate(player_list):
+            if player.player_id == None or player.player_id == user.id:
+                player.player_name = user.name
+                player.player_id = user.id
+                player.color = color[index]
                 player.isHuman = True
                 player.isAI = False
                 player.save()
                 break 
 
-        player = Player.objects.filter(player_id=player_id)[0]
-
         json_player_list = []
 
         for player in player_list:
             player_data_json = player.toJSON()
-            json_player_list.append(player_data_json)
+            json_player_list.append(player_data_json) 
 
+        # client_index = 1
+
+        # async_to_sync(self.send(text_data=json.dumps({"type": "send_client_index", "index": client_index})))
         async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "send_joinedPlayer", "playerList": list(json_player_list)}
             )
@@ -233,6 +243,10 @@ class GameConsumer(WebsocketConsumer):
         isReady = event["isReady"]
         self.send(text_data=json.dumps({"type": "send_ready_information" ,"player_id": player_id, "isReady": isReady}))
     
+    def send_client_index(self, event):
+        index = event["index"]
+        
+        self.send(text_data=json.dumps({"type": "send_ready_information" ,"index": index}))
 
     #Soll ermöglichen sich zu reconnecten
     def get_gamestate(self,event):
