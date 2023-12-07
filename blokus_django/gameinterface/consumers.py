@@ -117,7 +117,7 @@ class GameConsumer(WebsocketConsumer):
 
         user = User.objects.filter(id=player_id).first()
 
-        game = Game.objects.all()[0]
+        game = Game.objects.all().first()
 
         if not game:
             Player.objects.all().delete()
