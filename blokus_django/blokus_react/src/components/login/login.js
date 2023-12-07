@@ -1,35 +1,45 @@
-import React, { useState } from 'react';
-import '../../styles/login/login.css';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import "../../styles/login/login.css";
+import { startWebsocketGameConnection } from "../../webSocketConnections/webSocketGameInterface";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCredentials(prevState => ({
+    setCredentials((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/login', {
-        email: credentials.email,
-        password: credentials.password
+      const response = await fetch("http://localhost:8000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(credentials),
       });
-      console.log('Login successful:', response.data);
-      navigate('/gamepage');
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
+      localStorage.setItem("access_token", data.access_token);
+      navigate("/lobby");
+      //setTimeout(navigate("/lobby"), 10000);
     } catch (error) {
-      console.error('Login error:', error.response ? error.response.data : error.message);
+      console.error(
+        "Login error:",
+        error.response ? error.response.data : error.message
+      );
     }
   };
 
@@ -39,16 +49,37 @@ function Login() {
         <h2>LOGIN</h2>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <input className="login-input" type="email" id="email" name="email" placeholder="EMAIL" value={credentials.email} onChange={handleChange} required />
+            <input
+              className="login-input"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="EMAIL"
+              value={credentials.email}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div className="input-group">
-            <input className="login-input" type="password" id="password" name="password" placeholder="PASSWORD" value={credentials.password} onChange={handleChange} required />
+            <input
+              className="login-input"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="PASSWORD"
+              value={credentials.password}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div className="submit-button-container">
-                <button className="submit-button" type="submit">LOGIN</button>
+            <button className="submit-button" type="submit">
+              LOGIN
+            </button>
           </div>
         </form>
-        <br /><br />
+        <br />
+        <br />
         <Link to="/register">Noch nicht registriert?</Link>
       </div>
     </div>

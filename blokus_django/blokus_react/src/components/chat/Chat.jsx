@@ -7,9 +7,8 @@ import { startWebsocketChatConnection,registerOnMessageCallback} from '../../web
 
 startWebsocketChatConnection()
 
-export default function Chat () {
+export default function Chat ({username}) {
   const [allMessages, setAllMessages] = useState([]);
-  const [username, setUsername] = useState(null);
 
   registerOnMessageCallback(onMessageReceived)
   
@@ -26,7 +25,7 @@ export default function Chat () {
             <h1 className='container-title'>Messages</h1>
             <TextBar/>
           </div>
-          <MessageWindow messages={allMessages} username={""} />
+          <MessageWindow messages={allMessages} username={username} />
         </div>
       </div>
   )
