@@ -25,7 +25,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('gamepage/', index),
     path('register/', index),
-    path('lobby/', index)
+    path('lobby/', index),
+    path('login/', index),
 
 
 ]
