@@ -9,12 +9,13 @@ const Message = ({ text, username}) => (
   </div>
 )
 
-export default function MessageWindow ({ messages = [], username }) {  
+export default function MessageWindow ({ chatJson = { chatlist: [] }}) {
+    console.log(chatJson.chatlist);
     return (
       <div className='message-window'>
-        {messages.map((msg, i) => {
-          return <Message key={i} text={msg} username={username}/>
-        })}
+      {chatJson.chatlist.map((msgJson, index) => (
+        <Message key={index} text={msgJson.message} username={msgJson.username} />
+        ))}
       </div>
     )
  }

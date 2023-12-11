@@ -2,11 +2,11 @@ import React, { Component, useState } from 'react'
 import '../../styles/Chat/TextBar.css'
 import {sendChatMessage} from '../../webSocketConnections/wsChatInterface'
 
-export default function TextBar () {
+export default function TextBar ({username}) {
   const [inputValue, setInputValue] = useState('')
 
   function onClickSend () {
-    sendChatMessage(inputValue)
+    sendChatMessage(inputValue, username)
     setInputValue('')
   }
 
