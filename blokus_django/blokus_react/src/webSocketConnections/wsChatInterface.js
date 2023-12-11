@@ -22,12 +22,12 @@ export const startWebsocketChatConnection = () => {
 
 
 export const registerOnMessageCallback = (callBackFunction) => {
-  onMessageCallback = callBackFunction
+  onMessageCallback = callBackFunction;
 }
 
 export const sendChatMessage = (message, username) => {
     wsSendMessage(JSON.stringify({
         'message': message,
-        'username': username
+        'username': username,
     }))
 }
