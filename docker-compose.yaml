@@ -1,0 +1,8 @@
+services:
+  blokus_django:
+    build: ./blokus_django
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./blokus_django:/blokus_django
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"

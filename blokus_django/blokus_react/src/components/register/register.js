@@ -51,7 +51,7 @@ function Register() {
           </div>
         </form>
         <br /><br />
-        <Link to="/">Bereits registriert? Zurück zum Login</Link>
+        <Link to="/login">Bereits registriert? Zurück zum Login</Link>
         </div>
     </div>
   );
