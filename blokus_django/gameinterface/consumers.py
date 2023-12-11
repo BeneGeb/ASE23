@@ -82,9 +82,10 @@ class GameConsumer(WebsocketConsumer):
 
     def placeField(self, json_data):
         try:
-            index_list = json_data["indexList"]
+            index_list = json_data["indexList"] #Liste mit allen Indizes auf denen ein Blokc platziert wird
             color = json_data["color"]
             blockId = json_data["blockId"]
+
             Square.objects.filter(
                 game_id=1, square_id__in=index_list).update(value=color)
             values_list = Square.objects.values_list('value', flat=True)
@@ -92,7 +93,19 @@ class GameConsumer(WebsocketConsumer):
             game = Game.objects.filter(game_id=1)
             currPlayer_id = game.first().currPlayer_id
             newPlayer_id = (currPlayer_id + 1) % 4
+
+            #Abfrage ob newPlayer eine KI ist
+            #Funktion die KI aufruft, rückgabe ist eine indexliste
+            
+            
+            
+            
+            
             game.update(currPlayer_id=newPlayer_id)
+
+
+
+    
 
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "send_gamefield", "currPlayer": game.first(
