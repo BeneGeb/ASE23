@@ -10,9 +10,8 @@ function Register() {
     email: "",
     password: "",
   });
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
-    const navigate = useNavigate();
     const { name, value } = e.target;
     setCredentials((prevState) => ({
       ...prevState,
