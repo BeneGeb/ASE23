@@ -9,12 +9,16 @@ startWebsocketChatConnection()
 
 export default function Chat ({username}) {
   const [allMessages, setAllMessages] = useState([]);
+  const [usernameMessage, setUsername] = useState([]);
 
   registerOnMessageCallback(onMessageReceived)
   
   function onMessageReceived (msg) {
-    msg = JSON.parse(msg)
-    setAllMessages(allMessages.concat(msg["message"]))
+    const json = JSON.parse(msg)
+    msg = json["message"]
+    const username = json["username"]
+    setUsername(username)
+    setAllMessages(allMessages.concat(msg))
   }
 
 
@@ -23,9 +27,9 @@ export default function Chat ({username}) {
         <div className='container'>
           <div className='chat-header'>
             <h1 className='container-title'>Messages</h1>
-            <TextBar/>
+            <TextBar username={username}/>
           </div>
-          <MessageWindow messages={allMessages} username={username} />
+          <MessageWindow messages={allMessages} username={usernameMessage} />
         </div>
       </div>
   )
