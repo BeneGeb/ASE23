@@ -48,6 +48,8 @@ class GameConsumer(WebsocketConsumer):
                     self.joinLobby(json_data)
                 elif action == "updatePlayerSettings":
                     self.updatePlayerSettings(json_data)
+                elif action == "checkIfStartGame":
+                    self.startReadyStatus()
                 elif action == "sendIfPlayerReady":
                     self.updateIsReadyStatus(json_data)
                 elif action == "playerQuit":
@@ -210,6 +212,24 @@ class GameConsumer(WebsocketConsumer):
             self.room_group_name, {"type": "send_playerData",
                                    "player_id": player_id, "player_name": player_name, "color": color}
         )
+    
+    def startReadyStatus(self):
+
+        ready_players = Player.objects.filter(isReady=True).count()
+        human_players = Player.objects.filter(isHuman=1).count()
+
+        if ready_players == human_players:
+            self.startGame()
+        else:
+            human_players = Player.objects.filter(isHuman=0)
+            json_player_list = []
+            for player in human_players:
+                player_data_json = player.toJSON()
+                json_player_list.append(player_data_json)
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {
+                    "type": "send_missing_players", "unchecked_players": list(json_player_list)}
+            )
 
     def updateIsReadyStatus(self, json_data):
         access_token = json_data["access_token"]
@@ -357,6 +377,12 @@ class GameConsumer(WebsocketConsumer):
         color = event["color"]
         self.send(text_data=json.dumps(
             {"type": "send_playerData", "player_id": player_id, "player_name": player_name, "color": color}))
+    
+    def send_missing_players(self, event):
+        player_list = event["player_list"]
+        self.send(text_data=json.dumps(
+        {"type": "send_missing_players", "player_list": player_list}))
+        
 
     def send_ready_information(self, event):
         player_id = event["player_id"]
