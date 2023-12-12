@@ -20,15 +20,11 @@ import {
   checkFieldPossible,
   evalDiagonalFields,
 } from "../../Helper/BlokusHelper";
-<<<<<<< Updated upstream
-import ControlButtons from "./Buttons/ControlButtons";
 import Chat from "../chat/Chat";
-=======
 
 import PlaceBlockButtons from "./Buttons/placeBlockButtons";
 import SurrChatButtons from "./Buttons/surrChatButtons";
 import WinnerOverview from "./WinnerOverview/WinnerOverview";
->>>>>>> Stashed changes
 
 // startWebsocketGameConnection();
 
@@ -340,8 +336,7 @@ export default function GamePage() {
     setPlayerData(updatedPlayerData);
   }
 
-<<<<<<< Updated upstream
-  function ChatPopup({username}){
+  function ChatPopup({ username }) {
     const [isOpen, setIsOpen] = useState(false);
 
     const togglePopup = () => {
@@ -349,18 +344,19 @@ export default function GamePage() {
     };
     return (
       <div>
-        <button classname="open-button-chat" onClick={togglePopup}>Chat</button>
-  
+        <button classname="open-button-chat" onClick={togglePopup}>
+          Chat
+        </button>
+
         {isOpen && (
           <div className="popup">
-            <Chat username={username}/>
+            <Chat username={username} />
           </div>
         )}
       </div>
     );
   }
-  
-=======
+
   function onSurrender() {
     console.log("Surrender");
     sendPlayerSurrender();
@@ -369,7 +365,6 @@ export default function GamePage() {
   function onChat() {
     console.log("Chat");
   }
->>>>>>> Stashed changes
 
   return (
     <div class="gamepage">
@@ -413,13 +408,7 @@ export default function GamePage() {
           onFilterChange={onFilterChange}
           onSwitchBlockClick={onSwitchBlockClick}
         />
-<<<<<<< Updated upstream
-        <div className="lobby-buttons-div">
-            <ChatPopup username={"username"}/>
-        </div>
-=======
         <SurrChatButtons onSurrender={onSurrender} onChat={onChat} />
->>>>>>> Stashed changes
         <BlockOverview
           key={2}
           currPlayer={2 == currPlayer}
