@@ -52,7 +52,9 @@ class ChatConsumer(WebsocketConsumer):
             for chat in chat_list
         ]
 
-        self.send(text_data=json.dumps({"type": "chat_message", "chatlist": json_chat_list}))
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name, {"type": "send_chat_message", "chatlist": json_chat_list}
+        )
 
     def disconnect(self, close_code):
         async_to_sync(
@@ -61,5 +63,9 @@ class ChatConsumer(WebsocketConsumer):
                 self.channel_name,
             )
         )
+
+    def send_chat_message(self, event):
+        self.send(text_data=json.dumps(
+            {"type": "chat_message", "chatlist": event["chatlist"]}))
 
 
