@@ -18,6 +18,7 @@ def ki_perfom_move(field, ki_id, player_index_id):
     block_variation = block_variation[random.randint(
         0, len(block_variation)-1)]
     print(f"block_variation: {block_variation}")
+    return block_variation
 
 
 def Block_variation(blocks, player_index_id, color, field):
