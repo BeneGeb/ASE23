@@ -66,7 +66,7 @@ const ButtonQuit = ({ player_id }) => {
   };
   return (
     <button type="button" className="quit-button" onClick={hangleQuit}>
-      Quite
+      Quit
     </button>
   );
 };
