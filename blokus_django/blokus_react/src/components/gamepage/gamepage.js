@@ -20,6 +20,7 @@ import {
   evalDiagonalFields,
 } from "../../Helper/BlokusHelper";
 import ControlButtons from "./Buttons/ControlButtons";
+import Chat from "../chat/Chat";
 
 // startWebsocketGameConnection();
 
@@ -295,6 +296,26 @@ export default function GamePage() {
     setPlayerData(updatedPlayerData);
   }
 
+  function ChatPopup({username}){
+    const [isOpen, setIsOpen] = useState(false);
+
+    const togglePopup = () => {
+      setIsOpen(!isOpen);
+    };
+    return (
+      <div>
+        <button classname="open-button-chat" onClick={togglePopup}>Chat</button>
+  
+        {isOpen && (
+          <div className="popup">
+            <Chat username={username}/>
+          </div>
+        )}
+      </div>
+    );
+  }
+  
+
   return (
     <div class="gamepage">
       <div className="overviews-container">
@@ -346,6 +367,9 @@ export default function GamePage() {
           onFilterChange={onFilterChange}
           onSwitchBlockClick={onSwitchBlockClick}
         />
+        <div className="lobby-buttons-div">
+            <ChatPopup username={"username"}/>
+        </div>
         <BlockOverview
           key={2}
           currPlayer={2 == currPlayer}
