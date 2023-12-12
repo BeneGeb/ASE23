@@ -20,6 +20,7 @@ class Player(models.Model):
     isAI = models.BooleanField()
     isHuman = models.BooleanField()
     isReady = models.BooleanField()
+    hasSurrendered = models.BooleanField()
 
     def toJSON(self):
         return {

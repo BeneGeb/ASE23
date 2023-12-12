@@ -87,18 +87,37 @@ export const sendIfPlayerReady = (isReady) => {
   );
 };
 
+export const sendPlayerSurrender = () => {
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "sendPlayerSurrender",
+      access_token: localStorage.getItem("access_token"),
+    })
+  );
+};
+
 export const playerJoinedLobby = (index) => {
   const color = ["#FF0000", "#0000FF", "#00FF00", "#FFFF00"];
   const player_name = "Player_" + index;
   sendJoinedPlayer(index, player_name, color[index]);
 };
 
-export const playerQuit = (player_id) => {
+export const playerQuit = (player_index) => {
   wsSendMessage(
     JSON.stringify({
       type: "action",
       action: "playerQuit",
-      player_id: player_id,
+      player_index: player_index,
+    })
+  );
+};
+
+export const sendIfGameStart = () =>{
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "checkIfStartGame",
     })
   );
 };

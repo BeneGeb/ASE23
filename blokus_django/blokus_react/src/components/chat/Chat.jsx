@@ -1,32 +1,45 @@
-import React from 'react'
-import '../../styles/Chat/Chat.css'
-import { useState } from 'react'
-import MessageWindow from './MessageWindow'
-import TextBar from './TextBar'
-import { startWebsocketChatConnection,registerOnMessageCallback} from '../../webSocketConnections/wsChatInterface'
+import React from "react";
+import "../../styles/Chat/Chat.css";
+import { useState, useEffect } from "react";
+import MessageWindow from "./MessageWindow";
+import TextBar from "./TextBar";
+import {
+  startWebsocketChatConnection,
+  registerOnMessageCallback,
+} from "../../webSocketConnections/wsChatInterface";
 
-startWebsocketChatConnection()
+export default function Chat({ username, inLobby }) {
+  const [chatJson, setChatJson] = useState();
+  let className = "";
 
-export default function Chat ({username}) {
-  const [allMessages, setAllMessages] = useState([]);
+  registerOnMessageCallback(onMessageReceived);
+  useEffect(() => {
+    async function fetchData() {
+      startWebsocketChatConnection();
+    }
+    fetchData();
+  }, []);
 
-  registerOnMessageCallback(onMessageReceived)
-  
-  function onMessageReceived (msg) {
-    msg = JSON.parse(msg)
-    setAllMessages(allMessages.concat(msg["message"]))
+  function onMessageReceived(jsonData) {
+    const json = JSON.parse(jsonData);
+    setChatJson(json);
   }
 
+  if (inLobby) {
+    className = "background-containter";
+  } else {
+    className = "transparent-background-container";
+  }
 
   return (
-      <div className='background-containter'>
-        <div className='container'>
-          <div className='chat-header'>
-            <h1 className='container-title'>Messages</h1>
-            <TextBar/>
-          </div>
-          <MessageWindow messages={allMessages} username={username} />
+    <div className={className}>
+      <div className="container">
+        <div className="chat-header">
+          <h1 className="container-title">Messages</h1>
+          <TextBar username={username} />
         </div>
+        <MessageWindow chatJson={chatJson} />
       </div>
-  )
+    </div>
+  );
 }

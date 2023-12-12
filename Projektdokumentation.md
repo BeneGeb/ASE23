@@ -29,7 +29,34 @@ In unserer Anwendung nutzen wir das **ReactJS-Framework**, welches auf einer hie
 In unserem Backend verwenden wir eine WebSocket-Verbindung für die Kommunikation zwischen einem Client und dem Server. Für die Verarbeitung von WebSocket-Anfragen haben wir eine Funktion definiert, die automatisch aufgerufen wird, sobald der Server eine solche Anfrage empfängt. Diese Funktion fungiert als Interface, das im Sinne des Strategy Patterns. Sie bildet die Schnittstelle zwischen dem Client und dem Algorithmus, der durch die Anfrage ausgelöst wird. Innerhalb dieser Funktion erfolgt die Entscheidung darüber, wie der empfangene Request weiter verarbeitet werden soll. Auf diese Weise ermöglichen wir eine flexible und anpassbare Verarbeitung von WebSocket-Anfragen, wobei die spezifische Logik abhängig von den erhaltenen Daten und Anfragen variiert.
 
 ## Qualitätssicherung
-(Welche Art von Tests haben wir implementiert (Beispiele)? Welche Abdeckung wurde erreicht (Nachweis)?)
+
+In unserem Projekt haben wir verschiedene Arten von automatisierten Tests implementiert, um die Qualität und Zuverlässigkeit unserer Anwendung sicherzustellen. Unsere Tests decken wichtige Aspekte der Authentifizierungsfunktionalität ab, einschließlich der Registrierung und Anmeldung von Benutzern. 
+
+### Implementierte Tests
+
+1. **Registrierungstests:**
+   - Erfolgreiche Registrierung: Überprüfung, dass Benutzer mit gültigen Daten erfolgreich registriert werden können.
+   - Registrierung mit unvollständigen Daten: Sicherstellung, dass die Registrierung fehlschlägt, wenn erforderliche Felder fehlen.
+   - Registrierung mit einer bereits vorhandenen E-Mail: Überprüfung, dass eine Registrierung mit einer bereits verwendeten E-Mail-Adresse abgelehnt wird.
+   - Registrierung mit ungültiger E-Mail: Validierung, dass ungültige E-Mail-Adressen nicht akzeptiert werden.
+
+2. **Anmeldungstests:**
+   - Erfolgreiche Anmeldung: Bestätigung, dass Benutzer mit korrekten Anmeldedaten Zugang erhalten.
+   - Anmeldung mit ungültigen Daten: Überprüfung, dass falsche Anmeldedaten zu einem Fehler der Anmeldung führen.
+
+Die Implementierung unserer Tests erfolgte in der Datei `test.py`, die sich im Verzeichnis `ASE23\blokus_django\tests\test.py` befindet. Um die Tests auszuführen, können Sie im `ASE23\blokus_django`-Terminal den folgenden Befehl verwenden:
+
+```bash
+python manage.py test
+```
+
+### Testabdeckung
+
+Die Tests decken die wesentlichen Funktionen und Fehlerfälle ab. Dies bietet ein solides Fundament für die Gewährleistung der Funktionalität und Sicherheit unserer Anwendung.
+
+### Statische Code Analyse
+
+Um die Sicherheit unserer Applikation zu Testen verwenden wir eine statische Code Analyse. Als Tool haben wir dafür CodeQL verwendet. CodeQL ist eine leistungsstarke statische Code-Analyse-Engine, die von GitHub entwickelt wurde. Sie ermöglicht Entwicklern und Sicherheitsteams, komplexe Codebasen nach Sicherheitslücken und Codefehlern zu durchsuchen.
 
 ## Reuse
 **PyJWT**: Wir haben PyJWT in unserem Backend verwendet. Dadurch ist es uns möglich eine JWT Token basierte Authentifizierung in unserem Projekt zu benutzen  
@@ -38,6 +65,7 @@ In unserem Backend verwenden wir eine WebSocket-Verbindung für die Kommunikatio
 
 ## Continuous Integration
 Wir haben unsere verschiedenen Beiträge über Github miteinander vereint. Dafür habenw wir mit Pull Requests gearbeitet. Jeder von uns hat auf seinem eigenen Branch gearbeitet und einen Pull Request zum mergen auf den main branch erstellt. Anschließend muss der Pull Request von einem anderen Nutzer reviewed werden, bevor die Änderungen auf den main branch gepusht werden.
+
 
 ## Dokumentation (Benutzersicht)
 Unsere Anwendung wird über Docker bereitgestellt.
