@@ -129,40 +129,40 @@ def all_blocks():
     block17 = [
         [False, False, False, False, False],
         [False, True, False, False, False],
+        [False, True, False, False, False],
         [False, True, True, True, False],
-        [False, False, False, False, False],
         [False, False, False, False, False],
     ]
 
     block18 = [
         [False, False, False, False, False],
-        [False, False, False, False, False],
-        [False, True, True, True, False],
+        [False, True, True, False, False],
+        [False, False, True, True, False],
         [False, False, False, True, False],
         [False, False, False, False, False],
     ]
 
     block19 = [
         [False, False, False, False, False],
-        [False, False, True, False, False],
+        [False, True, False, False, False],
         [False, True, True, True, False],
-        [False, False, False, False, False],
+        [False, False, False, True, False],
         [False, False, False, False, False],
     ]
 
     block20 = [
         [False, False, False, False, False],
-        [False, False, False, True, False],
+        [False, True, False, False, False],
         [False, True, True, True, False],
-        [False, False, False, False, False],
+        [False, False, True, False, False],
         [False, False, False, False, False],
     ]
 
     block21 = [
         [False, False, False, False, False],
-        [False, False, False, False, False],
+        [False, False, True, False, False],
         [False, True, True, True, False],
-        [False, False, False, False, False],
+        [False, False, True, False, False],
         [False, False, False, False, False],
     ]
 

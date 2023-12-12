@@ -147,7 +147,8 @@ class GameConsumer(WebsocketConsumer):
             newPlayer = Player.objects.get(id=newPlayer_id)
             if newPlayer.isAI:
                 newPlayer_id = (newPlayer_id + 1) % 4
-                new_index_list = ki_perfom_move(values_list, newPlayer_id)
+                new_index_list = ki_perfom_move(
+                    values_list, 1, Player.objects.all().first().player_index)
                 Square.objects.filter(
                     game_id=1, square_id__in=new_index_list).update(value=color)
                 values_list = Square.objects.values_list('value', flat=True)
