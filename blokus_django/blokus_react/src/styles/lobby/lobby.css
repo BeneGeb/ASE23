@@ -19,6 +19,12 @@
     flex-direction: row;
 }
 
+.chat-inner-div{
+    width: 59%;
+    height: 65%;
+    margin: 3%;
+}
+
 .chat-div{
     width: 100%;
     height: 50%;
