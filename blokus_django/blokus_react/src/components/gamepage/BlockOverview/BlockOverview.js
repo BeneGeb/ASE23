@@ -6,7 +6,6 @@ import { useState } from "react";
 export default function BlockOverview({
   playerData,
   currPlayer,
-  allBlocks,
   onFilterChange,
   onSwitchBlockClick,
 }) {

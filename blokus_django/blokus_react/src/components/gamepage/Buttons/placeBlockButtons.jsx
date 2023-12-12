@@ -1,5 +1,5 @@
 import "../../../styles/Gamepage/Buttons/controlbuttons.css";
-export default function ControlButtons({ onSubmit, onRotate, onMirror }) {
+export default function PlaceBlockButtons({ onSubmit, onRotate, onMirror }) {
   return (
     <div className="control-buttons-container">
       <button

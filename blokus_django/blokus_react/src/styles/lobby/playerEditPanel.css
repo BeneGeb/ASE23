@@ -1,15 +1,15 @@
 .parent-div-edit{
-    background-color: #d9d9d9d0;
     border-radius: 25px;
     width: 25%;
     height: 100%;
     margin-left:3%;
     border-style: solid;
     border-width: 3px;
-    border-color: #b1b1b1;
     display: flex;
     justify-content: space-evenly;
     flex-direction: column;
+    background-color: #d9d9d9d0;
+    border-color: #b1b1b1;
     box-shadow: 3px 3px rgba(102, 100, 100, 0.226);
 }
 

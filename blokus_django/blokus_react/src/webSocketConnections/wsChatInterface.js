@@ -1,33 +1,34 @@
-let onMessageCallback
-let wsSendMessage
+let onMessageCallback;
+let wsSendMessage;
 
 export const startWebsocketChatConnection = () => {
-    let url = "ws://127.0.0.1:8000/ws/chat/"
-    const ws = new window.WebSocket(url) || {}
-   
-    ws.onopen = () => {
-        console.log('opened Websocket Chat connection')
-    }
+  let url = "ws://127.0.0.1:8000/ws/chat/";
+  const ws = new window.WebSocket(url) || {};
 
-    ws.onclose = (e) => {
-        console.log('close Websocket Chat connection: ', e.code, e.reason)
-    }
+  ws.onopen = () => {
+    console.log("opened Websocket Chat connection");
+  };
 
-    ws.onmessage = (e) => {
-        onMessageCallback(e.data)
-    }
+  ws.onclose = (e) => {
+    console.log("close Websocket Chat connection: ", e.code, e.reason);
+  };
 
-    wsSendMessage = ws.send.bind(ws)
-}
+  ws.onmessage = (e) => {
+    onMessageCallback(e.data);
+  };
 
+  wsSendMessage = ws.send.bind(ws);
+};
 
 export const registerOnMessageCallback = (callBackFunction) => {
   onMessageCallback = callBackFunction;
-}
+};
 
-export const sendChatMessage = (message, username) => {
-    wsSendMessage(JSON.stringify({
-        'message': message,
-        'username': username,
-    }))
-}
+export const sendChatMessage = (message) => {
+  wsSendMessage(
+    JSON.stringify({
+      message: message,
+      access_token: localStorage.getItem("access_token"),
+    })
+  );
+};
