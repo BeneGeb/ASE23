@@ -7,8 +7,9 @@ import { startWebsocketChatConnection,registerOnMessageCallback} from '../../web
 
 startWebsocketChatConnection()
 
-export default function Chat ({username}) {
+export default function Chat ({username, inLobby}) {
   const [chatJson, setChatJson] = useState();
+  let className = '';
 
   registerOnMessageCallback(onMessageReceived)
   
@@ -17,8 +18,15 @@ export default function Chat ({username}) {
     setChatJson(json)
   }
 
+  if(inLobby){
+    className = 'background-containter';
+  }
+  else {
+    className = 'transparent-background-container';
+  }
+
   return (
-      <div className='background-containter'>
+      <div className={className}>
         <div className='container'>
           <div className='chat-header'>
             <h1 className='container-title'>Messages</h1>

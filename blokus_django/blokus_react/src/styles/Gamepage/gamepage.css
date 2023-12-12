@@ -138,21 +138,17 @@
     opacity: 0.7;
 }
 
-.open-button-chat{
-    
-}
-
 .popup {
     position: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 50%;
-    height: 50%;
-    top: 50%;
+    height:35%;
+    top: 75%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0);
     border-radius: 25px;
     border: 1px solid #ccc;
     z-index: 1000;

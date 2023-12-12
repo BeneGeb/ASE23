@@ -114,7 +114,7 @@ export default function LobbyPage({}) {
       </div>
       <div className="chat-div">
         <div className="chat-inner-div">
-          <Chat username={playerData[playerIndex].player_name} />
+          <Chat username={playerData[playerIndex].player_name} inLobby={true} />
         </div>
       </div>
     </div>
