@@ -50,28 +50,24 @@ export default function GamePage() {
       player_id: 0,
       player_name: "-",
       color: "red",
-      selectedBlock: allBlocks.get("red")[0],
       selectedFilter: 1,
     },
     {
       player_id: 1,
       player_name: "-",
       color: "green",
-      selectedBlock: allBlocks.get("green")[0],
       selectedFilter: 1,
     },
     {
       player_id: 2,
       player_name: "-",
       color: "blue",
-      selectedBlock: allBlocks.get("blue")[0],
       selectedFilter: 1,
     },
     {
       player_id: 3,
       player_name: "-",
       color: "yellow",
-      selectedBlock: allBlocks.get("yellow")[0],
       selectedFilter: 1,
     },
   ]);
@@ -93,10 +89,7 @@ export default function GamePage() {
       );
     } else if (type === "send_block_placed") {
       deletePlacedBlockFromAllBlocks(json["playerId"], json["blockId"]);
-      evalMarkedFields(squaresArray, null);
     } else if (type === "send_end_game") {
-      console.log(jsonData);
-      console.log("Game Ended");
       const showWinner = () => setShowWinner(true);
       showWinner();
     }
@@ -115,8 +108,19 @@ export default function GamePage() {
         color: colorMapping[newData.color],
         player_name: newData.player_name,
       };
+
+      if (!updatedPlayerData[index].selectedBlock) {
+        updatedPlayerData[index].selectedBlock = allBlocks.get(
+          colorMapping[newData.color]
+        )[0];
+      }
     });
-    console.log(updatedPlayerData);
+
+    const currPlayerData = updatedPlayerData.find(
+      (player) => player.player_id === currPlayer
+    );
+
+    evalMarkedFields(field, currPlayerData.selectedBlock);
     setPlayerData(updatedPlayerData);
     setPlacedBlock([]);
   }
@@ -165,6 +169,7 @@ export default function GamePage() {
     if (selectedBlock == null) {
       selectedBlock = currPlayerData.selectedBlock;
     }
+    console.log(currPlayerData);
 
     if (selectedBlock == null) {
       setMarkedFields([]);
