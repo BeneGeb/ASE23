@@ -18,6 +18,7 @@ colorMatcher = {
     "#00FF00": "green"
 }
 
+
 class GameConsumer(WebsocketConsumer):
 
     def connect(self):
@@ -40,7 +41,7 @@ class GameConsumer(WebsocketConsumer):
         # player.isReady = False
         # player.save()
         Player.objects.all().delete()
-        #self.startGame()
+        # self.startGame()
 
     def receive(self, text_data):
         json_data = json.loads(text_data)
@@ -75,7 +76,7 @@ class GameConsumer(WebsocketConsumer):
     # region Handle incoming Requests
 
     def startGame(self):
-        
+
         # Delete old Data
         Square.objects.all().delete()
 
@@ -87,7 +88,6 @@ class GameConsumer(WebsocketConsumer):
                 square_id=i, game_id=game, value="")
             empty_field.append(square.value)
 
-
         allHuman = Player.objects.filter(isHuman=True).count()
         allAi = Player.objects.filter(isAI=True)
         for index, ai in enumerate(allAi):
@@ -97,8 +97,8 @@ class GameConsumer(WebsocketConsumer):
             ai.color = color[allHuman + index]
             ai.save()
 
-
-        player_list = [{'color': player.color, 'player_id': player.player_index, 'player_name': player.player_name} for player in Player.objects.all()]
+        player_list = [{'color': player.color, 'player_id': player.player_index,
+                        'player_name': player.player_name} for player in Player.objects.all()]
 
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name, {
@@ -107,7 +107,7 @@ class GameConsumer(WebsocketConsumer):
         # Send empty generated Field to Clients
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name, {
-                "type": "send_gamefield", "field": empty_field, "currPlayer": game.currPlayer_id, "playerList": player_list }
+                "type": "send_gamefield", "field": empty_field, "currPlayer": game.currPlayer_id, "playerList": player_list}
         )
 
         # except Exception as e:
@@ -121,7 +121,8 @@ class GameConsumer(WebsocketConsumer):
     def placeField(self, json_data):
         print("placeField")
         try:
-            index_list = json_data["indexList"] #Liste mit allen Indizes auf denen ein Blokc platziert wird
+            # Liste mit allen Indizes auf denen ein Blokc platziert wird
+            index_list = json_data["indexList"]
             color = json_data["color"]
             blockId = json_data["blockId"]
 
@@ -137,28 +138,36 @@ class GameConsumer(WebsocketConsumer):
                     newPlayer_id = (newPlayer_id + 1) % 4
                 else:
                     break
-            
+
             while Player.objects.filter(player_index=newPlayer_id).first().isAI:
                 print("AUFRUF KI")
-                next_player = Player.objects.filter(player_index=newPlayer_id).first()
+                next_player = Player.objects.filter(
+                    player_index=newPlayer_id).first()
                 if next_player.isAI:
-                    index_list = ki_perform_move(values_list, newPlayer_id, next_player.color )
-                    Square.objects.filter(
-                    game_id=1, square_id__in=index_list).update(value=colorMatcher[next_player.color])
+                    index_list = ki_perform_move(
+                        values_list, newPlayer_id, next_player.color)
+                    if index_list != []:
 
-                    values_list = Square.objects.values_list('value', flat=True)
-                    newPlayer_id = (newPlayer_id + 1) % 4
+                        Square.objects.filter(
+                            game_id=1, square_id__in=index_list).update(value=colorMatcher[next_player.color])
 
-            #Abfrage ob newPlayer eine KI ist
-            #Funktion die KI aufruft, rückgabe ist eine indexliste
+                        values_list = Square.objects.values_list(
+                            'value', flat=True)
+                        newPlayer_id = (newPlayer_id + 1) % 4
+                    else:
+                        next_player.hasSurrendered = True
+                        next_player.save()
+                        newPlayer_id = (newPlayer_id + 1) % 4
+                        #  newPlayer_id = (newPlayer_id + 1) % 4
+                        # continue
 
-
-
-
+            # Abfrage ob newPlayer eine KI ist
+            # Funktion die KI aufruft, rückgabe ist eine indexliste
 
             game.update(currPlayer_id=newPlayer_id)
 
-            player_list = [{'color': player.color, 'player_id': player.player_index, 'player_name': player.player_name} for player in Player.objects.all()]
+            player_list = [{'color': player.color, 'player_id': player.player_index,
+                            'player_name': player.player_name} for player in Player.objects.all()]
 
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "send_gamefield", "currPlayer": game.first(
@@ -248,7 +257,7 @@ class GameConsumer(WebsocketConsumer):
             self.room_group_name, {"type": "send_playerData",
                                    "player_id": player_id, "player_name": player_name, "color": color}
         )
-    
+
     def startReadyStatus(self):
 
         ready_players = Player.objects.filter(isReady=True).count()
@@ -257,12 +266,12 @@ class GameConsumer(WebsocketConsumer):
         if ready_players == human_players:
             self.startGame()
         else:
-            
+
             async_to_sync(self.channel_layer.group_send)(
                 async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {"type": "error",
-                                       "message": "missing checkmarks of players"}
-            )
+                    self.room_group_name, {"type": "error",
+                                           "message": "missing checkmarks of players"}
+                )
             )
 
     def updateIsReadyStatus(self, json_data):
@@ -294,29 +303,27 @@ class GameConsumer(WebsocketConsumer):
 
         player_list = Player.objects.all()
 
-
         if player_index != 3:
-            for i in range (player_index, len(filtered_players)):
-                    print(i)
-                    player = Player.objects.get(player_index=i)
-                    player.player_index = i
-                    player.player_id = player_list[i+1].player_id
-                    player.color = player_list[i+1].color
-                    player.player_name = player_list[i+1].player_name
-                    player.isAI  = player_list[i+1].isAI
-                    player.isHuman = player_list[i+1].isHuman
-                    player.isReady = player_list[i+1].isReady
-                    player.save()
+            for i in range(player_index, len(filtered_players)):
+                print(i)
+                player = Player.objects.get(player_index=i)
+                player.player_index = i
+                player.player_id = player_list[i+1].player_id
+                player.color = player_list[i+1].color
+                player.player_name = player_list[i+1].player_name
+                player.isAI = player_list[i+1].isAI
+                player.isHuman = player_list[i+1].isHuman
+                player.isReady = player_list[i+1].isReady
+                player.save()
 
         player = Player.objects.get(player_index=len(filtered_players)-1)
         player.player_id = None
         player.player_name = "-"
         player.color = "gray"
         player.isAI = True
-        player.isHuman = False  
+        player.isHuman = False
         player.isReady = False
         player.save()
-        
 
         json_player_list = []
 
@@ -325,7 +332,7 @@ class GameConsumer(WebsocketConsumer):
         for player in player_list:
             player_data_json = player.toJSON()
             json_player_list.append(player_data_json)
-        
+
         if len(Player.objects.filter(isHuman=0)) == 4:
             Game.objects.all().delete()
             Player.objects.all().delete()
@@ -334,7 +341,6 @@ class GameConsumer(WebsocketConsumer):
             self.room_group_name, {
                 "type": "send_joinedPlayer", "playerList": list(json_player_list)}
         )
-
 
         # async_to_sync(self.channel_layer.group_send)(
         #     self.room_group_name, {"type": "send_playerData",
@@ -345,44 +351,45 @@ class GameConsumer(WebsocketConsumer):
 
     def playerSurrender(self, json_data):
         access_token = json_data["access_token"]
-        #player = Player.objects.get(player_id=player_id)
+        # player = Player.objects.get(player_id=player_id)
         payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])
         game = Game.objects.get(game_id=1)
-        #player_id = payload.get("id")
-        
+        # player_id = payload.get("id")
 
         player_id = game.currPlayer_id
         player = Player.objects.get(player_index=player_id)
 
         player.hasSurrendered = True
         player.save()
-        
+
         player_surrendered = Player.objects.filter(hasSurrendered=True).count()
-        if  player_surrendered == 4:    
-            Square.objects.all().delete()   
+        if player_surrendered == 4:
+            Square.objects.all().delete()
             Game.objects.all().delete()
             Player.objects.all().delete()
+            # TODO KI.objects.all().delete()
             Chat.objects.all().delete()
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "send_end_game"}
             )
-            async_to_sync(self.channel_layer.group_discard)(self.room_group_name, self.channel_name)
-            return 
+            async_to_sync(self.channel_layer.group_discard)(
+                self.room_group_name, self.channel_name)
+            return
 
-    
         if player.player_index == game.currPlayer_id:
             newPlayer_id = (game.currPlayer_id + 1) % 4
             while Player.objects.filter(player_index=newPlayer_id).first().hasSurrendered:
                 newPlayer_id = (newPlayer_id + 1) % 4
-            
+
         game.currPlayer_id = newPlayer_id
         game.save()
 
-      
         values_list = Square.objects.values_list('value', flat=True)
-        player_list = [{'color': player.color, 'player_id': player.player_index, 'player_name': player.player_name} for player in Player.objects.all()]
+        player_list = [{'color': player.color, 'player_id': player.player_index,
+                        'player_name': player.player_name} for player in Player.objects.all()]
         async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name, {"type": "send_gamefield", "currPlayer": game.currPlayer_id, "field": list(values_list), "playerList": player_list}
+            self.room_group_name, {"type": "send_gamefield", "currPlayer": game.currPlayer_id, "field": list(
+                values_list), "playerList": player_list}
         )
 
     def error(self, event):
@@ -413,7 +420,7 @@ class GameConsumer(WebsocketConsumer):
         player_name = event["player_name"]
         color = event["color"]
         self.send(text_data=json.dumps(
-            {"type": "send_playerData", "player_id": player_id, "player_name": player_name, "color": color})) 
+            {"type": "send_playerData", "player_id": player_id, "player_name": player_name, "color": color}))
 
     def send_ready_information(self, event):
         player_id = event["player_id"]
@@ -432,7 +439,7 @@ class GameConsumer(WebsocketConsumer):
 
         self.send(text_data=json.dumps(
             {"type": "send_start_game", "redirect": redirect}))
-        
+
     def send_end_game(self, event):
         self.send(text_data=json.dumps(
             {"type": "send_end_game"}))

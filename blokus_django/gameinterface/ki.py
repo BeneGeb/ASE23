@@ -32,7 +32,7 @@ def ki_perform_move(field, inc_player_index, color_hex):
     block_variation = block_variation[random.randint(
         0, len(block_variation)-1)]
     if block_variation == []:
-        return False
+        return []
     print(f"block_variation: {block_variation}")
     return block_variation
 
