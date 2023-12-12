@@ -9,13 +9,13 @@ def ki_move(field, blocks, player_index_id, color):
     # print(Finddiagonal)
     markedfiled = []
     startpos = 0
-    player_index_id = 3
+
     if len(Finddiagonal) != 0:
         for index in Finddiagonal:
             newfield = block_valuator.evalAllFixedIndices(index)
-        for possibility in newfield:
-            if check_possible_moves(field, possibility, color):
-                markedfiled.append(possibility)
+            for possibility in newfield:
+                if check_possible_moves(field, possibility, color):
+                    markedfiled.append(possibility)
         # print(f"markedfiled: {markedfiled}")
 
         k = 0

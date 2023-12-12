@@ -5,11 +5,18 @@ from .models import *
 from users.models import User
 from chat.models import Chat
 import jwt
+from .ki import ki_perform_move
 
 JWT_SECRET = "r3FIem8T67NVumSmD7IrdrC042YTrPAugLZJsucI80GLH0mHWkHmahHZKhc3jON_cu5aHMaIRM3u04svAv11QQ"
 
 color = ["#FF0000", "#0000FF", "#00FF00", "#FFFF00"]
 
+colorMatcher = {
+    "#FF0000": "red",
+    "#0000FF": "blue",
+    "#FFFF00": "yellow",
+    "#00FF00": "green"
+}
 
 class GameConsumer(WebsocketConsumer):
 
@@ -33,7 +40,7 @@ class GameConsumer(WebsocketConsumer):
         # player.isReady = False
         # player.save()
         Player.objects.all().delete()
-        self.startGame()
+        #self.startGame()
 
     def receive(self, text_data):
         json_data = json.loads(text_data)
@@ -112,6 +119,7 @@ class GameConsumer(WebsocketConsumer):
         #     print(e)
 
     def placeField(self, json_data):
+        print("placeField")
         try:
             index_list = json_data["indexList"] #Liste mit allen Indizes auf denen ein Blokc platziert wird
             color = json_data["color"]
@@ -129,10 +137,17 @@ class GameConsumer(WebsocketConsumer):
                     newPlayer_id = (newPlayer_id + 1) % 4
                 else:
                     break
+            
+            while Player.objects.filter(player_index=newPlayer_id).first().isAI:
+                print("AUFRUF KI")
+                next_player = Player.objects.filter(player_index=newPlayer_id).first()
+                if next_player.isAI:
+                    index_list = ki_perform_move(values_list, newPlayer_id, next_player.color )
+                    Square.objects.filter(
+                    game_id=1, square_id__in=index_list).update(value=colorMatcher[next_player.color])
 
-            if Player.objects.filter(player_index=newPlayer_id).first().isAI:
-                #index_list = 
-                pass
+                    values_list = Square.objects.values_list('value', flat=True)
+                    newPlayer_id = (newPlayer_id + 1) % 4
 
             #Abfrage ob newPlayer eine KI ist
             #Funktion die KI aufruft, rückgabe ist eine indexliste
