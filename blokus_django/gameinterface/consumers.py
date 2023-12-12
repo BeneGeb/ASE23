@@ -3,6 +3,7 @@ from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 from .models import *
 from users.models import User
+from .ki import ki_perfom_move
 import jwt
 
 JWT_SECRET = "r3FIem8T67NVumSmD7IrdrC042YTrPAugLZJsucI80GLH0mHWkHmahHZKhc3jON_cu5aHMaIRM3u04svAv11QQ"
@@ -46,12 +47,32 @@ class GameConsumer(WebsocketConsumer):
                     self.updateIsReadyStatus(json_data)
                 elif action == "playerQuit":
                     self.deletePlayer(json_data)
+                elif action == "testenq":
+                    self.testdate(json_data)
+                elif action == "output":
+                    self.outputs(json_data)
                 else:
                     raise "Unsupported action"
         except Exception as e:
             print(f"Receiving Request failed {json_data}: {e}")
 
     # region Handle incoming Requests
+    def testdate(self, json_data):
+        player = Player.objects.all().first()
+        ki = KI.objects.create(ki_id=1, player_index=player)
+        ki.save()
+
+    def outputs(self, json_data):
+        ki = KI.objects.all().first()
+        # print(ki.set_blocks(all_blocks()))
+        block1 = ki.get_blocks()[0]
+        # print(block1)
+        # print(ki.toJSON())
+        # print(ki)
+        values_list = Square.objects.values_list('value', flat=True)
+        ki_perfom_move(
+            values_list, 1, Player.objects.all().first().player_index)
+        # print(values_list)
 
     def startGame(self):
         try:
@@ -82,7 +103,8 @@ class GameConsumer(WebsocketConsumer):
 
     def placeField(self, json_data):
         try:
-            index_list = json_data["indexList"] #Liste mit allen Indizes auf denen ein Blokc platziert wird
+            # Liste mit allen Indizes auf denen ein Blokc platziert wird
+            index_list = json_data["indexList"]
             color = json_data["color"]
             blockId = json_data["blockId"]
 
@@ -94,18 +116,19 @@ class GameConsumer(WebsocketConsumer):
             currPlayer_id = game.first().currPlayer_id
             newPlayer_id = (currPlayer_id + 1) % 4
 
-            #Abfrage ob newPlayer eine KI ist
-            #Funktion die KI aufruft, rückgabe ist eine indexliste
-            
-            
-            
-            
-            
+            # Abfrage ob newPlayer eine KI ist
+            # Funktion die KI aufruft, rückgabe ist eine indexliste
+            newPlayer = Player.objects.get(id=newPlayer_id)
+            if newPlayer.isAI:
+                newPlayer_id = (newPlayer_id + 1) % 4
+                new_index_list = ki_perfom_move(values_list, newPlayer_id)
+                Square.objects.filter(
+                    game_id=1, square_id__in=new_index_list).update(value=color)
+                values_list = Square.objects.values_list('value', flat=True)
+
+                print("KI ist dran")
+
             game.update(currPlayer_id=newPlayer_id)
-
-
-
-    
 
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "send_gamefield", "currPlayer": game.first(
@@ -150,11 +173,11 @@ class GameConsumer(WebsocketConsumer):
             player1 = Player.objects.create(player_index=0, player_id=None, game_id=game,
                                             player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
             player2 = Player.objects.create(player_index=1, player_id=None, game_id=game,
-                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=True)
             player3 = Player.objects.create(player_index=2, player_id=None, game_id=game,
-                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=True)
             player4 = Player.objects.create(player_index=3, player_id=None, game_id=game,
-                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=True)
 
             player_list = [player1, player2, player3, player4]
 
