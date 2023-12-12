@@ -175,7 +175,6 @@ class GameConsumer(WebsocketConsumer):
                 player.color = color[index]
                 player.isHuman = True
                 player.isAI = False
-                client_index = player.player_index
                 player.save()
                 break
 
@@ -186,7 +185,7 @@ class GameConsumer(WebsocketConsumer):
             json_player_list.append(player_data_json)
 
         async_to_sync(self.send(text_data=json.dumps(
-            {"type": "send_client_index", "index": client_index})))
+            {"type": "send_player_id", "player_id": user.id})))
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name, {
                 "type": "send_joinedPlayer", "playerList": list(json_player_list)}
@@ -238,6 +237,23 @@ class GameConsumer(WebsocketConsumer):
         player = Player.objects.get(player_index=player_index)
         filtered_players = Player.objects.filter(isHuman=1)
 
+        player_list = Player.objects.all()
+
+
+        if player_index != 3:
+            for i in range (player_index, len(filtered_players)):
+                    print(i)
+                    player = Player.objects.get(player_index=i)
+                    player.player_index = i
+                    player.player_id = player_list[i+1].player_id
+                    player.color = player_list[i+1].color
+                    player.player_name = player_list[i+1].player_name
+                    player.isAI  = player_list[i+1].isAI
+                    player.isHuman = player_list[i+1].isHuman
+                    player.isReady = player_list[i+1].isReady
+                    player.save()
+
+        player = Player.objects.get(player_index=len(filtered_players)-1)
         player.player_id = None
         player.player_name = "-"
         player.color = "gray"
@@ -245,21 +261,7 @@ class GameConsumer(WebsocketConsumer):
         player.isHuman = False  
         player.isReady = False
         player.save()
-
-        player_list = Player.objects.all()
-        print(player_list)
-        print(len(filtered_players))
-
-        for i in range (player_index, len(filtered_players)):
-                player = Player.objects.get(player_index=i)
-                player.player_index = i
-                player.player_id = player_list[i+1].player_id
-                player.color = player_list[i+1].color
-                player.player_name = player_list[i+1].player_name
-                player.isAI  = player_list[i+1].isAI
-                player.isHuman = player_list[i+1].isHuman
-                player.isReady = player_list[i+1].isReady
-                player_list[i].save()
+        
 
         json_player_list = []
 
@@ -364,11 +366,11 @@ class GameConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps(
             {"type": "send_ready_information", "player_id": player_id, "isReady": isReady}))
 
-    def send_client_index(self, event):
-        index = event["index"]
+    def send_player_id(self, event):
+        player_id = event["index"]
 
         self.send(text_data=json.dumps(
-            {"type": "send_ready_information", "index": index}))
+            {"type": "send_player_id", "player_id": player_id}))
 
     def send_start_game(self, event):
         redirect = event["redirect"]
