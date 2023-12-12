@@ -15,9 +15,28 @@ def ki_move(field, blocks, player_index_id, color):
             newfield = block_valuator.evalAllFixedIndices(index)
         for possibility in newfield:
             if check_possible_moves(field, possibility, color):
-                print("KI has found a move")
                 markedfiled.append(possibility)
-        print(f"markedfiled: {markedfiled}")
+        # print(f"markedfiled: {markedfiled}")
+
+        k = 0
+        for j in range(2):
+            k += 1
+            for i in range(3):
+                k += 1
+                newfield = block_valuator.rotateBlock()
+                newfield = block_valuator.evalAllFixedIndices(index)
+
+                for possibility in newfield:
+                    if check_possible_moves(field, possibility, color):
+                        markedfiled.append(possibility)
+                # print(f"markedfiled: {markedfiled}")
+                # if markedfiled != []:
+                #     break
+            newfield = block_valuator.mirrorBlock()
+            newfield = block_valuator.evalAllFixedIndices(index)
+            if check_possible_moves(field, possibility, color):
+                markedfiled.append(possibility)
+        # print(k)
         return markedfiled
 
     elif len(Finddiagonal) == 0:
@@ -37,25 +56,30 @@ def ki_move(field, blocks, player_index_id, color):
         for possibility in newfield:
             if check_possible_moves(field, possibility, color):
                 markedfiled.append(possibility)
-        print(f"markedfiled: {markedfiled}")
+        # print(f"markedfiled: {markedfiled}")
+        k = 0
+        for j in range(2):
+            k += 1
+            for i in range(3):
+                k += 1
+                newfield = block_valuator.rotateBlock()
+                newfield = block_valuator.evalAllFixedIndices(startpos)
+
+                for possibility in newfield:
+                    if check_possible_moves(field, possibility, color):
+                        markedfiled.append(possibility)
+                # print(f"markedfiled: {markedfiled}")
+                # if markedfiled != []:
+                #     break
+            newfield = block_valuator.mirrorBlock()
+            newfield = block_valuator.evalAllFixedIndices(startpos)
+            if check_possible_moves(field, possibility, color):
+                markedfiled.append(possibility)
+        # print(k)
         return markedfiled
     else:
         print("KI has not found a move")
         return False
-
-    # for index in Finddiagonal:
-
-    # print(blocks)
-    # for block in blocks:
-    #     print(block)
-    #     if check_possible_moves(field, block, color):
-    #         print("KI has found a move")
-    #         break
-    #         return block
-    #     else:
-    #         print("KI has not found a move")
-    #         return False
-    # check_possible_moves(field, blocks, color)
 
 
 def check_possible_moves(field, possibility, color):

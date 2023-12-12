@@ -131,7 +131,7 @@ class GameConsumer(WebsocketConsumer):
                     break
 
             if Player.objects.filter(player_index=newPlayer_id).first().isAI:
-                index_list = 
+                #index_list = 
                 pass
 
             #Abfrage ob newPlayer eine KI ist
