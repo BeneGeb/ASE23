@@ -228,8 +228,10 @@ class GameConsumer(WebsocketConsumer):
                 player_data_json = player.toJSON()
                 json_player_list.append(player_data_json)
             async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {
-                    "type": "send_missing_players", "unchecked_players": list(json_player_list)}
+                async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {"type": "error",
+                                       "message": "missing checkmarks of players"}
+            )
             )
 
     def updateIsReadyStatus(self, json_data):
@@ -380,13 +382,7 @@ class GameConsumer(WebsocketConsumer):
         player_name = event["player_name"]
         color = event["color"]
         self.send(text_data=json.dumps(
-            {"type": "send_playerData", "player_id": player_id, "player_name": player_name, "color": color}))
-    
-    def send_missing_players(self, event):
-        player_list = event["player_list"]
-        self.send(text_data=json.dumps(
-        {"type": "send_missing_players", "player_list": player_list}))
-        
+            {"type": "send_playerData", "player_id": player_id, "player_name": player_name, "color": color})) 
 
     def send_ready_information(self, event):
         player_id = event["player_id"]

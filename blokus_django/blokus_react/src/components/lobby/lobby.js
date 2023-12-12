@@ -109,6 +109,9 @@ export default function LobbyPage({}) {
     } else if (type === "send_start_game") {
       console.log("start game");
       navigate("/gamepage");
+    } else if (type === "error") {
+      const message = json["message"];
+      console.log(message) 
     }
   }
 
