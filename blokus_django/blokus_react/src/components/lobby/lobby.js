@@ -42,6 +42,7 @@ export default function LobbyPage({}) {
       isReady: false,
     },
   ]);
+  const [playerId, setPlayerId] = useState(0);
   const [playerIndex, setPlayerIndex] = useState(0);
 
   useEffect(() => {
@@ -86,7 +87,12 @@ export default function LobbyPage({}) {
     const type = json["type"];
 
     if (type === "send_joinedPlayer") {
-      setPlayerData(json["player_list"]);
+      const playerData = json["player_list"];
+      setPlayerData(playerData);
+      const playerIndex = playerData.findIndex(
+        (element) => element.player_id === playerId
+      );
+      setPlayerIndex(playerIndex);
     } else if (type === "send_playerData") {
       const updatedData = {
         player_id: json["player_id"],
@@ -98,19 +104,24 @@ export default function LobbyPage({}) {
       const player_id = json["player_id"];
       const isReady = json["isReady"];
       updateReadyStatus(player_id, isReady);
-    } else if (type === "send_client_index") {
-      const index = json["index"];
-      setPlayerIndex(index);
+    } else if (type === "send_player_id") {
+      setPlayerId(json["player_id"]);
     } else if (type === "send_start_game") {
       console.log("start game");
       navigate("/gamepage");
+    } else if (type === "error") {
+      const message = json["message"];
+      console.log(message) 
     }
   }
 
   return (
     <div class="lobby-page">
       <div className="upper-divs">
-        <PlayerOverviewField playerlist={playerData} player_id={playerIndex} />
+        <PlayerOverviewField
+          playerlist={playerData}
+          player_index={playerIndex}
+        />
         <PlayerEditField playerData={playerData[playerIndex]} />
       </div>
       <div className="chat-div">

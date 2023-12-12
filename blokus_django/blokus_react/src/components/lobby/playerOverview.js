@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "../../styles/lobby/playerOverview.css";
+import { useNavigate } from "react-router-dom";
 import {
+  sendIfGameStart,
   sendIfPlayerReady,
   playerQuit,
 } from "../../webSocketConnections/webSocketGameInterface";
@@ -60,9 +62,11 @@ const ButtonReady = ({ isReady }) => {
   );
 };
 
-const ButtonQuit = ({ player_id }) => {
+const ButtonQuit = ({ player_index }) => {
+  const navigate = useNavigate();
   const hangleQuit = () => {
-    playerQuit(player_id);
+    playerQuit(player_index);
+    navigate("/login");
   };
   return (
     <button type="button" className="quit-button" onClick={hangleQuit}>
@@ -71,7 +75,18 @@ const ButtonQuit = ({ player_id }) => {
   );
 };
 
-export default function PlayerOverviewField({ playerlist, player_id }) {
+const ButtonStart= () => {
+  const handleStart = () => {
+    sendIfGameStart();
+  };
+  return (
+    <button type="button" className="quit-button" onClick={handleStart}>
+      Start
+    </button>
+  );  
+}
+
+export default function PlayerOverviewField({ playerlist, player_index }) {
   return (
     <div className="parent-div">
       <div className="header">
@@ -85,7 +100,7 @@ export default function PlayerOverviewField({ playerlist, player_id }) {
             <PlayerNameField name={player.player_name} />
             <SingleBlocks blockColor={player.color} />
             <CheckBoxReady
-              player_id={player.player_id}
+              player_index={player.player_id}
               isReady={player.isReady}
             />
           </div>
@@ -93,10 +108,11 @@ export default function PlayerOverviewField({ playerlist, player_id }) {
       </div>
       <div className="button-div">
         <ButtonReady
-          player_id={player_id}
-          isReady={playerlist[player_id].isReady}
+          player_index={player_index}
+          isReady={playerlist[player_index].isReady}
         />
-        <ButtonQuit player_id={player_id} />
+        <ButtonStart/>
+        <ButtonQuit player_index={player_index} />
       </div>
     </div>
   );
