@@ -29,9 +29,11 @@ class GameConsumer(WebsocketConsumer):
         )
 
     def debug(self, message):
-        # Player.objects.all().update(isReady=True, hasSurrendered=False)
-        Player.objects.all().delete()
-        # self.startGame()
+        player = Player.objects.get(player_index=3)
+        player.isReady = False
+        player.save()
+        #Player.objects.all().delete()
+        #self.startGame()
 
     def receive(self, text_data):
         json_data = json.loads(text_data)
