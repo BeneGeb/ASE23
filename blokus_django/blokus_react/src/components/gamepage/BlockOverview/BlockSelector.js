@@ -4,7 +4,7 @@ function SwitchBlockButton({ direction, onClick }) {
   return (
     <button
       onClick={onClick}
-      class={"arrow-selection-button " + direction + "-arrow"}
+      className={"arrow-selection-button " + direction + "-arrow"}
     ></button>
   );
 }

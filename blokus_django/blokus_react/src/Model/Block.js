@@ -75,7 +75,6 @@ export class Block {
 
       allFixesIndices.push(fixedIndices);
     });
-
     return allFixesIndices;
   }
 }
