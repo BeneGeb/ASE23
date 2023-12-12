@@ -4,8 +4,10 @@ import json
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 from .models import *
+import jwt
+from gameinterface.models import Player
 
-
+JWT_SECRET = "r3FIem8T67NVumSmD7IrdrC042YTrPAugLZJsucI80GLH0mHWkHmahHZKhc3jON_cu5aHMaIRM3u04svAv11QQ"
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_group_name = "chat"
@@ -27,9 +29,12 @@ class ChatConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
+        access_token = text_data_json["access_token"]
+        payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])
+        player = Player.objects.get(player_id=payload.get("id"))
 
         message = text_data_json["message"]
-        username = text_data_json["username"]
+        username = player.player_name
         print("receive")
 
         message_id = Chat.objects.count()

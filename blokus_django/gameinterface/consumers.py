@@ -3,6 +3,7 @@ from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 from .models import *
 from users.models import User
+from chat.models import Chat
 import jwt
 
 JWT_SECRET = "r3FIem8T67NVumSmD7IrdrC042YTrPAugLZJsucI80GLH0mHWkHmahHZKhc3jON_cu5aHMaIRM3u04svAv11QQ"
@@ -251,11 +252,11 @@ class GameConsumer(WebsocketConsumer):
 
     def playerSurrender(self, json_data):
         access_token = json_data["access_token"]
-        payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])
-        #player_id = payload.get("id")
-        game = Game.objects.get(game_id=1)
-        
         #player = Player.objects.get(player_id=player_id)
+        payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])
+        game = Game.objects.get(game_id=1)
+        #player_id = payload.get("id")
+        
 
         player_id = game.currPlayer_id
         player = Player.objects.get(player_index=player_id)
@@ -268,6 +269,7 @@ class GameConsumer(WebsocketConsumer):
             Square.objects.all().delete()   
             Game.objects.all().delete()
             Player.objects.all().delete()
+            Chat.objects.all().delete()
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "send_end_game"}
             )

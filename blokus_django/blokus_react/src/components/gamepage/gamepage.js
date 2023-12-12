@@ -41,6 +41,7 @@ export default function GamePage() {
   const [allBlocks, setAllBlocks] = useState(generateBlocks());
   const [showWinner, setShowWinner] = useState(false);
   const [currPlayer, setCurrPlayer] = useState(0);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [squaresArray, setsquaresArray] = useState(
     Array.from({ length: 400 }, (v, i) => "")
   );
@@ -336,27 +337,6 @@ export default function GamePage() {
     setPlayerData(updatedPlayerData);
   }
 
-  function ChatPopup({ username }) {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const togglePopup = () => {
-      setIsOpen(!isOpen);
-    };
-    return (
-      <div>
-        <button classname="open-button-chat" onClick={togglePopup}>
-          Chat
-        </button>
-
-        {isOpen && (
-          <div className="popup">
-            <Chat username={username} />
-          </div>
-        )}
-      </div>
-    );
-  }
-
   function onSurrender() {
     console.log("Surrender");
     sendPlayerSurrender();
@@ -364,6 +344,7 @@ export default function GamePage() {
 
   function onChat() {
     console.log("Chat");
+    setIsChatOpen(!isChatOpen);
   }
 
   return (
@@ -420,6 +401,11 @@ export default function GamePage() {
       {showWinner ? (
         <WinnerOverview playerData={playerData} allBlocks={allBlocks} />
       ) : null}
+      {isChatOpen && (
+        <div className="popup">
+          <Chat username={"bene"} />
+        </div>
+      )}
     </div>
   );
 }
