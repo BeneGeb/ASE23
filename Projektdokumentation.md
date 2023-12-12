@@ -54,6 +54,9 @@ python manage.py test
 
 Die Tests decken die wesentlichen Funktionen und Fehlerfälle ab. Dies bietet ein solides Fundament für die Gewährleistung der Funktionalität und Sicherheit unserer Anwendung.
 
+### Statische Code Analyse
+
+Um die Sicherheit unserer Applikation zu Testen verwenden wir eine statische Code Analyse. Als Tool haben wir dafür CodeQL verwendet. CodeQL ist eine leistungsstarke statische Code-Analyse-Engine, die von GitHub entwickelt wurde. Sie ermöglicht Entwicklern und Sicherheitsteams, komplexe Codebasen nach Sicherheitslücken und Codefehlern zu durchsuchen.
 
 ## Reuse
 **PyJWT**: Wir haben PyJWT in unserem Backend verwendet. Dadurch ist es uns möglich eine JWT Token basierte Authentifizierung in unserem Projekt zu benutzen  
@@ -62,6 +65,7 @@ Die Tests decken die wesentlichen Funktionen und Fehlerfälle ab. Dies bietet ei
 
 ## Continuous Integration
 Wir haben unsere verschiedenen Beiträge über Github miteinander vereint. Dafür habenw wir mit Pull Requests gearbeitet. Jeder von uns hat auf seinem eigenen Branch gearbeitet und einen Pull Request zum mergen auf den main branch erstellt. Anschließend muss der Pull Request von einem anderen Nutzer reviewed werden, bevor die Änderungen auf den main branch gepusht werden.
+
 
 ## Dokumentation (Benutzersicht)
 Unsere Anwendung wird über Docker bereitgestellt.

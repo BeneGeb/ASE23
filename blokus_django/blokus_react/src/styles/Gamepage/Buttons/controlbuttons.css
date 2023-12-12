@@ -39,3 +39,15 @@
     background-image: url('mirror-button.png');
 }
 
+
+.surrender-button {
+    background-image: url('surrend-button.png');
+    background-size: 60%;
+        background-repeat: no-repeat;
+}
+
+.chat-button {
+    background-image: url('chat-button.png');
+    background-size: 70%;
+    background-repeat: no-repeat;
+}
