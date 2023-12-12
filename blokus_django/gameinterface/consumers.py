@@ -228,20 +228,54 @@ class GameConsumer(WebsocketConsumer):
             self.startGame()
 
     def deletePlayer(self, json_data):
-        player_id = json_data["player_id"]
-        player = Player.objects.get(player_id=player_id)
+        player_index = json_data["player_index"]
+        print(player_index)
+        player = Player.objects.get(player_index=player_index)
+        filtered_players = Player.objects.filter(isHuman=1)
 
+        player.player_id = None
         player.player_name = "-"
         player.color = "gray"
         player.isAI = True
-        player.isHuman = False
+        player.isHuman = False  
         player.isReady = False
         player.save()
 
+        player_list = Player.objects.all()
+        print(player_list)
+        print(len(filtered_players))
+
+        for i in range (player_index, len(filtered_players)):
+                player_list[i].player_id = player_list[i+1].player_id
+                player_list[i].color = player_list[i+1].color
+                player_list[i].player_name = player_list[i+1].player_name
+                player_list[i].isAI = player_list[i+1].isAI
+                player_list[i].isHuman = player_list[i+1].isHuman
+                player_list[i].isReady = player_list[i+1].isReady
+                player_list[i].save()
+
+        json_player_list = []
+
+        player_list = Player.objects.all()
+
+        for player in player_list:
+            player_data_json = player.toJSON()
+            json_player_list.append(player_data_json)
+        
+        if len(Player.objects.filter(isHuman=0)) == 4:
+            Game.objects.all().delete()
+            Player.objects.all().delete()
+
         async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name, {"type": "send_playerData",
-                                   "player_id": player_id, "player_name": "-", "color": "gray"}
+            self.room_group_name, {
+                "type": "send_joinedPlayer", "playerList": list(json_player_list)}
         )
+
+
+        # async_to_sync(self.channel_layer.group_send)(
+        #     self.room_group_name, {"type": "send_playerData",
+        #                            "player_id": player_id, "player_name": "-", "color": "gray"}
+        # )
 
     # region Send Requests to client
 
