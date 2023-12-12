@@ -18,13 +18,13 @@ class AuthTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, {'id': 1, 'name': 'TestUser', 'email': 'test@example.com'})
 
-    # def test_register_with_incomplete_data(self):
-    #     incomplete_data = {
-    #         'name': 'TestUser',
-    #         'email': 'test@example.com'
-    #     }
-    #     response = self.client.post('/api/register/', incomplete_data, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_register_with_incomplete_data(self):
+        incomplete_data = {
+            'name': 'TestUser',
+            'email': 'test@example.com'
+        }
+        response = self.client.post('/api/register/', incomplete_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     # def test_register_with_existing_email(self):
     #     self.client.post('/api/register/', {'name': 'User1', 'email': 'user@example.com', 'password': 'password123'}, format='json')
