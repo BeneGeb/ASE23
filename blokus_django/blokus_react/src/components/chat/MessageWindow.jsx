@@ -4,7 +4,7 @@ import '../../styles/Chat/MessageWindow.css'
 
 const Message = ({ text, username}) => (
   <div className={'message'}>
-    <div className='message-username'>{username}</div>
+    <div className='message-username'>{username}:</div>
     <div className='message-text'>{text}</div>
   </div>
 )

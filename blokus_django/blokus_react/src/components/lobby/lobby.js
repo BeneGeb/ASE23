@@ -113,7 +113,9 @@ export default function LobbyPage({}) {
         <PlayerEditField playerData={playerData[playerIndex]} />
       </div>
       <div className="chat-div">
-        <Chat username={playerData[playerIndex].player_name} />
+        <div className="chat-inner-div">
+          <Chat username={playerData[playerIndex].player_name} inLobby={true} />
+        </div>
       </div>
     </div>
   );
