@@ -109,7 +109,7 @@ export default function LobbyPage({}) {
   return (
     <div class="lobby-page">
       <div className="upper-divs">
-        <PlayerOverviewField playerlist={playerData} player_id={playerIndex} />
+        <PlayerOverviewField playerlist={playerData} player_index={playerIndex} />
         <PlayerEditField playerData={playerData[playerIndex]} />
       </div>
       <div className="chat-div">
