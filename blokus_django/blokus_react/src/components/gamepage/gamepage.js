@@ -7,6 +7,7 @@ import {
   registerOnGameMessageCallback,
   sendPlacedBlock,
   startGame,
+  sendPlayerSurrender,
 } from "../../webSocketConnections/webSocketGameInterface";
 import Gamefield from "./field/Gamefield";
 import {
@@ -19,40 +20,56 @@ import {
   checkFieldPossible,
   evalDiagonalFields,
 } from "../../Helper/BlokusHelper";
-import ControlButtons from "./Buttons/ControlButtons";
 import Chat from "../chat/Chat";
+
+import PlaceBlockButtons from "./Buttons/placeBlockButtons";
+import SurrChatButtons from "./Buttons/surrChatButtons";
+import WinnerOverview from "./WinnerOverview/WinnerOverview";
 
 // startWebsocketGameConnection();
 
 // setTimeout(startGame, 2000);
 
+const colorMapping = {
+  "#FF0000": "red",
+  "#00FF00": "green",
+  "#0000FF": "blue",
+  "#FFFF00": "yellow",
+};
+
 export default function GamePage() {
   const [allBlocks, setAllBlocks] = useState(generateBlocks());
+  const [showWinner, setShowWinner] = useState(false);
   const [currPlayer, setCurrPlayer] = useState(0);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [squaresArray, setsquaresArray] = useState(
     Array.from({ length: 400 }, (v, i) => "")
   );
   const [playerData, setPlayerData] = useState([
     {
       player_id: 0,
+      player_name: "-",
       color: "red",
       selectedBlock: allBlocks.get("red")[0],
       selectedFilter: 1,
     },
     {
       player_id: 1,
+      player_name: "-",
       color: "green",
       selectedBlock: allBlocks.get("green")[0],
       selectedFilter: 1,
     },
     {
       player_id: 2,
+      player_name: "-",
       color: "blue",
       selectedBlock: allBlocks.get("blue")[0],
       selectedFilter: 1,
     },
     {
       player_id: 3,
+      player_name: "-",
       color: "yellow",
       selectedBlock: allBlocks.get("yellow")[0],
       selectedFilter: 1,
@@ -69,17 +86,38 @@ export default function GamePage() {
     const type = json["type"];
 
     if (type === "send_gamefield") {
-      updateCurrentGamestate(json["field"], json["currPlayer"]);
+      updateCurrentGamestate(
+        json["field"],
+        json["currPlayer"],
+        json["playerList"]
+      );
     } else if (type === "send_block_placed") {
       deletePlacedBlockFromAllBlocks(json["playerId"], json["blockId"]);
       evalMarkedFields(squaresArray, null);
+    } else if (type === "send_end_game") {
+      console.log(jsonData);
+      console.log("Game Ended");
+      const showWinner = () => setShowWinner(true);
+      showWinner();
     }
   }
 
-  function updateCurrentGamestate(field, currPlayer) {
+  function updateCurrentGamestate(field, currPlayer, newPlayerData) {
     setCurrPlayer(currPlayer);
     setsquaresArray(field);
     evalMarkedFields(field, null);
+    const updatedPlayerData = [...playerData];
+
+    newPlayerData.forEach((newData, index) => {
+      updatedPlayerData[index] = {
+        ...updatedPlayerData[index],
+        player_id: newData.player_id,
+        color: colorMapping[newData.color],
+        player_name: newData.player_name,
+      };
+    });
+    console.log(updatedPlayerData);
+    setPlayerData(updatedPlayerData);
     setPlacedBlock([]);
   }
 
@@ -173,6 +211,7 @@ export default function GamePage() {
   }
 
   function onSquareClick(index) {
+    console.log(index);
     if (isIndexInArrayOfArray(index, markedFields)) {
       const placedBlock = findIndexInArrayOfArray(index, markedFields);
 
@@ -202,6 +241,7 @@ export default function GamePage() {
     );
 
     const selectedBlock = updatedPlayerData[playerIndex].selectedBlock;
+    if (!selectedBlock) return;
     selectedBlock.turnBlock();
 
     updatedPlayerData[playerIndex] = {
@@ -222,6 +262,7 @@ export default function GamePage() {
     );
 
     const selectedBlock = updatedPlayerData[playerIndex].selectedBlock;
+    if (!selectedBlock) return;
     selectedBlock.mirrorBlock();
 
     updatedPlayerData[playerIndex] = {
@@ -296,25 +337,15 @@ export default function GamePage() {
     setPlayerData(updatedPlayerData);
   }
 
-  function ChatPopup({username}){
-    const [isOpen, setIsOpen] = useState(false);
-
-    const togglePopup = () => {
-      setIsOpen(!isOpen);
-    };
-    return (
-      <div>
-        <button classname="open-button-chat" onClick={togglePopup}>Chat</button>
-  
-        {isOpen && (
-          <div className="popup">
-            <Chat username={username}/>
-          </div>
-        )}
-      </div>
-    );
+  function onSurrender() {
+    console.log("Surrender");
+    sendPlayerSurrender();
   }
-  
+
+  function onChat() {
+    console.log("Chat");
+    setIsChatOpen(!isChatOpen);
+  }
 
   return (
     <div class="gamepage">
@@ -322,14 +353,11 @@ export default function GamePage() {
         <BlockOverview
           key={0}
           currPlayer={0 == currPlayer}
-          allBlocks={allBlocks.get(
-            playerData.find((player) => player.player_id == 0).color
-          )}
           playerData={playerData.find((player) => player.player_id == 0)}
           onFilterChange={onFilterChange}
           onSwitchBlockClick={onSwitchBlockClick}
         />
-        <ControlButtons
+        <PlaceBlockButtons
           onSubmit={onSubmitField}
           onRotate={onRotateSquare}
           onMirror={onMirrorSquare}
@@ -337,9 +365,6 @@ export default function GamePage() {
         <BlockOverview
           key={1}
           currPlayer={1 == currPlayer}
-          allBlocks={allBlocks.get(
-            playerData.find((player) => player.player_id == 1).color
-          )}
           playerData={playerData.find((player) => player.player_id == 1)}
           onFilterChange={onFilterChange}
           onSwitchBlockClick={onSwitchBlockClick}
@@ -360,27 +385,27 @@ export default function GamePage() {
         <BlockOverview
           key={3}
           currPlayer={3 == currPlayer}
-          allBlocks={allBlocks.get(
-            playerData.find((player) => player.player_id == 3).color
-          )}
           playerData={playerData.find((player) => player.player_id == 3)}
           onFilterChange={onFilterChange}
           onSwitchBlockClick={onSwitchBlockClick}
         />
-        <div className="lobby-buttons-div">
-            <ChatPopup username={"username"}/>
-        </div>
+        <SurrChatButtons onSurrender={onSurrender} onChat={onChat} />
         <BlockOverview
           key={2}
           currPlayer={2 == currPlayer}
-          allBlocks={allBlocks.get(
-            playerData.find((player) => player.player_id == 2).color
-          )}
           playerData={playerData.find((player) => player.player_id == 2)}
           onFilterChange={onFilterChange}
           onSwitchBlockClick={onSwitchBlockClick}
         />
       </div>
+      {showWinner ? (
+        <WinnerOverview playerData={playerData} allBlocks={allBlocks} />
+      ) : null}
+      {isChatOpen && (
+        <div className="popup">
+          <Chat username={"bene"} />
+        </div>
+      )}
     </div>
   );
 }

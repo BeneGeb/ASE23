@@ -102,6 +102,7 @@ export default function LobbyPage({}) {
       const index = json["index"];
       setPlayerIndex(index);
     } else if (type === "send_start_game") {
+      console.log("start game");
       navigate("/gamepage");
     }
   }
