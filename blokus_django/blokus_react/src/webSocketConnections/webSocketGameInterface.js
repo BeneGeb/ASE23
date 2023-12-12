@@ -87,6 +87,16 @@ export const sendIfPlayerReady = (isReady) => {
   );
 };
 
+export const sendPlayerSurrender = () => {
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "sendPlayerSurrender",
+      access_token: localStorage.getItem("access_token"),
+    })
+  );
+};
+
 export const playerJoinedLobby = (index) => {
   const color = ["#FF0000", "#0000FF", "#00FF00", "#FFFF00"];
   const player_name = "Player_" + index;

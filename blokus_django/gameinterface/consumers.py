@@ -27,6 +27,11 @@ class GameConsumer(WebsocketConsumer):
             )
         )
 
+    def debug(self, message):
+        # Player.objects.all().update(isReady=True, hasSurrendered=False)
+        Player.objects.all().delete()
+        # self.startGame()
+
     def receive(self, text_data):
         json_data = json.loads(text_data)
         try:
@@ -46,6 +51,10 @@ class GameConsumer(WebsocketConsumer):
                     self.updateIsReadyStatus(json_data)
                 elif action == "playerQuit":
                     self.deletePlayer(json_data)
+                elif action == "sendPlayerSurrender":
+                    self.playerSurrender(json_data)
+                elif action == "debug":
+                    self.debug(json_data)
                 else:
                     raise "Unsupported action"
         except Exception as e:
@@ -66,10 +75,16 @@ class GameConsumer(WebsocketConsumer):
                     square_id=i, game_id=game, value="")
                 empty_field.append(square.value)
 
+            player_list = [{'color': player.color, 'player_id': player.player_index, 'player_name': player.player_name} for player in Player.objects.all()]
+
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {
+                    "type": "send_start_game", "redirect": True}
+            )
             # Send empty generated Field to Clients
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {
-                    "type": "send_gamefield", "field": empty_field, "currPlayer": game.currPlayer_id}
+                    "type": "send_gamefield", "field": empty_field, "currPlayer": game.currPlayer_id, "playerList": player_list }
             )
 
         except Exception as e:
@@ -93,23 +108,21 @@ class GameConsumer(WebsocketConsumer):
             game = Game.objects.filter(game_id=1)
             currPlayer_id = game.first().currPlayer_id
             newPlayer_id = (currPlayer_id + 1) % 4
+            for i in range(4):
+                if Player.objects.filter(player_index=newPlayer_id).first().hasSurrendered:
+                    newPlayer_id = (newPlayer_id + 1) % 4
+                else:
+                    break
 
             #Abfrage ob newPlayer eine KI ist
             #Funktion die KI aufruft, rückgabe ist eine indexliste
-            
-            
-            
-            
-            
             game.update(currPlayer_id=newPlayer_id)
 
-
-
-    
+            player_list = [{'color': player.color, 'player_id': player.player_index, 'player_name': player.player_name} for player in Player.objects.all()]
 
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "send_gamefield", "currPlayer": game.first(
-                ).currPlayer_id, "field": list(values_list)}
+                ).currPlayer_id, "field": list(values_list), "playerList": player_list}
             )
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {
@@ -124,10 +137,6 @@ class GameConsumer(WebsocketConsumer):
             )
             print(e)
 
-    def finishGame(self, json_data):
-        Game.objects.all().delete()
-        Player.objects.all().delete()
-        Square.objects.all().delete()
     # endregion
 
     def joinLobby(self, json_data):
@@ -148,13 +157,13 @@ class GameConsumer(WebsocketConsumer):
 
         if not player_list:
             player1 = Player.objects.create(player_index=0, player_id=None, game_id=game,
-                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=False, hasSurrendered=False)
             player2 = Player.objects.create(player_index=1, player_id=None, game_id=game,
-                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=False, hasSurrendered=False)
             player3 = Player.objects.create(player_index=2, player_id=None, game_id=game,
-                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=False, hasSurrendered=False)
             player4 = Player.objects.create(player_index=3, player_id=None, game_id=game,
-                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=False)
+                                            player_name="-", color="gray", isAI=True, isHuman=False, isReady=False, hasSurrendered=False)
 
             player_list = [player1, player2, player3, player4]
 
@@ -221,10 +230,6 @@ class GameConsumer(WebsocketConsumer):
                     "type": "send_ready_information", "player_id": player_id, "isReady": isReady}
             )
         else:
-            async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name, {
-                    "type": "send_start_game", "redirect": True}
-            )
             self.startGame()
 
     def deletePlayer(self, json_data):
@@ -242,8 +247,48 @@ class GameConsumer(WebsocketConsumer):
             self.room_group_name, {"type": "send_playerData",
                                    "player_id": player_id, "player_name": "-", "color": "gray"}
         )
-
     # region Send Requests to client
+
+    def playerSurrender(self, json_data):
+        access_token = json_data["access_token"]
+        payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])
+        #player_id = payload.get("id")
+        game = Game.objects.get(game_id=1)
+        
+        #player = Player.objects.get(player_id=player_id)
+
+        player_id = game.currPlayer_id
+        player = Player.objects.get(player_index=player_id)
+
+        player.hasSurrendered = True
+        player.save()
+        
+        player_surrendered = Player.objects.filter(hasSurrendered=True).count()
+        if  player_surrendered == 4:    
+            Square.objects.all().delete()   
+            Game.objects.all().delete()
+            Player.objects.all().delete()
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name, {"type": "send_end_game"}
+            )
+            async_to_sync(self.channel_layer.group_discard)(self.room_group_name, self.channel_name)
+            return 
+
+    
+        if player.player_index == game.currPlayer_id:
+            newPlayer_id = (game.currPlayer_id + 1) % 4
+            while Player.objects.filter(player_index=newPlayer_id).first().hasSurrendered:
+                newPlayer_id = (newPlayer_id + 1) % 4
+            
+        game.currPlayer_id = newPlayer_id
+        game.save()
+
+      
+        values_list = Square.objects.values_list('value', flat=True)
+        player_list = [{'color': player.color, 'player_id': player.player_index, 'player_name': player.player_name} for player in Player.objects.all()]
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name, {"type": "send_gamefield", "currPlayer": game.currPlayer_id, "field": list(values_list), "playerList": player_list}
+        )
 
     def error(self, event):
         message = event["message"]
@@ -252,8 +297,9 @@ class GameConsumer(WebsocketConsumer):
     def send_gamefield(self, event):
         field = event["field"]
         currPlayer = event["currPlayer"]
+        playerList = event["playerList"]
         self.send(text_data=json.dumps(
-            {"type": "send_gamefield", "currPlayer": currPlayer, "field": field}))
+            {"type": "send_gamefield", "currPlayer": currPlayer, "field": field,  "playerList": playerList}))
 
     def send_block_placed(self, event):
         playerId = event["playerId"]
@@ -288,8 +334,13 @@ class GameConsumer(WebsocketConsumer):
 
     def send_start_game(self, event):
         redirect = event["redirect"]
+
         self.send(text_data=json.dumps(
             {"type": "send_start_game", "redirect": redirect}))
+        
+    def send_end_game(self, event):
+        self.send(text_data=json.dumps(
+            {"type": "send_end_game"}))
 
     # Soll ermöglichen sich zu reconnecten
     def get_gamestate(self, event):
