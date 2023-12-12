@@ -235,7 +235,6 @@ class GameConsumer(WebsocketConsumer):
 
     def deletePlayer(self, json_data):
         player_index = json_data["player_index"]
-        print(player_index)
         player = Player.objects.get(player_index=player_index)
         filtered_players = Player.objects.filter(isHuman=1)
 
@@ -252,12 +251,14 @@ class GameConsumer(WebsocketConsumer):
         print(len(filtered_players))
 
         for i in range (player_index, len(filtered_players)):
-                player_list[i].player_id = player_list[i+1].player_id
-                player_list[i].color = player_list[i+1].color
-                player_list[i].player_name = player_list[i+1].player_name
-                player_list[i].isAI = player_list[i+1].isAI
-                player_list[i].isHuman = player_list[i+1].isHuman
-                player_list[i].isReady = player_list[i+1].isReady
+                player = Player.objects.get(player_index=i)
+                player.player_index = i
+                player.player_id = player_list[i+1].player_id
+                player.color = player_list[i+1].color
+                player.player_name = player_list[i+1].player_name
+                player.isAI  = player_list[i+1].isAI
+                player.isHuman = player_list[i+1].isHuman
+                player.isReady = player_list[i+1].isReady
                 player_list[i].save()
 
         json_player_list = []
