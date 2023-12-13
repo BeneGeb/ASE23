@@ -109,11 +109,11 @@ export default function GamePage() {
         player_name: newData.player_name,
       };
 
-      if (!updatedPlayerData[index].selectedBlock) {
-        updatedPlayerData[index].selectedBlock = allBlocks.get(
-          colorMapping[newData.color]
-        )[0];
-      }
+      // if (!updatedPlayerData[index].selectedBlock) {
+      //   updatedPlayerData[index].selectedBlock = allBlocks.get(
+      //     colorMapping[newData.color]
+      //   )[0];
+      // }
     });
 
     const currPlayerData = updatedPlayerData.find(
