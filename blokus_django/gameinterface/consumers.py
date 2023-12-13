@@ -410,16 +410,43 @@ class GameConsumer(WebsocketConsumer):
             while Player.objects.filter(player_index=newPlayer_id).first().hasSurrendered:
                 newPlayer_id = (newPlayer_id + 1) % 4
 
+            #Perform AI Move
+            values_list = Square.objects.values_list('value', flat=True)
+            while Player.objects.filter(player_index=newPlayer_id).first().isAI:
+                print("AUFRUF KI")
+                next_player = Player.objects.filter(
+                    player_index=newPlayer_id).first()
+                if next_player.isAI:
+                    index_list = ki_perform_move(
+                        values_list, newPlayer_id, next_player.color)
+                    if index_list != []:
+
+                        Square.objects.filter(
+                            game_id=1, square_id__in=index_list).update(value=colorMatcher[next_player.color])
+
+                        values_list = Square.objects.values_list(
+                            'value', flat=True)
+                        newPlayer_id = (newPlayer_id + 1) % 4
+                    else:
+                        next_player.hasSurrendered = True
+                        next_player.save()
+                        newPlayer_id = (newPlayer_id + 1) % 4
+
+
+
         game.currPlayer_id = newPlayer_id
         game.save()
 
-        values_list = Square.objects.values_list('value', flat=True)
         player_list = [{'color': player.color, 'player_id': player.player_index,
                         'player_name': player.player_name} for player in Player.objects.all()]
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name, {"type": "send_gamefield", "currPlayer": game.currPlayer_id, "field": list(
                 values_list), "playerList": player_list}
         )
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name, {"type": "send_player_surrender", "player_id": player_id}
+        )
+
 
     def error(self, event):
         message = event["message"]
@@ -472,6 +499,10 @@ class GameConsumer(WebsocketConsumer):
     def send_end_game(self, event):
         self.send(text_data=json.dumps(
             {"type": "send_end_game"}))
+        
+    def send_player_surrender(self, event):
+        self.send(text_data=json.dumps(
+            {"type": "send_player_surrender", "player_id": event["player_id"]}))
 
     # Soll ermöglichen sich zu reconnecten
     def get_gamestate(self, event):

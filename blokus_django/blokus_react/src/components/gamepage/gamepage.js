@@ -74,6 +74,7 @@ export default function GamePage() {
   ]);
   const [markedFields, setMarkedFields] = useState([]);
   const [placedBlock, setPlacedBlock] = useState([]);
+  const [surrenderedPlayers, setSurrenderedPlayers] = useState([]);
 
   registerOnGameMessageCallback(onGameMessageReceived);
 
@@ -94,6 +95,10 @@ export default function GamePage() {
     } else if (type === "send_end_game") {
       const showWinner = () => setShowWinner(true);
       showWinner();
+    } else if (type === "send_player_surrender") {
+      let updatedSurrenderedPlayers = [...surrenderedPlayers];
+      updatedSurrenderedPlayers.push(json["player_id"]);
+      setSurrenderedPlayers(updatedSurrenderedPlayers);
     }
   }
 
@@ -363,6 +368,7 @@ export default function GamePage() {
           playerData={playerData.find((player) => player.player_id == 0)}
           onFilterChange={onFilterChange}
           onSwitchBlockClick={onSwitchBlockClick}
+          surrendered={surrenderedPlayers.includes(0)}
         />
         <PlaceBlockButtons
           onSubmit={onSubmitField}
@@ -375,6 +381,7 @@ export default function GamePage() {
           playerData={playerData.find((player) => player.player_id == 1)}
           onFilterChange={onFilterChange}
           onSwitchBlockClick={onSwitchBlockClick}
+          surrendered={surrenderedPlayers.includes(1)}
         />
       </div>
       <div className="game-field">
@@ -395,6 +402,7 @@ export default function GamePage() {
           playerData={playerData.find((player) => player.player_id == 3)}
           onFilterChange={onFilterChange}
           onSwitchBlockClick={onSwitchBlockClick}
+          surrendered={surrenderedPlayers.includes(3)}
         />
         <SurrChatButtons onSurrender={onSurrender} onChat={onChat} />
         <BlockOverview
@@ -403,6 +411,7 @@ export default function GamePage() {
           playerData={playerData.find((player) => player.player_id == 2)}
           onFilterChange={onFilterChange}
           onSwitchBlockClick={onSwitchBlockClick}
+          surrendered={surrenderedPlayers.includes(2)}
         />
       </div>
       {showWinner ? (

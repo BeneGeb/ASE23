@@ -70,7 +70,7 @@ const ButtonQuit = ({ player_index }) => {
   };
   return (
     <button type="button" className="quit-button" onClick={hangleQuit}>
-      Quite
+      Quit
     </button>
   );
 };
