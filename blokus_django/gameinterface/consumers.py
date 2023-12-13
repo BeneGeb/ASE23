@@ -186,6 +186,9 @@ class GameConsumer(WebsocketConsumer):
             )
             print(e)
 
+
+      
+
     # endregion
 
     def joinLobby(self, json_data):
