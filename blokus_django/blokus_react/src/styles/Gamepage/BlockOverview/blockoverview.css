@@ -138,3 +138,7 @@
 .block-view.blue {
     border-color: #0000FF;
 }
+
+.surrendered-overview{
+    opacity: 0.5;
+}

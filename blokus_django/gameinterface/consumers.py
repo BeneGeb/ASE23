@@ -395,6 +395,10 @@ class GameConsumer(WebsocketConsumer):
             self.room_group_name, {"type": "send_gamefield", "currPlayer": game.currPlayer_id, "field": list(
                 values_list), "playerList": player_list}
         )
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name, {"type": "send_player_surrender", "player_id": player_id}
+        )
+
 
     def error(self, event):
         message = event["message"]
@@ -447,6 +451,10 @@ class GameConsumer(WebsocketConsumer):
     def send_end_game(self, event):
         self.send(text_data=json.dumps(
             {"type": "send_end_game"}))
+        
+    def send_player_surrender(self, event):
+        self.send(text_data=json.dumps(
+            {"type": "send_player_surrender", "player_id": event["player_id"]}))
 
     # Soll ermöglichen sich zu reconnecten
     def get_gamestate(self, event):

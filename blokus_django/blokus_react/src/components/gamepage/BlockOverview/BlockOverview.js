@@ -8,6 +8,7 @@ export default function BlockOverview({
   currPlayer,
   onFilterChange,
   onSwitchBlockClick,
+  surrendered,
 }) {
   function handleFilterChange(filterValue) {
     onFilterChange(playerData.player_id, filterValue);
@@ -17,12 +18,15 @@ export default function BlockOverview({
     onSwitchBlockClick(playerData.player_id, direction);
   }
 
+  let newClassName = currPlayer
+    ? "block-overview " + playerData.color
+    : "block-overview";
+  if (surrendered) {
+    newClassName += " surrendered-overview";
+  }
+
   return (
-    <div
-      class={
-        currPlayer ? "block-overview " + playerData.color : "block-overview"
-      }
-    >
+    <div className={newClassName}>
       <BlockSelector
         currPlayer={currPlayer}
         selectedBlock={playerData.selectedBlock}
