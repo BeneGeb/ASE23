@@ -19,7 +19,7 @@ Entwicklungsteam: Pascal Weider, Samuel Amoah
 ## Architektur
 **Client-Server:** 
 Bei der Architektur haben wir uns für eine Client Server Struktur entschieden. Die Entscheidung für eine Client-Server-Architektur basiert auf der klaren Aufteilung von Spiellogik und Graphischer Oberfläche. Die klare Trennung erleichtert die Wartung, Erweiterung und die Anbindung verschiedener Clients, was eine robuste und gut strukturierte Lösung für unser Spiel bietet.  
-![Alt-Text](Architecture.png)
+![Architecture](/Architectur.png)
 
 ## Design 
 **Composite Pattern**
