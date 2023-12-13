@@ -192,13 +192,13 @@ class GameConsumer(WebsocketConsumer):
     # endregion
 
     def joinLobby(self, json_data):
-
+        # determining player id out of jwt token
         access_token = json_data["access_token"]
         payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])
         player_id = payload.get("id")
 
+        # get user with determined player id 
         user = User.objects.filter(id=player_id).first()
-
         game = Game.objects.all().first()
 
         if not game:
@@ -207,6 +207,7 @@ class GameConsumer(WebsocketConsumer):
 
         player_list = Player.objects.all()
 
+        # create all players if the lobby is empty 
         if not player_list:
             player1 = Player.objects.create(player_index=0, player_id=None, game_id=game,
                                             player_name="-", color="gray", isAI=True, isHuman=False, isReady=False, hasSurrendered=False)
@@ -219,6 +220,7 @@ class GameConsumer(WebsocketConsumer):
 
             player_list = [player1, player2, player3, player4]
 
+        # set data of the joined player 
         for index, player in enumerate(player_list):
             if player.player_id == None or player.player_id == user.id:
                 player.player_name = user.name
@@ -231,10 +233,12 @@ class GameConsumer(WebsocketConsumer):
 
         json_player_list = []
 
+        # convert player_list in json format
         for player in player_list:
             player_data_json = player.toJSON()
             json_player_list.append(player_data_json)
 
+        # send user id and player list to frontend 
         async_to_sync(self.send(text_data=json.dumps(
             {"type": "send_player_id", "player_id": user.id})))
         async_to_sync(self.channel_layer.group_send)(
@@ -243,6 +247,7 @@ class GameConsumer(WebsocketConsumer):
         )
 
     def updatePlayerSettings(self, json_data):
+        # determining player id out of jwt token
         access_token = json_data["access_token"]
         payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])
         player_id = payload.get("id")
@@ -252,25 +257,32 @@ class GameConsumer(WebsocketConsumer):
 
         player = Player.objects.get(player_id=player_id)
 
+        # update determined player
         player.player_name = player_name
         player.color = color
         player.save()
 
+        # send updated data to frontend 
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name, {"type": "send_playerData",
                                    "player_id": player_id, "player_name": player_name, "color": color}
         )
 
     def startReadyStatus(self): 
+        # get number of players that are ready  
         ready_players_number = Player.objects.filter(isReady=True).count()
+        # get number of players that are human 
         human_players_number = Player.objects.filter(isHuman=1).count()
     
         human_players = Player.objects.filter(isHuman = 1)
 
+        # store all colors of existing players 
         color_list = []
         for player in human_players:
             color_list.append(player.color)    
         set_color_list = set(color_list)
+
+        # check if all colors are different
         if len(color_list) == len(set_color_list):
             if ready_players_number == human_players_number :
                 self.startGame()
@@ -290,6 +302,7 @@ class GameConsumer(WebsocketConsumer):
             )
 
     def updateIsReadyStatus(self, json_data):
+        # get number of players that are ready  
         access_token = json_data["access_token"]
         payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])
         player_id = payload.get("id")
@@ -297,8 +310,10 @@ class GameConsumer(WebsocketConsumer):
         isReady = json_data["isReady"]
         player = Player.objects.get(player_id=player_id)
 
+        # update determined player
         player.isReady = isReady
         player.save()
+
         # Check if all players are ready
         total_players = Player.objects.count()
         ready_players = Player.objects.filter(isReady=True).count()
@@ -312,13 +327,16 @@ class GameConsumer(WebsocketConsumer):
             self.startGame()
 
     def deletePlayer(self, json_data):
+        # get number of players that are ready  
         player_index = json_data["player_index"]
         player = Player.objects.get(player_index=player_index)
         filtered_players = Player.objects.filter(isHuman=1)
 
         player_list = Player.objects.all()
 
+        # check if last player is quiting 
         if player_index != 3:
+            # move up players  
             for i in range(player_index, len(filtered_players)):
                 print(i)
                 player = Player.objects.get(player_index=i)
@@ -331,6 +349,7 @@ class GameConsumer(WebsocketConsumer):
                 player.isReady = player_list[i+1].isReady
                 player.save()
 
+        # overwrite data of player that is quiting 
         player = Player.objects.get(player_index=len(filtered_players)-1)
         player.player_id = None
         player.player_name = "-"
@@ -344,10 +363,12 @@ class GameConsumer(WebsocketConsumer):
 
         player_list = Player.objects.all()
 
+        # convert player_list in json format
         for player in player_list:
             player_data_json = player.toJSON()
             json_player_list.append(player_data_json)
 
+        # delete all player if no human is in lobby 
         if len(Player.objects.filter(isHuman=0)) == 4:
             Game.objects.all().delete()
             Player.objects.all().delete()
@@ -356,13 +377,6 @@ class GameConsumer(WebsocketConsumer):
             self.room_group_name, {
                 "type": "send_joinedPlayer", "playerList": list(json_player_list)}
         )
-
-        # async_to_sync(self.channel_layer.group_send)(
-        #     self.room_group_name, {"type": "send_playerData",
-        #                            "player_id": player_id, "player_name": "-", "color": "gray"}
-        # )
-
-    # region Send Requests to client
 
     def playerSurrender(self, json_data):
         access_token = json_data["access_token"]
