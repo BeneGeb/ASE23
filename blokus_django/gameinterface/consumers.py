@@ -338,7 +338,6 @@ class GameConsumer(WebsocketConsumer):
         if player_index != 3:
             # move up players  
             for i in range(player_index, len(filtered_players)):
-                print(i)
                 player = Player.objects.get(player_index=i)
                 player.player_index = i
                 player.player_id = player_list[i+1].player_id
@@ -477,5 +476,3 @@ class GameConsumer(WebsocketConsumer):
     # Soll ermöglichen sich zu reconnecten
     def get_gamestate(self, event):
         pass
-
-    # endregion
