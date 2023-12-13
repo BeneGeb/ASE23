@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../../styles/lobby/playerOverview.css";
 import { useNavigate } from "react-router-dom";
 import {
+  sendIfGameStart,
   sendIfPlayerReady,
   playerQuit,
 } from "../../webSocketConnections/webSocketGameInterface";
@@ -74,6 +75,17 @@ const ButtonQuit = ({ player_index }) => {
   );
 };
 
+const ButtonStart= () => {
+  const handleStart = () => {
+    sendIfGameStart();
+  };
+  return (
+    <button type="button" className="quit-button" onClick={handleStart}>
+      Start
+    </button>
+  );  
+}
+
 export default function PlayerOverviewField({ playerlist, player_index }) {
   return (
     <div className="parent-div">
@@ -99,6 +111,7 @@ export default function PlayerOverviewField({ playerlist, player_index }) {
           player_index={player_index}
           isReady={playerlist[player_index].isReady}
         />
+        <ButtonStart/>
         <ButtonQuit player_index={player_index} />
       </div>
     </div>

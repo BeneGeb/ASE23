@@ -112,3 +112,12 @@ export const playerQuit = (player_index) => {
     })
   );
 };
+
+export const sendIfGameStart = () =>{
+  wsSendMessage(
+    JSON.stringify({
+      type: "action",
+      action: "checkIfStartGame",
+    })
+  );
+};
