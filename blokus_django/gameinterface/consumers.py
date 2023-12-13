@@ -36,7 +36,7 @@ class GameConsumer(WebsocketConsumer):
             )
         )
 
-    def debug(self, message):
+    def debug(self, json_data):
         # player = Player.objects.get(player_index=3)
         # player.isReady = False
         # player.save()
@@ -73,10 +73,7 @@ class GameConsumer(WebsocketConsumer):
         except Exception as e:
             print(f"Receiving Request failed {json_data}: {e}")
 
-    # region Handle incoming Requests
-    def debug(self):
-        Player.objects.all().delete()
-        
+
 
     def startGame(self):
 
