@@ -261,19 +261,31 @@ class GameConsumer(WebsocketConsumer):
                                    "player_id": player_id, "player_name": player_name, "color": color}
         )
 
-    def startReadyStatus(self):
+    def startReadyStatus(self): 
+        ready_players_number = Player.objects.filter(isReady=True).count()
+        human_players_number = Player.objects.filter(isHuman=1).count()
+    
+        human_players = Player.objects.filter(isHuman = 1)
 
-        ready_players = Player.objects.filter(isReady=True).count()
-        human_players = Player.objects.filter(isHuman=1).count()
-
-        if ready_players == human_players:
-            self.startGame()
-        else:
-
+        color_list = []
+        for player in human_players:
+            color_list.append(player.color)    
+        set_color_list = set(color_list)
+        if len(color_list) == len(set_color_list):
+            if ready_players_number == human_players_number :
+                self.startGame()
+            else:
+                async_to_sync(self.channel_layer.group_send)(
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.room_group_name, {"type": "error",
+                                            "message": "missing checkmarks of players"}
+                    )
+                )
+        else: 
             async_to_sync(self.channel_layer.group_send)(
                 async_to_sync(self.channel_layer.group_send)(
                     self.room_group_name, {"type": "error",
-                                           "message": "missing checkmarks of players"}
+                                        "message": "picked colors are not unique"}
                 )
             )
 
