@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
 import time
-import websockets
+
 
 class AuthTestCase(TestCase):
 
@@ -73,12 +73,3 @@ class AuthTestCase(TestCase):
         }
         response = self.client.post('/api/login/', login_data, format='json')
         self.assertNotEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_join_lobby(self):
-         async with websockets.connect('ws://127.0.0.1:8000/ws/game/') as websocket:
-            # Hier kannst du deine WebSocket-Tests durchführen
-            message = "Test message"
-            await websocket.send(message)
-
-            response = await websocket.recv()
-            self.assertEqual(response, message)

@@ -28,11 +28,11 @@ def ki_perform_move(field, inc_player_index, color_hex):
         ki.get_blocks(),  inc_player_index, color, field, ki_id)
 
     print(f"block_variation: {block_variation}")
+    if block_variation == []:
+        return []
 
     block_variation = block_variation[random.randint(
         0, len(block_variation)-1)]
-    if block_variation == []:
-        return []
     print(f"block_variation: {block_variation}")
     return block_variation
 
