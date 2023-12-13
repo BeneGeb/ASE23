@@ -192,7 +192,7 @@ class GameConsumer(WebsocketConsumer):
     # endregion
 
     def joinLobby(self, json_data):
-        print(json_data)
+
         # determining player id out of jwt token
         access_token = json_data["access_token"]
         payload = jwt.decode(access_token, JWT_SECRET, algorithms=['HS256'])
