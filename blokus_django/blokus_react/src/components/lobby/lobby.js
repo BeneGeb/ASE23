@@ -48,7 +48,7 @@ export default function LobbyPage({}) {
   useEffect(() => {
     function fetchData() {
       startWebsocketGameConnection();
-      setTimeout(() => sendJoinedPlayer(), 2000);
+      setTimeout(() => sendJoinedPlayer(), 400);
     }
     fetchData();
   }, []);
