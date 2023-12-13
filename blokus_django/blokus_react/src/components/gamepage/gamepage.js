@@ -45,6 +45,7 @@ export default function GamePage() {
   const [squaresArray, setsquaresArray] = useState(
     Array.from({ length: 400 }, (v, i) => "")
   );
+  const [receivedFirstPlayerData, setReceivedFirstPlayerData] = useState(false);
   const [playerData, setPlayerData] = useState([
     {
       player_id: 0,
@@ -89,6 +90,7 @@ export default function GamePage() {
       );
     } else if (type === "send_block_placed") {
       deletePlacedBlockFromAllBlocks(json["playerId"], json["blockId"]);
+      evalMarkedFields(squaresArray);
     } else if (type === "send_end_game") {
       const showWinner = () => setShowWinner(true);
       showWinner();
@@ -98,7 +100,7 @@ export default function GamePage() {
   function updateCurrentGamestate(field, currPlayer, newPlayerData) {
     setCurrPlayer(currPlayer);
     setsquaresArray(field);
-    evalMarkedFields(field, null);
+
     const updatedPlayerData = [...playerData];
 
     newPlayerData.forEach((newData, index) => {
@@ -109,20 +111,21 @@ export default function GamePage() {
         player_name: newData.player_name,
       };
 
-      // if (!updatedPlayerData[index].selectedBlock) {
-      //   updatedPlayerData[index].selectedBlock = allBlocks.get(
-      //     colorMapping[newData.color]
-      //   )[0];
-      // }
+      if (!receivedFirstPlayerData) {
+        updatedPlayerData[index].selectedBlock = allBlocks.get(
+          colorMapping[newData.color]
+        )[0];
+      }
     });
 
-    const currPlayerData = updatedPlayerData.find(
-      (player) => player.player_id === currPlayer
-    );
+    if (!receivedFirstPlayerData) {
+      console.log(updatedPlayerData[0].selectedBlock);
+      evalMarkedFields(field, updatedPlayerData[0].selectedBlock);
+    }
 
-    evalMarkedFields(field, currPlayerData.selectedBlock);
     setPlayerData(updatedPlayerData);
     setPlacedBlock([]);
+    setReceivedFirstPlayerData(true);
   }
 
   function deletePlacedBlockFromAllBlocks(player_id, block_id) {
@@ -169,7 +172,6 @@ export default function GamePage() {
     if (selectedBlock == null) {
       selectedBlock = currPlayerData.selectedBlock;
     }
-    console.log(currPlayerData);
 
     if (selectedBlock == null) {
       setMarkedFields([]);
@@ -187,7 +189,7 @@ export default function GamePage() {
       //Try every possibility for every diagonal block
       allDiagonalFields.forEach((index) => {
         const newFields = selectedBlock.evalAllFixedIndices(index);
-
+        console.log(selectedBlock);
         newFields.forEach((possibility) => {
           if (checkFieldPossible(possibility, color, squaresArray))
             markedFields.push(possibility);

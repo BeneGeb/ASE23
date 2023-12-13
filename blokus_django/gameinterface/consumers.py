@@ -370,7 +370,8 @@ class GameConsumer(WebsocketConsumer):
             Square.objects.all().delete()
             Game.objects.all().delete()
             Player.objects.all().delete()
-            # TODO KI.objects.all().delete()
+            KI.objects.all().delete()
+            
             Chat.objects.all().delete()
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name, {"type": "send_end_game"}
