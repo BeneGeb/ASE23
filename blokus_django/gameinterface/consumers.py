@@ -74,6 +74,9 @@ class GameConsumer(WebsocketConsumer):
             print(f"Receiving Request failed {json_data}: {e}")
 
     # region Handle incoming Requests
+    def debug(self):
+        Player.objects.all().delete()
+        
 
     def startGame(self):
 
@@ -412,26 +415,26 @@ class GameConsumer(WebsocketConsumer):
                 newPlayer_id = (newPlayer_id + 1) % 4
 
             #Perform AI Move
-            values_list = Square.objects.values_list('value', flat=True)
-            while Player.objects.filter(player_index=newPlayer_id).first().isAI:
-                print("AUFRUF KI")
-                next_player = Player.objects.filter(
-                    player_index=newPlayer_id).first()
-                if next_player.isAI:
-                    index_list = ki_perform_move(
-                        values_list, newPlayer_id, next_player.color)
-                    if index_list != []:
+        values_list = Square.objects.values_list('value', flat=True)
+        while Player.objects.filter(player_index=newPlayer_id).first().isAI:
+            print("AUFRUF KI")
+            next_player = Player.objects.filter(
+                player_index=newPlayer_id).first()
+            if next_player.isAI:
+                index_list = ki_perform_move(
+                    values_list, newPlayer_id, next_player.color)
+                if index_list != []:
 
-                        Square.objects.filter(
-                            game_id=1, square_id__in=index_list).update(value=colorMatcher[next_player.color])
+                    Square.objects.filter(
+                        game_id=1, square_id__in=index_list).update(value=colorMatcher[next_player.color])
 
-                        values_list = Square.objects.values_list(
-                            'value', flat=True)
-                        newPlayer_id = (newPlayer_id + 1) % 4
-                    else:
-                        next_player.hasSurrendered = True
-                        next_player.save()
-                        newPlayer_id = (newPlayer_id + 1) % 4
+                    values_list = Square.objects.values_list(
+                        'value', flat=True)
+                    newPlayer_id = (newPlayer_id + 1) % 4
+                else:
+                    next_player.hasSurrendered = True
+                    next_player.save()
+                    newPlayer_id = (newPlayer_id + 1) % 4
 
 
 
