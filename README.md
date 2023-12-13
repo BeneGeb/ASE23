@@ -25,14 +25,3 @@
 - **Wohnort:** [Mannheim]
 - **Unternehmen:** [Siemens Healthcare GmbH]
 
-# Docker
-Der Docker wird über folgenden Befehl gebuildet
-```
-docker-compose build
-```
-
-Der Docker wird über folgenden Container gestartet
-```
-docker-compose up
-```
-
