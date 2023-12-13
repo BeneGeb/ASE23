@@ -16,12 +16,12 @@ Product Owner: Benedikt Gebauer
 Entwicklungsteam: Pascal Weider, Samuel Amoah  
 
 
-## Architektur (siehe Tasks in Vorlesung)
+## Architektur
 **Client-Server:** 
 Bei der Architektur haben wir uns für eine Client Server Struktur entschieden. Die Entscheidung für eine Client-Server-Architektur basiert auf der klaren Aufteilung von Spiellogik und Graphischer Oberfläche. Die klare Trennung erleichtert die Wartung, Erweiterung und die Anbindung verschiedener Clients, was eine robuste und gut strukturierte Lösung für unser Spiel bietet.  
 
 
-## Design (siehe Tasks in Vorlesung)
+## Design 
 **Composite Pattern**
 In unserer Anwendung nutzen wir das **ReactJS-Framework**, welches auf einer hierarchischen Baumstruktur basiert, um die Webapplikation zu organisieren. Das Framework implementiert dabei automatisch das sogenannte Composite Pattern. Dieses Entwurfsmuster ermöglicht es uns, Komponenten hierarchisch zu strukturieren, wobei eine zentrale Oberkomponente alle anderen Komponenten enthält. Diese Beziehung bildet eine Baumstruktur, die charakteristisch für das Composite Pattern ist. Durch diese Struiktur kann jede Komponente unabhängig behandelt und gewartet werden. Außerdem wird die Übersichlichtkeit des Programms gewährleistet  
 
@@ -81,8 +81,8 @@ Mit dem folgenden Befehl wird der Containter gestoppt:
 ```
 docker-compose down
 ```
-Die Applikation steht anschließend unter folgender IP-Adresse zur Verfügung
-`127.0.0.1:8000`
+Die Applikation steht anschließend unter folgender Adresse zur Verfügung
+`127.0.0.1:8000/login`
 
 ## Dokumentation (Entwicklersicht)
 (Was müssen externe Entwickler über die Struktur des Projektes wissen? Welche Erweiterungsmöglichkeiten gibt es? Welches sind die wichtigsten Klassen/Module?)  
@@ -117,4 +117,9 @@ Innerhalb der Lobby Komponente kann der Nutzer die aktuelle zur Lobby beigetrete
 Die Gamepage Komponente stellt unser eigentliches Spiel dar. Die Komponente ist so aufgebaut das in der Mitte das Spielfeld angezeigt wird. Außen herum können die noch verfügbaren Spielsteine von jedem Spieler angezeigt werden.
 
 ## Fazit
-(War das Projekt erfolgreich? Was würden wir beim nächsten Mal anders machen? ...)
+### War das Projekt erfolgreich?
+Das Projekt ist erfolgreich verlaufen. Wir waren in der Lage die Anforderungen zu erfüllen. Insbesondere mit unserer UI und UX sind wir sehr zufrieden. Unsere Applikation ermöglicht ein gutes Spielerlebnis, welches durch die kontinuierliche Behebung kleinerer Fehler noch weiter optimiert wird.
+### Was würden wir anders machen?
+Beim nächsten Mal würden wir früher Anfangen Tests zu schreiben. Insbesondere im späteren Verlaufs des Projekt, wäre es sehr hilfreich gewesen die Tests ausführen zu können. Mit zunehmender Komplexität ist es immer schwieriger Einzuschätzen, ob die Applikation nach getätigten Änderungen noch erwartungsgemäß funktioniert.  
+Zusammenhängend damit würden wir ebenfalls Continous Integrations im Bezug auf automatische Tests und automatisches builden unserer React Applikation früher einrichten. 
+
